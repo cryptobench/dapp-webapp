@@ -7,7 +7,7 @@ module.exports = (server, config, logger, authentication) => {
       return next();
     } catch (error) {
       if (error.name === "AuthenticationError") {
-        logger.info(error.toString());
+        logger.warn(error.toString());
         res.send(401, error.toString());
         return false;
       }

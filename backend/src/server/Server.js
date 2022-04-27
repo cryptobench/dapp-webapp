@@ -1,7 +1,6 @@
 const HttpServer = require("./Http");
-const AppConfig = require("../di-config/AppConfig");
 
-const Server = ({ Config, Logger, Authentication, CliAdapter }) => {
+const Server = ({ Config, Logger, Authentication, CliAdapter }, AppConfig) => {
   let server;
   return {
     async init() {

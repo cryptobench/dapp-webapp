@@ -1,5 +1,6 @@
 const AdaptersConfig = require("./di-config/AdaptersConfig");
-const Server = require("./server/Server")(AdaptersConfig);
+const AppConfig = require("./di-config/AppConfig");
+const Server = require("./server/Server")(AdaptersConfig, AppConfig);
 
 Server.init()
   .then(() => Server.run())
