@@ -2,6 +2,10 @@
 
 todo
 
+### Prerequisites
+ - node >= v14.17.0
+ - npm >= 6.13.4 or yarn >= v1.22.3
+
 ## Install the dependencies
 
 ```bash
@@ -13,8 +17,8 @@ npm install
 ## Configuration
 
  - Copy `.env-template` file to `.env`
- - In `.env` file, define vars:
-   - `NODE_CONFIG_DIR` - directory containing configuration files for each environments (default `config` directory)
+ - (If needed) In `.env` file, define vars:
+   - `NODE_CONFIG_DIR` - directory containing configuration files for each environments (default `./config` directory)
    - `NODE_ENV` - current environment assignee to configuration file (default: `development`)
  - In `config/{environment}.json` define base configurations for app modules:
    - http
