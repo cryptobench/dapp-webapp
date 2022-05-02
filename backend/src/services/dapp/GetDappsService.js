@@ -18,10 +18,10 @@ module.exports = ({ database, cliAdapter }) => {
       });
       return Ok(dapps);
     },
-    async getStateData(appId) {
+    async getRawState(appId) {
       if (!appId) throw new UserError("Dapp Id is required");
-      const stateData = await cliAdapter.rawState(appId);
-      return Ok(stateData.join("\n"));
+      const rawState = await cliAdapter.rawState(appId);
+      return Ok(rawState.join("\n"));
     },
     async getRawData(appId) {
       if (!appId) throw new UserError("Dapp Id is required");

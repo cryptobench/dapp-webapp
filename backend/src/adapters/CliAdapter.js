@@ -10,8 +10,8 @@ module.exports = (config) => {
       env: { ...process.env, ...config.env },
       encoding: "utf8",
     });
-    if (result.error || result.stderr) {
-      throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error || result.stderr}`);
+    if (result.error) {
+      throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error}`);
     }
     return result.stdout.split("\n");
   }

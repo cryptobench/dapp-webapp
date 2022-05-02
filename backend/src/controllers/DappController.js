@@ -34,15 +34,15 @@ module.exports = (dappService) => {
     },
     {
       method: "get",
-      path: "/dapp/state/:appId",
+      path: "/dapp/rawState/:appId",
       handler: async (req, res) => {
-        const data = await dappService.getStateData(req.params.appId);
+        const data = await dappService.getRawState(req.params.appId);
         return res.send(200, data).end();
       },
     },
     {
       method: "get",
-      path: "/dapp/raw/:appId",
+      path: "/dapp/rawData/:appId",
       handler: async (req, res) => {
         const data = await dappService.getRawData(req.params.appId);
         return res.send(200, data).end();

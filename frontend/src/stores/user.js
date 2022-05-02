@@ -10,10 +10,7 @@ export const useUserStore = defineStore("user", {
 
   actions: {
     async register() {
-      const { payload } = await userApi.post({
-        login: "stefan007",
-        name: "stefan",
-      });
+      const { payload } = await userApi.post({});
       this.user = payload;
       defaults.headers.Authorization = this.user.id;
       LocalStorage.set("user", this.user);

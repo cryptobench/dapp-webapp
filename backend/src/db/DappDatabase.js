@@ -6,8 +6,8 @@ module.exports = function DappDatabase() {
       return userDapps ? Array.from(userDapps.values()) : [];
     },
     async insertDapp(userId, appId, appStoreId) {
-      const userDapps = db.get(userId) || new Map();
-      if (!db.has(userId)) db.set(userId, userDapps);
+      if (!db.has(userId)) db.set(userId, new Map());
+      const userDapps = db.get(userId);
       userDapps.set(appId, { appId, appStoreId, createdAt: new Date(), status: "active" });
     },
     async updateDappStatus(userId, appId, status) {

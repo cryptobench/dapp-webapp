@@ -39,14 +39,13 @@ export const useDappsStore = defineStore("dapps", {
       this.statusData = "";
       this.rawData = "";
       const start = async () => {
-        this.stateData = await api.get(`/dapp/state/${id}`);
-        this.rawData = await api.get(`/dapp/raw/${id}`);
+        this.stateData = await api.get(`/dapp/rawState/${id}`);
+        this.rawData = await api.get(`/dapp/rawData/${id}`);
         if (this.running) setTimeout(async () => await start(), 1000);
       };
       start();
     },
     stopGettingData() {
-      console.log("STOP STOP STOP STOP STOP STOP STOP STOP STOP ");
       this.running = false;
     },
   },
