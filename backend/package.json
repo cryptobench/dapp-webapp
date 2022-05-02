@@ -1,0 +1,37 @@
+{
+  "name": "dapp-webapp-backend",
+  "version": "0.0.1",
+  "description": "Golem WebApp Backend",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "lint": "eslint src",
+    "format": "prettier --ignore-path .gitignore --write '{src,test}/**/*.js'"
+  },
+  "keywords": [
+    "golem",
+    "dapps"
+  ],
+  "author": "Golem Factory",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.7",
+    "dotenv": "^16.0.0",
+    "helmet": "^5.0.2",
+    "pino": "^7.10.0",
+    "pino-multi-stream": "^6.0.0",
+    "pino-pretty": "^7.6.1",
+    "restify": "^8.6.1",
+    "rotating-file-stream": "^3.0.3",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.10.0",
+    "prettier": "^2.5.1"
+  },
+  "engines": {
+    "node": ">= 14.17.0",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

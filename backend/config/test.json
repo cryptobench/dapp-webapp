@@ -1,0 +1,21 @@
+{
+  "http": {
+    "port": null,
+    "origins": ["localhost"],
+    "throttle": {
+      "burst": 0,
+      "rate": 0,
+      "ip": true
+    }
+  },
+  "cli": {
+    "mock": "TODO"
+  },
+  "logger": {
+    "streams": {
+      "console": {
+        "level": "error"
+      }
+    }
+  }
+}
