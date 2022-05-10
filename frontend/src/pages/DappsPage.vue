@@ -43,17 +43,6 @@
           <q-btn
             rounded
             outline
-            v-if="props.row.status === 'stopped'"
-            size="sm"
-            color="positive"
-            label="start"
-            icon="play_circle_outline"
-            style="min-width: 90px"
-            @click="start(props.row.id)"
-          ></q-btn>
-          <q-btn
-            rounded
-            outline
             size="sm"
             color="secondary"
             label="details"

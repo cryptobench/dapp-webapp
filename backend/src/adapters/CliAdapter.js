@@ -13,26 +13,36 @@ module.exports = (config) => {
     if (result.error) {
       throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error}`);
     }
-    return result.stdout.split("\n");
+    return result;
   }
   return {
     async start() {
-      return run("start", "--config", config.configPath, config.descriptorPath);
+      return run("start", "--config", config.configPath, config.descriptorPath).then((res) => res.stdout?.split("\n"));
     },
     async stop(appId) {
-      return run("stop", "--app-id", appId);
+      return run("stop", "--app-id", appId).then((res) => res.stdout?.split("\n"));
     },
     async kill(appId) {
-      return run("kill", "--app-id", appId);
+      return run("kill", "--app-id", appId).then((res) => res.stdout?.split("\n"));
     },
     async list() {
-      return run("list");
+      return run("list").then((res) => res.stdout?.split("\n"));
     },
-    async rawData(appId) {
-      return run("raw-data", "--app-id", appId);
+    async rawData(appId, ensureAlive = true) {
+      return run("raw-data", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
+        (res) => res.stdout
+      );
     },
-    async rawState(appId) {
-      return run("raw-state", "--app-id", appId);
+    async rawState(appId, ensureAlive = true) {
+      return run("raw-state", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
+        (res) => res.stdout
+      );
+    },
+    async getStatus(appId) {
+      const result = await run("raw-state", "--app-id", appId);
+      if (result.status === 0) return "active";
+      if (result.status === 4) return "dead";
+      if (result.status === 5) return "stopped";
     },
   };
 };
