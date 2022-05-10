@@ -34,13 +34,16 @@ export const useDappsStore = defineStore("dapps", {
       const id = await api.post(`/dapp/kill/`, { appId });
       return !!id;
     },
+    async getData(id) {
+      this.stateData = await api.get(`/dapp/rawState/${id}`);
+      this.rawData = await api.get(`/dapp/rawData/${id}`);
+    },
     async startGettingData(id) {
       this.running = true;
       this.statusData = "";
       this.rawData = "";
       const start = async () => {
-        this.stateData = await api.get(`/dapp/rawState/${id}`);
-        this.rawData = await api.get(`/dapp/rawData/${id}`);
+        await this.getData(id);
         if (this.running) setTimeout(async () => await start(), 1000);
       };
       start();

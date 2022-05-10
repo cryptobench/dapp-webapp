@@ -14,10 +14,10 @@
     "args": ["-m", "yagna_dapp_manager"],
     "cwd": "/Users/marcin/dev/golem/dapp-manager",
     "env": {
-      "DAPP_RUNNER_EXEC": "/Users/marcin/dev/golem/dapp-manager/tests/assets/mock_dapp_runner.py"
+      "VIRTUAL_ENV": "/Users/marcin/dev/golem/dapp-manager/venv"
     },
-    "configPath": "config.yml",
-    "descriptorPath": "descriptor.yml"
+    "configPath": "sample_config.yml",
+    "descriptorPath": "sample_descriptor.yml"
   },
   "authentication": {
 
