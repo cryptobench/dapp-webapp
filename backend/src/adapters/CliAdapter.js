@@ -15,7 +15,7 @@ module.exports = (config, logger) => {
       throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error}`);
     }
     if (result.stderr) {
-      logger.debug(`[CLI Adapter] Command: ${args.join(" ")}; Stderr: ${result.stderr}`);
+      logger.debug(`[CLI Adapter] STDERR: ${result.stderr}`);
     }
     return result;
   }
