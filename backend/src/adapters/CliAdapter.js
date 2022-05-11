@@ -1,7 +1,7 @@
 const { spawnSync } = require("child_process");
 
 module.exports = (config) => {
-  if (!config.command || !config.args || !config.env) {
+  if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
   async function run(...args) {
@@ -29,10 +29,10 @@ module.exports = (config) => {
       return run("list");
     },
     async rawData(appId) {
-      return run("raw-data", "--app-id", appId);
+      return run("raw-data", "--app-id", appId, "--no-ensure-alive");
     },
     async rawState(appId) {
-      return run("raw-state", "--app-id", appId);
+      return run("raw-state", "--app-id", appId, "--no-ensure-alive");
     },
   };
 };
