@@ -16,8 +16,11 @@ module.exports = (config) => {
     return result.stdout.split("\n");
   }
   return {
-    async start() {
-      return run("start", "--config", config.configPath, config.descriptorPath);
+    async start(configPath, descriptorPath) {
+      if (!configPath || !descriptorPath) {
+        throw new Error(`Cannot start dapp without config or descriptor file`);
+      }
+      return run("start", "--config", configPath, descriptorPath);
     },
     async stop(appId) {
       return run("stop", "--app-id", appId);
