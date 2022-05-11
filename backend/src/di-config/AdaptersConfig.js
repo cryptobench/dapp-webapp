@@ -3,9 +3,10 @@ const Config = require("../adapters/Config");
 const Logger = require("../adapters/Logger");
 const CliAdapter = require("../adapters/CliAdapter");
 
+const logger = Logger(Config.logger);
 module.exports = {
   Config,
   Authentication,
-  Logger: Logger(Config.logger),
-  CliAdapter: CliAdapter(Config.cli),
+  Logger: logger,
+  CliAdapter: CliAdapter(Config.cli, logger),
 };

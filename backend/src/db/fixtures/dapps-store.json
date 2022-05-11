@@ -1,40 +1,40 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "name": "HTTP Proxy",
     "author": "Elliot Alderson",
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     "icon": "storage",
-    "configPath": "src/db/fixtures/config/sample_config.yml",
-    "descriptorPath": "src/db/fixtures/descriptor/http_proxy.yml"
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/http_proxy.yaml"
   },
   {
-    "id": 2,
+    "id": "2",
     "name": "HTTP Proxy explicit network",
     "author": "Tyrell Wellick",
     "description":
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet",
     "icon": "star",
-    "configPath": "src/db/fixtures/sample_config.yml",
-    "descriptorPath": "src/db/fixtures/http-proxy-explicit-network.yml"
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/http-proxy-explicit-network.yaml"
   },
   {
-    "id": 3,
+    "id": "3",
     "name": "HTTP Proxy specific port",
     "author": "Angela Moss",
     "description":
     "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     "icon": "image",
-    "configPath": "src/db/fixtures/sample_config.yml",
-    "descriptorPath": "src/db/fixtures/http-proxy-specific-port.yml"
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/http-proxy-specific-port.yaml"
   },
   {
-    "id": 4,
+    "id": "4",
     "name": "Simple service",
     "author": "Leslie Romero",
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet",
     "icon": "dvr",
-    "configPath": "src/db/fixtures/sample_config.yml",
-    "descriptorPath": "src/db/fixtures/simple-service.yml"
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/simple-service.yaml"
   }
 ]
