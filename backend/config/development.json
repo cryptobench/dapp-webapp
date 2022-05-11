@@ -14,14 +14,12 @@
     "args": ["-m", "yagna_dapp_manager"],
     "cwd": "/Users/marcin/dev/golem/dapp-manager",
     "env": {
-      "VIRTUAL_ENV": "/Users/marcin/dev/golem/dapp-manager/venv"
+      "OPTIONAL_SAMPLE_VAR": "var passed to env of spawned process - to define by user if needed"
     },
     "configPath": "sample_config.yml",
     "descriptorPath": "sample_descriptor.yml"
   },
-  "authentication": {
-
-  },
+  "authentication": {},
   "logger": {
     "streams": {
       "console": {

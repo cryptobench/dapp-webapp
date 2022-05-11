@@ -28,11 +28,21 @@ module.exports = (config) => {
     async list() {
       return run("list");
     },
-    async rawData(appId) {
-      return run("raw-data", "--app-id", appId, "--no-ensure-alive");
+    async rawData(appId, ensureAlive = true) {
+      return run("raw-data", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
+        (res) => res.stdout
+      );
     },
-    async rawState(appId) {
-      return run("raw-state", "--app-id", appId, "--no-ensure-alive");
+    async rawState(appId, ensureAlive = true) {
+      return run("raw-state", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
+        (res) => res.stdout
+      );
+    },
+    async getStatus(appId) {
+      const result = await run("raw-state", "--app-id", appId);
+      if (result.status === 0) return "active";
+      if (result.status === 4) return "unknown_app";
+      if (result.status === 5) return "dead";
     },
   };
 };

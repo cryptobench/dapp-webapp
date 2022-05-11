@@ -43,17 +43,6 @@
           <q-btn
             rounded
             outline
-            v-if="props.row.status === 'stopped'"
-            size="sm"
-            color="positive"
-            label="start"
-            icon="play_circle_outline"
-            style="min-width: 90px"
-            @click="start(props.row.id)"
-          ></q-btn>
-          <q-btn
-            rounded
-            outline
             size="sm"
             color="secondary"
             label="details"
@@ -150,7 +139,7 @@ export default defineComponent({
       },
       statusColor: (status) => {
         if (status === "active") return "positive";
-        if (status === "stopped") return "warning";
+        if (status === "unknown_app") return "warning";
         if (status === "dead") return "negative";
         return "primary";
       },
