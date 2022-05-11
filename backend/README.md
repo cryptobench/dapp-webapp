@@ -33,6 +33,14 @@ yarn start
 npm start
 ```
 
+### Start the app in development mode (hot-code reloading)
+
+```bash
+yarn dev
+# or
+npm run dev
+```
+
 ### Lint the files
 
 ```bash
