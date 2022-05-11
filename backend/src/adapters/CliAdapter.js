@@ -1,7 +1,7 @@
 const { spawnSync } = require("child_process");
 
 module.exports = (config) => {
-  if (!config.command || !config.args || !config.env) {
+  if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
   async function run(...args) {
@@ -13,20 +13,20 @@ module.exports = (config) => {
     if (result.error) {
       throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error}`);
     }
-    return result;
+    return result.stdout.split("\n");
   }
   return {
     async start() {
-      return run("start", "--config", config.configPath, config.descriptorPath).then((res) => res.stdout?.split("\n"));
+      return run("start", "--config", config.configPath, config.descriptorPath);
     },
     async stop(appId) {
-      return run("stop", "--app-id", appId).then((res) => res.stdout?.split("\n"));
+      return run("stop", "--app-id", appId);
     },
     async kill(appId) {
-      return run("kill", "--app-id", appId).then((res) => res.stdout?.split("\n"));
+      return run("kill", "--app-id", appId);
     },
     async list() {
-      return run("list").then((res) => res.stdout?.split("\n"));
+      return run("list");
     },
     async rawData(appId, ensureAlive = true) {
       return run("raw-data", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
