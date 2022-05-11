@@ -24,7 +24,6 @@ module.exports = (config, logger) => {
       if (!configPath || !descriptorPath) {
         throw new Error(`Cannot start dapp without config or descriptor file`);
       }
-      console.log({ configPath, descriptorPath });
       return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split("\n"));
     },
     async stop(appId) {
