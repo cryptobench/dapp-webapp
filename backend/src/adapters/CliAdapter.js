@@ -1,7 +1,7 @@
 const { spawnSync } = require("child_process");
 
 module.exports = (config) => {
-  if (!config.command || !config.args || !config.env) {
+  if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
   async function run(...args) {
@@ -31,11 +31,21 @@ module.exports = (config) => {
     async list() {
       return run("list");
     },
-    async rawData(appId) {
-      return run("raw-data", "--app-id", appId);
+    async rawData(appId, ensureAlive = true) {
+      return run("raw-data", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
+        (res) => res.stdout
+      );
     },
-    async rawState(appId) {
-      return run("raw-state", "--app-id", appId);
+    async rawState(appId, ensureAlive = true) {
+      return run("raw-state", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(
+        (res) => res.stdout
+      );
+    },
+    async getStatus(appId) {
+      const result = await run("raw-state", "--app-id", appId);
+      if (result.status === 0) return "active";
+      if (result.status === 4) return "unknown_app";
+      if (result.status === 5) return "dead";
     },
   };
 };

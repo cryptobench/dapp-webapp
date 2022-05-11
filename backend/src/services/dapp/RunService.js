@@ -14,14 +14,12 @@ module.exports = ({ cliAdapter, database, logger }) => {
     async stop(userId, appId) {
       if (!appId) throw new UserError("Dapp Id is required");
       const [stoppedAppId] = await cliAdapter.stop(appId);
-      await database.updateDappStatus(userId, stoppedAppId, "stopped");
       logger.info(`App ${appId} has been stopped by user ${userId}`);
       return Ok(stoppedAppId);
     },
     async kill(userId, appId) {
       if (!appId) throw new UserError("Dapp Id is required");
       const [killedAppId] = await cliAdapter.kill(appId);
-      await database.updateDappStatus(userId, killedAppId, "dead");
       logger.info(`App ${appId} has been killed by user ${userId}`);
       return Ok(killedAppId);
     },

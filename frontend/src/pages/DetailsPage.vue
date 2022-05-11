@@ -79,20 +79,32 @@
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <pre>{{ rawData }}</pre>
+
+              <ssh-pre v-if="jsonFormat" language="json" dark="true">{{ jsonParse(rawData) }}</ssh-pre>
+              <pre v-else>{{rawData}}</pre>
             </q-scroll-area>
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </div>
     <div class="row justify-between q-pa-xs q-gutter-md items-center">
-      <q-toggle
-        v-model="scrollToBottom"
-        label="Scroll to bottom"
-        size="xs"
-        color="secondary"
-        class="text-caption"
-      />
+      <div class="row justify-sm-start">
+        <q-toggle
+          v-model="scrollToBottom"
+          label="Scroll to bottom"
+          size="xs"
+          color="secondary"
+          class="text-caption"
+        />
+        <q-toggle
+          v-model="jsonFormat"
+          label="JSON format"
+          size="xs"
+          color="secondary"
+          class="text-caption"
+        />
+      </div>
+
       <div class="text-caption content-end">Refresh interval: <b>1s</b></div>
     </div>
   </q-page>
@@ -103,9 +115,12 @@ import { defineComponent, ref, onUnmounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
+import SshPre from 'simple-syntax-highlighter'
+import 'simple-syntax-highlighter/dist/sshpre.css'
 
 export default defineComponent({
   name: "IndexPage",
+  components: { SshPre },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -117,7 +132,12 @@ export default defineComponent({
     const consoleScroll = ref(null);
     const stopping = ref(false);
     const killing = ref(false);
-    dappStore.startGettingData(id);
+    const jsonFormat = ref(false);
+    if (dapp.value.status === 'active') {
+      dappStore.startGettingData(id);
+    } else {
+      dappStore.getData(id);
+    }
     watch(stateData, () => {
       if (scrollToBottom.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
@@ -137,6 +157,7 @@ export default defineComponent({
       rawData,
       consoleScroll,
       scrollToBottom,
+      jsonFormat,
       thumbStyle: {
         right: "4px",
         borderRadius: "5px",
@@ -153,7 +174,7 @@ export default defineComponent({
       },
       statusColor: (status) => {
         if (status === "active") return "positive";
-        if (status === "stopped") return "warning";
+        if (status === "unknown_app") return "warning";
         if (status === "dead") return "negative";
         return "primary";
       },
@@ -174,6 +195,7 @@ export default defineComponent({
           stopping.value = false;
           dappStore.stopGettingData();
           dappStore.getDapps();
+          dappStore.getData(id);
         });
       },
       kill: (id) => {
@@ -193,8 +215,16 @@ export default defineComponent({
           killing.value = false;
           dappStore.stopGettingData();
           dappStore.getDapps();
+          dappStore.getData(id);
         });
       },
+      jsonParse: (val) => {
+        try {
+          return JSON.stringify(JSON.parse(val || {}), null, 2);
+        } catch {
+          return val;
+        }
+      }
     };
   },
 });
@@ -205,4 +235,9 @@ export default defineComponent({
   background: black
   pre
     margin: 0
+  .ssh-pre
+    margin: 0
+    padding: 0
+  .ssh-pre--dark
+    background: inherit !important
 </style>
