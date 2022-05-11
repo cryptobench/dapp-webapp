@@ -105,7 +105,7 @@
         />
       </div>
 
-      <div class="text-caption content-end">Refresh interval: <b>1s</b></div>
+      <div class="text-caption content-end">Refresh interval: <b>3s</b></div>
     </div>
   </q-page>
 </template>

@@ -5,6 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "lint": "eslint src",
     "format": "prettier --ignore-path .gitignore --write '{src,test}/**/*.js'"
   },
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "eslint": "^8.10.0",
+    "nodemon": "^2.0.16",
     "prettier": "^2.5.1"
   },
   "engines": {

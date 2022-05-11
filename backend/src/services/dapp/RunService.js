@@ -1,10 +1,13 @@
 const { UserError, Ok } = require("../../utils/Result");
+const { resolve } = require("path");
 
 module.exports = ({ cliAdapter, database, logger }) => {
   return {
     async start(userId, appStoreId) {
       if (!appStoreId) throw new UserError("Dapp Id is required");
-      const [appId] = await cliAdapter.start(appStoreId);
+      const dappStore = await database.findDappById(appStoreId);
+      if (!dappStore) throw new UserError(`Dapp ${appStoreId} not found`);
+      const [appId] = await cliAdapter.start(resolve(dappStore.configPath), resolve(dappStore.descriptorPath));
       await database.insertDapp(userId, appId, appStoreId);
       logger.info(`App ${appId} has been launched by user ${userId}`);
       return Ok(appId);

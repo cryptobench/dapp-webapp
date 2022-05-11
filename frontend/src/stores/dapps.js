@@ -44,7 +44,7 @@ export const useDappsStore = defineStore("dapps", {
       this.rawData = "";
       const start = async () => {
         await this.getData(id);
-        if (this.running) setTimeout(async () => await start(), 1000);
+        if (this.running) setTimeout(async () => await start(), 3000);
       };
       start();
     },

@@ -1,32 +1,40 @@
 [
   {
-    "id": 1,
-    "name": "Postgres Database",
+    "id": "1",
+    "name": "HTTP Proxy",
     "author": "Elliot Alderson",
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    "icon": "storage"
+    "icon": "storage",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/http_proxy.yaml"
   },
   {
-    "id": 2,
-    "name": "Super golem app",
+    "id": "2",
+    "name": "HTTP Proxy explicit network",
     "author": "Tyrell Wellick",
     "description":
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet",
-    "icon": "star"
+    "icon": "star",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/http-proxy-explicit-network.yaml"
   },
   {
-    "id": 3,
-    "name": "Blender",
+    "id": "3",
+    "name": "HTTP Proxy specific port",
     "author": "Angela Moss",
     "description":
     "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    "icon": "image"
+    "icon": "image",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/http-proxy-specific-port.yaml"
   },
   {
-    "id": 4,
-    "name": "SSH",
+    "id": "4",
+    "name": "Simple service",
     "author": "Leslie Romero",
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet",
-    "icon": "dvr"
+    "icon": "dvr",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/descriptor/simple-service.yaml"
   }
 ]

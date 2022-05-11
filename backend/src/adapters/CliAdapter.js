@@ -1,6 +1,6 @@
 const { spawnSync } = require("child_process");
 
-module.exports = (config) => {
+module.exports = (config, logger) => {
   if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
@@ -10,23 +10,30 @@ module.exports = (config) => {
       env: { ...process.env, ...config.env },
       encoding: "utf8",
     });
+    logger.debug(`[CLI Adapter] Run command: ${args.join(" ")}`);
     if (result.error) {
       throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error}`);
     }
-    return result.stdout.split("\n");
+    if (result.stderr) {
+      logger.debug(`[CLI Adapter] STDERR: ${result.stderr}`);
+    }
+    return result;
   }
   return {
-    async start() {
-      return run("start", "--config", config.configPath, config.descriptorPath);
+    async start(configPath, descriptorPath) {
+      if (!configPath || !descriptorPath) {
+        throw new Error(`Cannot start dapp without config or descriptor file`);
+      }
+      return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split("\n"));
     },
     async stop(appId) {
-      return run("stop", "--app-id", appId);
+      return run("stop", "--app-id", appId).then((res) => res.stdout?.split("\n"));
     },
     async kill(appId) {
-      return run("kill", "--app-id", appId);
+      return run("kill", "--app-id", appId).then((res) => res.stdout?.split("\n"));
     },
     async list() {
-      return run("list");
+      return run("list").then((res) => res.stdout?.split("\n"));
     },
     async rawData(appId, ensureAlive = true) {
       return run("raw-data", "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then(

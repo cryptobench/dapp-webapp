@@ -15,9 +15,7 @@
     "cwd": "/Users/marcin/dev/golem/dapp-manager",
     "env": {
       "OPTIONAL_SAMPLE_VAR": "var passed to env of spawned process - to define by user if needed"
-    },
-    "configPath": "sample_config.yml",
-    "descriptorPath": "sample_descriptor.yml"
+    }
   },
   "authentication": {},
   "logger": {
