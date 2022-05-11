@@ -41,8 +41,8 @@ module.exports = (config) => {
     async getStatus(appId) {
       const result = await run("raw-state", "--app-id", appId);
       if (result.status === 0) return "active";
-      if (result.status === 4) return "dead";
-      if (result.status === 5) return "stopped";
+      if (result.status === 4) return "unknown_app";
+      if (result.status === 5) return "dead";
     },
   };
 };

@@ -174,7 +174,7 @@ export default defineComponent({
       },
       statusColor: (status) => {
         if (status === "active") return "positive";
-        if (status === "stopped") return "warning";
+        if (status === "unknown_app") return "warning";
         if (status === "dead") return "negative";
         return "primary";
       },
