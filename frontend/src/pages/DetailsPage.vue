@@ -51,15 +51,18 @@
           align="justify"
           dense
         >
-          <q-tab name="status" label="State" />
+          <q-tab name="state" label="State" />
           <q-tab name="data" label="Data" />
+          <q-tab name="stdout" label="Stdout" />
+          <q-tab name="stderr" label="Stderr" />
+          <q-tab name="log" label="Log" />
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel
-            name="status"
+            name="state"
             class="bg-black text-white console q-pa-lg"
           >
             <q-scroll-area
@@ -68,7 +71,8 @@
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <pre>{{ stateData }}</pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(stateData) }}</ssh-pre>
+              <pre v-else>{{stateData}}</pre>
             </q-scroll-area>
           </q-tab-panel>
 
@@ -79,9 +83,41 @@
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-
-              <ssh-pre v-if="jsonFormat" language="json" dark="true">{{ jsonParse(rawData) }}</ssh-pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(rawData) }}</ssh-pre>
               <pre v-else>{{rawData}}</pre>
+            </q-scroll-area>
+          </q-tab-panel>
+          <q-tab-panel name="stdout" class="bg-black text-white console q-pa-lg">
+            <q-scroll-area
+              style="height: 100%; width: 100%"
+              ref="consoleScroll"
+              :thumb-style="thumbStyle"
+              :bar-style="barStyle"
+            >
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(stdout) }}</ssh-pre>
+              <pre v-else>{{stdout}}</pre>
+            </q-scroll-area>
+          </q-tab-panel>
+          <q-tab-panel name="stderr" class="bg-black text-white console q-pa-lg">
+            <q-scroll-area
+              style="height: 100%; width: 100%"
+              ref="consoleScroll"
+              :thumb-style="thumbStyle"
+              :bar-style="barStyle"
+            >
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(stderr) }}</ssh-pre>
+              <pre v-else>{{stderr}}</pre>
+            </q-scroll-area>
+          </q-tab-panel>
+          <q-tab-panel name="log" class="bg-black text-white console q-pa-lg">
+            <q-scroll-area
+              style="height: 100%; width: 100%"
+              ref="consoleScroll"
+              :thumb-style="thumbStyle"
+              :bar-style="barStyle"
+            >
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(log) }}</ssh-pre>
+              <pre v-else>{{log}}</pre>
             </q-scroll-area>
           </q-tab-panel>
         </q-tab-panels>
@@ -98,14 +134,14 @@
         />
         <q-toggle
           v-model="jsonFormat"
-          label="JSON format"
+          label="Highlight syntax"
           size="xs"
           color="secondary"
           class="text-caption"
         />
       </div>
 
-      <div class="text-caption content-end">Refresh interval: <b>3s</b></div>
+      <div class="text-caption content-end">Refresh interval: <b>5s</b></div>
     </div>
   </q-page>
 </template>
@@ -128,6 +164,9 @@ export default defineComponent({
     const dapp = computed(() => dappStore.getDapp(id));
     const stateData = computed(() => dappStore.stateData);
     const rawData = computed(() => dappStore.rawData);
+    const stdout = computed(() => dappStore.stdout);
+    const stderr = computed(() => dappStore.stderr);
+    const log = computed(() => dappStore.log);
     const scrollToBottom = ref(true);
     const consoleScroll = ref(null);
     const stopping = ref(false);
@@ -138,7 +177,7 @@ export default defineComponent({
     } else {
       dappStore.getData(id);
     }
-    watch(stateData, () => {
+    watch([stateData, rawData, stdout, stderr, log], () => {
       if (scrollToBottom.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
@@ -150,11 +189,14 @@ export default defineComponent({
     const $q = useQuasar();
     return {
       dapp,
-      tab: ref("status"),
+      tab: ref("state"),
       stopping,
       killing,
       stateData,
       rawData,
+      stdout,
+      stderr,
+      log,
       consoleScroll,
       scrollToBottom,
       jsonFormat,
