@@ -6,7 +6,7 @@
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     "icon": "storage",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
-    "descriptorPath": "src/db/fixtures/descriptor/http_proxy.yaml"
+    "descriptorPath": "src/db/fixtures/descriptor/http-proxy.yaml"
   },
   {
     "id": "2",

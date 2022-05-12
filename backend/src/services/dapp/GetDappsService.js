@@ -1,6 +1,11 @@
 const { UserError, Ok } = require("../../utils/Result");
 
 module.exports = ({ database, cliAdapter }) => {
+  async function getDetails(dataType, appId) {
+    if (!appId) throw new UserError("Dapp Id is required");
+    const details = await cliAdapter[dataType](appId, false);
+    return Ok(details);
+  }
   return {
     async getDapps(userId) {
       const userDapps = await database.findDappsByUser(userId);
@@ -19,14 +24,19 @@ module.exports = ({ database, cliAdapter }) => {
       return Ok(dapps);
     },
     async getRawState(appId) {
-      if (!appId) throw new UserError("Dapp Id is required");
-      const rawState = await cliAdapter.rawState(appId, false);
-      return Ok(rawState);
+      return getDetails("rawState", appId);
     },
     async getRawData(appId) {
-      if (!appId) throw new UserError("Dapp Id is required");
-      const rawData = await cliAdapter.rawData(appId, false);
-      return Ok(rawData);
+      return getDetails("rawData", appId);
+    },
+    async getStdout(appId) {
+      return getDetails("stdout", appId);
+    },
+    async getStderr(appId) {
+      return getDetails("stderr", appId);
+    },
+    async getLog(appId) {
+      return getDetails("log", appId);
     },
   };
 };

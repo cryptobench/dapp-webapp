@@ -48,5 +48,29 @@ module.exports = (dappService) => {
         return res.send(200, data).end();
       },
     },
+    {
+      method: "get",
+      path: "/dapp/stdout/:appId",
+      handler: async (req, res) => {
+        const data = await dappService.getStdout(req.params.appId);
+        return res.send(200, data).end();
+      },
+    },
+    {
+      method: "get",
+      path: "/dapp/stderr/:appId",
+      handler: async (req, res) => {
+        const data = await dappService.getStderr(req.params.appId);
+        return res.send(200, data).end();
+      },
+    },
+    {
+      method: "get",
+      path: "/dapp/log/:appId",
+      handler: async (req, res) => {
+        const data = await dappService.getLog(req.params.appId);
+        return res.send(200, data).end();
+      },
+    },
   ];
 };

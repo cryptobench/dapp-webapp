@@ -9,6 +9,9 @@ export const useDappsStore = defineStore("dapps", {
     dapps: [],
     stateData: "",
     rawData: "",
+    stdout: "",
+    stderr: "",
+    log: "",
     running: false,
   }),
 
@@ -37,6 +40,9 @@ export const useDappsStore = defineStore("dapps", {
     async getData(id) {
       this.stateData = await api.get(`/dapp/rawState/${id}`);
       this.rawData = await api.get(`/dapp/rawData/${id}`);
+      this.stdout = await api.get(`/dapp/stdout/${id}`);
+      this.stderr = await api.get(`/dapp/stderr/${id}`);
+      this.log = await api.get(`/dapp/log/${id}`);
     },
     async startGettingData(id) {
       this.running = true;
@@ -44,7 +50,7 @@ export const useDappsStore = defineStore("dapps", {
       this.rawData = "";
       const start = async () => {
         await this.getData(id);
-        if (this.running) setTimeout(async () => await start(), 3000);
+        if (this.running) setTimeout(async () => await start(), 5000);
       };
       start();
     },

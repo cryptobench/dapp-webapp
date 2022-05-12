@@ -18,9 +18,9 @@
     "mande": "^2.0.1",
     "pinia": "^2.0.13",
     "quasar": "^2.6.0",
+    "simple-syntax-highlighter": "^2.2.0",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0",
-    "vue3-highlightjs": "^1.0.5"
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
