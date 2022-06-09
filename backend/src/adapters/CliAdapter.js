@@ -20,7 +20,7 @@ module.exports = (config, logger) => {
     return result;
   }
   async function getDetails(command, appId, ensureAlive = true) {
-    return run(command, "--app-id", appId, ensureAlive ? undefined : "--no-ensure-alive").then((res) => res.stdout);
+    return run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive").then((res) => res.stdout);
   }
   return {
     async start(configPath, descriptorPath) {
@@ -30,19 +30,19 @@ module.exports = (config, logger) => {
       return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split("\n"));
     },
     async stop(appId) {
-      return run("stop", "--app-id", appId).then((res) => res.stdout?.split("\n"));
+      return run("stop", appId).then((res) => res.stdout?.split("\n"));
     },
     async kill(appId) {
-      return run("kill", "--app-id", appId).then((res) => res.stdout?.split("\n"));
+      return run("kill", appId).then((res) => res.stdout?.split("\n"));
     },
     async list() {
       return run("list").then((res) => res.stdout?.split("\n"));
     },
     async rawData(appId, ensureAlive = true) {
-      return getDetails("raw-data", appId, ensureAlive);
+      return getDetails("data", appId, ensureAlive);
     },
     async rawState(appId, ensureAlive = true) {
-      return getDetails("raw-state", appId, ensureAlive);
+      return getDetails("state", appId, ensureAlive);
     },
     async stdout(appId, ensureAlive = true) {
       return getDetails("stdout", appId, ensureAlive);
@@ -54,7 +54,7 @@ module.exports = (config, logger) => {
       return getDetails("log", appId, ensureAlive);
     },
     async getStatus(appId) {
-      const result = await run("raw-state", "--app-id", appId);
+      const result = await run("read", "state", appId);
       if (result.status === 0) return "active";
       if (result.status === 4) return "unknown_app";
       if (result.status === 5) return "dead";

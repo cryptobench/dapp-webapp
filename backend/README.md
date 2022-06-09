@@ -6,6 +6,23 @@ todo
  - node >= v14.17.0
  - npm >= 6.13.4 or yarn >= v1.22.3
 
+ ### yagna
+
+ Follow the requestor's intro tutorial: https://handbook.golem.network/requestor-tutorials/flash-tutorial-of-requestor-development and ensure you can correctly run tasks on yagna.
+
+ ### dapp-manager
+
+Install dapp-manager (currently only available as a python source package):
+
+```
+python3 -m venv ~/.envs/dapp-manager
+source ~/.envs/dapp-manager/bin/activate
+git clone https://github.com/golemfactory/dapp-manager.git
+cd dapp-manager
+pip install -U pip poetry
+poetry install
+```
+
 ## Install the dependencies
 
 ```bash
@@ -24,6 +41,24 @@ npm install
    - http
    - cli
    - logger
+
+The default config assumes that the yagna app-key is available in your environment as `YAGNA_APPKEY`.
+
+### Ensure you have `dapp-manager` available in your PATH
+
+If you followed the prerequisites above and installed the `dapp-manager` from source using poetry, just make sure that you're running the back-end app with your `dapp-manager` python environment active:
+
+```
+source ~/.envs/dapp-manager/bin/activate
+```
+
+You can verify if `dapp-manager` is available with:
+
+```
+dapp-manager
+```
+
+It should display the help for the command.
 
 ## Start the app
 

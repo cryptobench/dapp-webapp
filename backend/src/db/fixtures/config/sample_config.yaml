@@ -1,6 +1,6 @@
 yagna:
-  api_url: "http://127.0.0.1:6765"
-  gsb_url: "tcp://127.0.0.1:6766"
+#  api_url: "http://127.0.0.1:6765"
+#  gsb_url: "tcp://127.0.0.1:6766"
   app_key: "$YAGNA_APPKEY"
   subnet_tag: "devnet-beta"
 
