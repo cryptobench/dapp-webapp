@@ -10,9 +10,9 @@
     }
   },
   "cli": {
-    "command": "/Users/marcin/dev/golem/dapp-manager/venv/bin/python3",
-    "args": ["-m", "yagna_dapp_manager"],
-    "cwd": "/Users/marcin/dev/golem/dapp-manager",
+    "command": "dapp-manager",
+    "args": [],
+    "cwd": null,
     "env": {
       "OPTIONAL_SAMPLE_VAR": "var passed to env of spawned process - to define by user if needed"
     }
