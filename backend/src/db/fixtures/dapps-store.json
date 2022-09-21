@@ -1,40 +1,26 @@
 [
   {
     "id": "1",
-    "name": "HTTP Proxy",
-    "author": "Elliot Alderson",
-    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    "icon": "storage",
+    "icon": "hub",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
-    "descriptorPath": "src/db/fixtures/descriptor/http-proxy.yaml"
+    "descriptorPath": "src/db/fixtures/dapp-store/apps/http-proxy.yaml"
   },
   {
     "id": "2",
-    "name": "HTTP Proxy explicit network",
-    "author": "Tyrell Wellick",
-    "description":
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet",
-    "icon": "star",
+    "icon": "sensors",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
-    "descriptorPath": "src/db/fixtures/descriptor/http-proxy-explicit-network.yaml"
+    "descriptorPath": "src/db/fixtures/dapp-store/apps/simple-service.yaml"
   },
   {
     "id": "3",
-    "name": "HTTP Proxy specific port",
-    "author": "Angela Moss",
-    "description":
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    "icon": "image",
+    "icon": "dns",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
-    "descriptorPath": "src/db/fixtures/descriptor/http-proxy-specific-port.yaml"
+    "descriptorPath": "src/db/fixtures/dapp-store/apps/webapp.yaml"
   },
   {
-    "id": "4",
-    "name": "Simple service",
-    "author": "Leslie Romero",
-    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet",
-    "icon": "dvr",
+    "id": "3",
+    "icon": "outbound",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
-    "descriptorPath": "src/db/fixtures/descriptor/simple-service.yaml"
+    "descriptorPath": "src/db/fixtures/dapp-store/apps/external-api-request.yaml"
   }
 ]
