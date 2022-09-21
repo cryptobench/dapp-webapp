@@ -1,6 +1,6 @@
 {
   "http": {
-    "port": 8200,
+    "port": 8888,
     "origins": ["http://localhost:8080"],
     "throttle": {
       "burst": 20,
