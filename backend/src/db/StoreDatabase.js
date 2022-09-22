@@ -14,8 +14,8 @@ module.exports = function StoreDatabase() {
       return dapps.find((dapp) => dapp.id === appId);
     },
     async findAllStoreDapps() {
-      dapps.forEach((dapp) => {
-        let dapp_meta = DEFAULT_META
+      dapps.forEach(async (dapp) => {
+        let dapp_meta = Object.assign({}, DEFAULT_META);
         try {
           let dapp_data = yaml.load(fs.readFileSync(dapp.descriptorPath));
           if (dapp_data.meta) {

@@ -7,10 +7,9 @@
       </q-item-section>
       <q-icon :name="icon" size="lg" />
     </q-card-section>
-    <q-card-section>
+    <q-card-section class="description">
       {{ description }}
     </q-card-section>
-    <q-separator />
     <q-card-actions vertical align="right">
       <q-btn
         flat

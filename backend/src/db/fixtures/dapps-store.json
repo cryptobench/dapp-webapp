@@ -18,7 +18,7 @@
     "descriptorPath": "src/db/fixtures/dapp-store/apps/webapp.yaml"
   },
   {
-    "id": "3",
+    "id": "4",
     "icon": "outbound",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/external-api-request.yaml"
