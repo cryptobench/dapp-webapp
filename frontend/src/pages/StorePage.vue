@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <h4 class="q-ma-md">Dapp Store</h4>
-    <div class="q-pa-md row items-start q-gutter-lg">
+    <div class="q-pa-md row items-start items-stretch q-gutter-lg" id="dapp-store">
       <DappStoreCard
         v-for="dapp in dapps"
         :key="dapp.id"
