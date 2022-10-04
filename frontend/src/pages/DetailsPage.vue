@@ -13,6 +13,9 @@
                 align="middle"
               />
             </h5>
+            <p v-if="link">
+              <a :href="link" target="_blank">View the running service</a>
+            </p>
             <p>
               ID: <b>{{ dapp.id }}</b>
             </p>
@@ -172,6 +175,7 @@ export default defineComponent({
     const stopping = ref(false);
     const killing = ref(false);
     const jsonFormat = ref(false);
+    const link = computed(() => dappStore.link);
     if (dapp.value.status === 'active') {
       dappStore.startGettingData(id);
     } else {
@@ -197,6 +201,7 @@ export default defineComponent({
       stdout,
       stderr,
       log,
+      link,
       consoleScroll,
       scrollToBottom,
       jsonFormat,

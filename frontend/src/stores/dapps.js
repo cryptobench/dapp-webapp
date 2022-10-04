@@ -12,6 +12,7 @@ export const useDappsStore = defineStore("dapps", {
     stdout: "",
     stderr: "",
     log: "",
+    link: "",
     running: false,
   }),
 
@@ -43,6 +44,26 @@ export const useDappsStore = defineStore("dapps", {
       this.stdout = await api.get(`/dapp/stdout/${id}`);
       this.stderr = await api.get(`/dapp/stderr/${id}`);
       this.log = await api.get(`/dapp/log/${id}`);
+      this.link =this.getLink();
+    },
+    getLink() {
+      let link = "";
+        this.rawData.split("\n").every(line => {
+          let data = {}
+          try {
+            data = JSON.parse(line);
+          } catch (error) {
+            return true;
+          }
+          for (const [_, val] of Object.entries(data)) {
+            if (val.local_proxy_address) {
+              link = val.local_proxy_address;
+              return false;
+            }
+          }
+          return true;
+        });
+      return link;
     },
     async startGettingData(id) {
       this.running = true;
