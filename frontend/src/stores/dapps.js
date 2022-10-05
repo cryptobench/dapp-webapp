@@ -57,15 +57,7 @@ export const useDappsStore = defineStore("dapps", {
       start();
     },
     stopGettingData(id) {
-      this.clearData(id);
       this.running[id] = false;
-    },
-    clearData(id) {
-      this.statusData?.[id] && (this.statusData[id] = "");
-      this.rawData?.[id] && (this.rawData[id] = "");
-      this.stdout?.[id] && (this.stdout[id] = "");
-      this.stderr?.[id] && (this.stderr[id] = "");
-      this.log?.[id] && (this.log[id] = "");
     },
   },
 });
