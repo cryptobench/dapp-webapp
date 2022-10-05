@@ -13,8 +13,8 @@
                 align="middle"
               />
             </h5>
-            <p v-if="link">
-              <a :href="link" target="_blank">View the running service</a>
+            <p v-if="link" class="service-link">
+              <a title="View the running service" :href="link" target="_blank"><q-icon name="link"/> {{link}}</a>
             </p>
             <p>
               ID: <b>{{ dapp.id }}</b>
