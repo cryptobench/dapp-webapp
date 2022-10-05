@@ -49,7 +49,6 @@ export const useDappsStore = defineStore("dapps", {
     },
     async startGettingData(id) {
       this.running[id] = true;
-      this.clearData(id);
       const start = async () => {
         await this.getData(id);
         if (this.running[id]) setTimeout(async () => await start(), 5000);
