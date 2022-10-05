@@ -17,11 +17,11 @@ export const useDappsStore = defineStore("dapps", {
 
   getters: {
     getDapp: (state) => (id) => state.dapps.find((dapp) => dapp.id === id),
-    getStateData: (state) => (id) => state.stateData[id],
-    getRawData: (state) => (id) => state.rawData[id],
-    getStdout: (state) => (id) => state.stdout[id],
-    getStderr: (state) => (id) => state.stderr[id],
-    getLog: (state) => (id) => state.log[id],
+    getStateData: (state) => (id) => state.stateData?.[id],
+    getRawData: (state) => (id) => state.rawData?.[id],
+    getStdout: (state) => (id) => state.stdout?.[id],
+    getStderr: (state) => (id) => state.stderr?.[id],
+    getLog: (state) => (id) => state.log?.[id],
   },
 
   actions: {
@@ -51,7 +51,7 @@ export const useDappsStore = defineStore("dapps", {
       this.running[id] = true;
       const start = async () => {
         await this.getData(id);
-        if (this.running[id]) setTimeout(async () => await start(), 5000);
+        if (this.running?.[id]) setTimeout(async () => await start(), 5000);
       };
       start();
     },
