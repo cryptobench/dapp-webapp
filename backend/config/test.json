@@ -17,5 +17,11 @@
         "level": "error"
       }
     }
+  },
+  "redis": {
+    "port": 6379,
+    "host": "localhost",
+    "database": 0,
+    "reconnect_after": 2000
   }
 }

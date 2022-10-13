@@ -48,6 +48,7 @@ export const useDappsStore = defineStore("dapps", {
     },
     getLink() {
       let link = "";
+      console.log('RAW', this.rawData)
         this.rawData.split("\n").every(line => {
           let data = {}
           try {
