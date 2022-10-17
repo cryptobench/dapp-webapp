@@ -50,8 +50,8 @@ export const useDappsStore = defineStore("dapps", {
     },
     getLink(id) {
       let link = "";
-      this.rawData[id].split("\n").every(line => {
-        let data = {}
+      this.rawData[id]?.split("\n")?.every((line) => {
+        let data = {};
         try {
           data = JSON.parse(line);
         } catch (error) {

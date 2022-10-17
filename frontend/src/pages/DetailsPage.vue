@@ -175,18 +175,18 @@ export default defineComponent({
     const stopping = ref(false);
     const killing = ref(false);
     const jsonFormat = ref(false);
-    const link = computed(() => dappStore.link);
+    const link = computed(() => dappStore.getLink(id));
     if (dapp.value.status === 'active') {
       dappStore.startGettingData(id);
     } else {
       dappStore.getData(id);
     }
     watch([stateData, rawData, stdout, stderr, log], () => {
-      if (scrollToBottom.value)
+      if (scrollToBottom?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
     watch(scrollToBottom, () => {
-      if (scrollToBottom.value)
+      if (scrollToBottom?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
     onUnmounted(() =>  dappStore.stopGettingData(id));
