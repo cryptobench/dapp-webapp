@@ -24,5 +24,8 @@
         "level": "debug"
       }
     }
+  },
+  "sqlite": {
+    "filename": "dapp.db"
   }
 }

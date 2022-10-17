@@ -1,17 +1,36 @@
-module.exports = function UserDatabase() {
-  const db = new Map();
+module.exports = function UserDatabase(db) {
   return {
     async userExist(id) {
-      return db.has(id);
+      return new Promise((res, rej) => {
+        db.get("SELECT * FROM users WHERE id=?", id, (err, row) => {
+          if (err) rej(err);
+          else res(!!row);
+        });
+      });
     },
     async insertUser(user) {
-      db.set(user.id, user);
+      return new Promise((res, rej) => {
+        db.run("INSERT INTO users (id, login, name) values (?, ?, ?)", user.id, user.login, user.name, (err) => {
+          if (err) rej(err);
+          else res();
+        });
+      });
     },
     async findAllUsers() {
-      return Array.from(db.values());
+      return new Promise((res, rej) => {
+        db.all("SELECT * FROM users", (err, rows) => {
+          if (err) rej(err);
+          else res(rows);
+        });
+      });
     },
     async findUser(id) {
-      return db.get(id);
+      return new Promise((res, rej) => {
+        db.get("SELECT * FROM users WHERE id=?", id, (err, row) => {
+          if (err) rej(err);
+          else res(row);
+        });
+      });
     },
   };
 };

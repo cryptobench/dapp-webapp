@@ -1,10 +1,11 @@
 const HttpServer = require("./Http");
 
-const Server = ({ Config, Logger, Authentication, CliAdapter }, AppConfig) => {
-  let server;
+const Server = ({ Config, Logger, Authentication, CliAdapter, SQLite }, AppConfig) => {
+  let server, dbDriver;
   return {
     async init() {
-      const { controllers, database } = AppConfig(Logger, CliAdapter);
+      dbDriver = await SQLite.connect();
+      const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver);
       const authentication = Authentication(database);
       await authentication.init();
       server = HttpServer({ controllers, authentication, config: Config.http, logger: Logger });
@@ -15,6 +16,7 @@ const Server = ({ Config, Logger, Authentication, CliAdapter }, AppConfig) => {
     },
     async end() {
       await server.close();
+      await dbDriver.close();
       Logger.info(`API Dapps server closed`);
     },
   };
