@@ -4,20 +4,23 @@ import { api } from "boot/axios";
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
     dapps: [],
-    stateData: "",
-    rawData: "",
-    stdout: "",
-    stderr: "",
-    log: "",
-    link: "",
-    proxyUrl: "",
-    running: false,
+    stateData: {},
+    rawData: {},
+    stdout: {},
+    stderr: {},
+    log: {},
+    link: {},
+    running: {},
+    proxyUrl: {},
   }),
 
   getters: {
-    getDapp: (state) => {
-      return (id) => state.dapps.find((dapp) => dapp.id === id);
-    },
+    getDapp: (state) => (id) => state.dapps.find((dapp) => dapp.id === id),
+    getStateData: (state) => (id) => state.stateData?.[id],
+    getRawData: (state) => (id) => state.rawData?.[id],
+    getStdout: (state) => (id) => state.stdout?.[id],
+    getStderr: (state) => (id) => state.stderr?.[id],
+    getLog: (state) => (id) => state.log?.[id],
   },
 
   actions: {
@@ -37,16 +40,16 @@ export const useDappsStore = defineStore("dapps", {
       return !!id;
     },
     async getData(id) {
-      this.stateData = await api.get(`/dapp/rawState/${id}`);
-      this.rawData = await api.get(`/dapp/rawData/${id}`);
-      this.stdout = await api.get(`/dapp/stdout/${id}`);
-      this.stderr = await api.get(`/dapp/stderr/${id}`);
-      this.log = await api.get(`/dapp/log/${id}`);
+      this.stateData[id] = await api.get(`/dapp/rawState/${id}`);
+      this.rawData[id] = await api.get(`/dapp/rawData/${id}`);
+      this.stdout[id] = await api.get(`/dapp/stdout/${id}`);
+      this.stderr[id] = await api.get(`/dapp/stderr/${id}`);
+      this.log[id] = await api.get(`/dapp/log/${id}`);
       this.setupLink(id);
     },
-    parseLinkFromRawData() {
+    parseLinkFromRawData(rawData) {
       let link = "";
-      this.rawData.split("\n").filter(l => l.trim()).forEach(line => {
+      rawData.split("\n").filter(l => l.trim()).forEach(line => {
         try {
           let data = JSON.parse(line);
           link = data?.http?.local_proxy_address || ""
@@ -57,11 +60,11 @@ export const useDappsStore = defineStore("dapps", {
       return link;
     },
     setupLink(id) {
-      const link = this.parseLinkFromRawData(this.rawData);
-      if(link !== this.link) {
-        this.link = link;
+      const link = this.parseLinkFromRawData(this.rawData[id]);
+      if(link !== this.link[id]) {
+        this.link[id] = link;
 
-        if(this.link.length) {
+        if(this.link[id].length) {
           this.getProxyUrl(id, link)
         }
       }
@@ -75,17 +78,15 @@ export const useDappsStore = defineStore("dapps", {
       });
     },
     async startGettingData(id) {
-      this.running = true;
-      this.statusData = "";
-      this.rawData = "";
+      this.running[id] = true;
       const start = async () => {
         await this.getData(id);
-        if (this.running) setTimeout(async () => await start(), 5000);
+        if (this.running?.[id]) setTimeout(async () => await start(), 5000);
       };
       start();
     },
-    stopGettingData() {
-      this.running = false;
+    stopGettingData(id) {
+      this.running[id] = false;
     },
   },
 });

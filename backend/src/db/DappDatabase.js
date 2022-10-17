@@ -1,14 +1,20 @@
-module.exports = function DappDatabase() {
-  const db = new Map();
+module.exports = function DappDatabase(db) {
   return {
     async findDappsByUser(userId) {
-      const userDapps = db.get(userId);
-      return userDapps ? Array.from(userDapps.values()) : [];
+      return new Promise((res, rej) => {
+        db.all("SELECT * FROM dapp WHERE userId=?", userId, (err, row) => {
+          if (err) rej(err);
+          else res(row);
+        });
+      });
     },
     async insertDapp(userId, appId, appStoreId) {
-      if (!db.has(userId)) db.set(userId, new Map());
-      const userDapps = db.get(userId);
-      userDapps.set(appId, { appId, appStoreId, createdAt: new Date() });
-    },
-  };
+      return new Promise((res, rej) => {
+        db.run("INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, createdAt) values (?, ?, ?, ?)", userId, appId, appStoreId, (new Date()).toISOString(), (err) => {
+          if (err) rej(err);
+          else res();
+        });
+      });
+    }
+  }
 };

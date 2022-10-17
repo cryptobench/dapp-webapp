@@ -30,5 +30,8 @@
       "host": "localhost",
       "database": 0,
       "reconnect_after": 2000
+  },
+  "sqlite": {
+    "filename": "dapp.db"
   }
 }

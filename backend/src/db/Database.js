@@ -2,7 +2,7 @@ const UserDatabase = require("./UserDatabase");
 const StoreDatabase = require("./StoreDatabase");
 const DappDatabase = require("./DappDatabase");
 
-const Database = (dbDriver = "todo") => {
+const Database = (dbDriver) => {
   return {
     ...UserDatabase(dbDriver),
     ...StoreDatabase(dbDriver),

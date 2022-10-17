@@ -7,7 +7,8 @@
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
     "lint": "eslint src",
-    "format": "prettier --ignore-path .gitignore --write '{src,test}/**/*.js'"
+    "format": "prettier --ignore-path .gitignore --write '{src,test}/**/*.js'",
+    "migrate": "db-migrate --config config/database.json"
   },
   "keywords": [
     "golem",
@@ -26,9 +27,12 @@
     "redis": "^4.3.1",
     "restify": "^8.6.1",
     "rotating-file-stream": "^3.0.3",
+    "sqlite3": "^5.1.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "db-migrate": "^0.11.13",
+    "db-migrate-sqlite3": "^0.4.0",
     "eslint": "^8.10.0",
     "nodemon": "^2.0.16",
     "prettier": "^2.5.1"

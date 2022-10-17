@@ -17,7 +17,7 @@ Install dapp-manager (currently only available as a python source package):
 ```
 python3 -m venv ~/.envs/dapp-manager
 source ~/.envs/dapp-manager/bin/activate
-git clone https://github.com/golemfactory/dapp-manager.git
+git clone --recurse-submodules  https://github.com/golemfactory/dapp-manager.git
 cd dapp-manager
 pip install -U pip poetry
 poetry install

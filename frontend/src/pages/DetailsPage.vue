@@ -168,17 +168,17 @@ export default defineComponent({
     const id = route.params.id;
     const dappStore = useDappsStore();
     const dapp = computed(() => dappStore.getDapp(id));
-    const stateData = computed(() => dappStore.stateData);
-    const rawData = computed(() => dappStore.rawData);
-    const stdout = computed(() => dappStore.stdout);
-    const stderr = computed(() => dappStore.stderr);
-    const log = computed(() => dappStore.log);
+    const stateData = computed(() => dappStore.getStateData(id));
+    const rawData = computed(() => dappStore.getRawData(id));
+    const stdout = computed(() => dappStore.getStdout(id));
+    const stderr = computed(() => dappStore.getStderr(id));
+    const log = computed(() => dappStore.getLog(id));
     const scrollToBottom = ref(true);
     const consoleScroll = ref(null);
     const stopping = ref(false);
     const killing = ref(false);
     const jsonFormat = ref(false);
-    const link = computed(() => dappStore.link);
+    const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.proxyUrl);
     if (dapp.value.status === 'active') {
       dappStore.startGettingData(id);
@@ -186,14 +186,14 @@ export default defineComponent({
       dappStore.getData(id);
     }
     watch([stateData, rawData, stdout, stderr, log], () => {
-      if (scrollToBottom.value)
+      if (scrollToBottom?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
     watch(scrollToBottom, () => {
-      if (scrollToBottom.value)
+      if (scrollToBottom?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
-    onUnmounted(() => dappStore.stopGettingData());
+    onUnmounted(() =>  dappStore.stopGettingData(id));
     const $q = useQuasar();
     return {
       dapp,

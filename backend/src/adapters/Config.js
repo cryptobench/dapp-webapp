@@ -7,4 +7,5 @@ module.exports = {
   logger: config.get("logger"),
   cli: config.get("cli"),
   redis: config.get("redis"),
+  sqlite: config.get("sqlite"),
 };
