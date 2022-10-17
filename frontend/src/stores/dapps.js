@@ -1,8 +1,5 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { useUserStore } from "stores/user";
-
-const userStore = useUserStore();
 
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
@@ -13,6 +10,7 @@ export const useDappsStore = defineStore("dapps", {
     stderr: "",
     log: "",
     link: "",
+    proxyUrl: "",
     running: false,
   }),
 
@@ -44,27 +42,37 @@ export const useDappsStore = defineStore("dapps", {
       this.stdout = await api.get(`/dapp/stdout/${id}`);
       this.stderr = await api.get(`/dapp/stderr/${id}`);
       this.log = await api.get(`/dapp/log/${id}`);
-      this.link =this.getLink();
+      this.setupLink(id);
     },
-    getLink() {
+    parseLinkFromRawData() {
       let link = "";
-      console.log('RAW', this.rawData)
-        this.rawData.split("\n").every(line => {
-          let data = {}
-          try {
-            data = JSON.parse(line);
-          } catch (error) {
-            return true;
-          }
-          for (const [_, val] of Object.entries(data)) {
-            if (val.local_proxy_address) {
-              link = val.local_proxy_address;
-              return false;
-            }
-          }
-          return true;
-        });
+      this.rawData.split("\n").filter(l => l.trim()).forEach(line => {
+        try {
+          let data = JSON.parse(line);
+          link = data?.http?.local_proxy_address || ""
+        } catch (error) {
+          console.log('ERROR', error)
+        }
+      });
       return link;
+    },
+    setupLink(id) {
+      const link = this.parseLinkFromRawData(this.rawData);
+      if(link !== this.link) {
+        this.link = link;
+
+        if(this.link.length) {
+          this.getProxyUrl(id, link)
+        }
+      }
+    },
+    getProxyUrl(id, local_proxy_address) {
+      const port = local_proxy_address.substr(local_proxy_address.indexOf(":",5)+1)
+      api.get(`/dapp/proxyUrl/${id}/${port}`).then((response) => {
+        this.proxyUrl = response?.proxyUrl || ""
+      }).catch(() => {
+        this.getProxyUrl(id, local_proxy_address)
+      });
     },
     async startGettingData(id) {
       this.running = true;

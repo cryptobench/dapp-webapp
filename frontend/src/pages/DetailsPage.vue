@@ -16,6 +16,9 @@
             <p v-if="link" class="service-link">
               <a title="View the running service" :href="link" target="_blank"><q-icon name="link"/> {{link}}</a>
             </p>
+            <p v-if="proxyUrl" class="service-link">
+              <a title="View the running service via proxy" :href="proxyUrl" target="_blank"><q-icon name="link"/> {{proxyUrl}}</a>
+            </p>
             <p>
               ID: <b>{{ dapp.id }}</b>
             </p>
@@ -176,6 +179,7 @@ export default defineComponent({
     const killing = ref(false);
     const jsonFormat = ref(false);
     const link = computed(() => dappStore.link);
+    const proxyUrl = computed(() => dappStore.proxyUrl);
     if (dapp.value.status === 'active') {
       dappStore.startGettingData(id);
     } else {
@@ -202,6 +206,7 @@ export default defineComponent({
       stderr,
       log,
       link,
+      proxyUrl,
       consoleScroll,
       scrollToBottom,
       jsonFormat,
