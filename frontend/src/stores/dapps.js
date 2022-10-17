@@ -7,19 +7,22 @@ const userStore = useUserStore();
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
     dapps: [],
-    stateData: "",
-    rawData: "",
-    stdout: "",
-    stderr: "",
-    log: "",
-    link: "",
-    running: false,
+    stateData: {},
+    rawData: {},
+    stdout: {},
+    stderr: {},
+    log: {},
+    link: {},
+    running: {},
   }),
 
   getters: {
-    getDapp: (state) => {
-      return (id) => state.dapps.find((dapp) => dapp.id === id);
-    },
+    getDapp: (state) => (id) => state.dapps.find((dapp) => dapp.id === id),
+    getStateData: (state) => (id) => state.stateData?.[id],
+    getRawData: (state) => (id) => state.rawData?.[id],
+    getStdout: (state) => (id) => state.stdout?.[id],
+    getStderr: (state) => (id) => state.stderr?.[id],
+    getLog: (state) => (id) => state.log?.[id],
   },
 
   actions: {
@@ -39,44 +42,41 @@ export const useDappsStore = defineStore("dapps", {
       return !!id;
     },
     async getData(id) {
-      this.stateData = await api.get(`/dapp/rawState/${id}`);
-      this.rawData = await api.get(`/dapp/rawData/${id}`);
-      this.stdout = await api.get(`/dapp/stdout/${id}`);
-      this.stderr = await api.get(`/dapp/stderr/${id}`);
-      this.log = await api.get(`/dapp/log/${id}`);
-      this.link =this.getLink();
+      this.stateData[id] = await api.get(`/dapp/rawState/${id}`);
+      this.rawData[id] = await api.get(`/dapp/rawData/${id}`);
+      this.stdout[id] = await api.get(`/dapp/stdout/${id}`);
+      this.stderr[id] = await api.get(`/dapp/stderr/${id}`);
+      this.log[id] = await api.get(`/dapp/log/${id}`);
     },
-    getLink() {
+    getLink(id) {
       let link = "";
-        this.rawData.split("\n").every(line => {
-          let data = {}
-          try {
-            data = JSON.parse(line);
-          } catch (error) {
-            return true;
-          }
-          for (const [_, val] of Object.entries(data)) {
-            if (val.local_proxy_address) {
-              link = val.local_proxy_address;
-              return false;
-            }
-          }
+      this.rawData[id].split("\n").every(line => {
+        let data = {}
+        try {
+          data = JSON.parse(line);
+        } catch (error) {
           return true;
-        });
+        }
+        for (const [_, val] of Object.entries(data)) {
+          if (val.local_proxy_address) {
+            link = val.local_proxy_address;
+            return false;
+          }
+        }
+        return true;
+      });
       return link;
     },
     async startGettingData(id) {
-      this.running = true;
-      this.statusData = "";
-      this.rawData = "";
+      this.running[id] = true;
       const start = async () => {
         await this.getData(id);
-        if (this.running) setTimeout(async () => await start(), 5000);
+        if (this.running?.[id]) setTimeout(async () => await start(), 5000);
       };
       start();
     },
-    stopGettingData() {
-      this.running = false;
+    stopGettingData(id) {
+      this.running[id] = false;
     },
   },
 });

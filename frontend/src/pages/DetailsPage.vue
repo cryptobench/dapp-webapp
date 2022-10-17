@@ -165,11 +165,11 @@ export default defineComponent({
     const id = route.params.id;
     const dappStore = useDappsStore();
     const dapp = computed(() => dappStore.getDapp(id));
-    const stateData = computed(() => dappStore.stateData);
-    const rawData = computed(() => dappStore.rawData);
-    const stdout = computed(() => dappStore.stdout);
-    const stderr = computed(() => dappStore.stderr);
-    const log = computed(() => dappStore.log);
+    const stateData = computed(() => dappStore.getStateData(id));
+    const rawData = computed(() => dappStore.getRawData(id));
+    const stdout = computed(() => dappStore.getStdout(id));
+    const stderr = computed(() => dappStore.getStderr(id));
+    const log = computed(() => dappStore.getLog(id));
     const scrollToBottom = ref(true);
     const consoleScroll = ref(null);
     const stopping = ref(false);
@@ -189,7 +189,7 @@ export default defineComponent({
       if (scrollToBottom.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
-    onUnmounted(() => dappStore.stopGettingData());
+    onUnmounted(() =>  dappStore.stopGettingData(id));
     const $q = useQuasar();
     return {
       dapp,
