@@ -18,7 +18,7 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient) => {
   const storeService = StoreService({ database, logger });
   const storeController = StoreController(storeService);
 
-  const dappService = DappService({ database, logger, cliAdapter });
+  const dappService = DappService({ database, logger, cliAdapter, redisClient });
   const dappController = DappController(dappService);
 
   return {

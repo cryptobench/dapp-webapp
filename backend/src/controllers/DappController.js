@@ -72,5 +72,13 @@ module.exports = (dappService) => {
         return res.send(200, data).end();
       },
     },
+    {
+      method: "get",
+      path: "/dapp/proxyUrl/:appId/:port",
+      handler: async (req, res) => {
+        const data = await dappService.getProxyUrl(req.params.appId, req.params.port);
+        return res.send(200, data).end();
+      },
+    },
   ];
 };
