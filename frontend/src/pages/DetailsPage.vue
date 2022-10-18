@@ -179,7 +179,7 @@ export default defineComponent({
     const killing = ref(false);
     const jsonFormat = ref(false);
     const link = computed(() => dappStore.getLink(id));
-    const proxyUrl = computed(() => dappStore.proxyUrl);
+    const proxyUrl = computed(() => dappStore.getProxyUrl(id));
     if (dapp.value.status === 'active') {
       dappStore.startGettingData(id);
     } else {

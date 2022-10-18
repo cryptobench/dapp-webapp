@@ -21,6 +21,8 @@ export const useDappsStore = defineStore("dapps", {
     getStdout: (state) => (id) => state.stdout?.[id],
     getStderr: (state) => (id) => state.stderr?.[id],
     getLog: (state) => (id) => state.log?.[id],
+    getLink: (state) => (id) => state.link?.[id],
+    getProxyUrl: (state) => (id) => state.proxyUrl?.[id],
   },
 
   actions: {
@@ -65,16 +67,16 @@ export const useDappsStore = defineStore("dapps", {
         this.link[id] = link;
 
         if(this.link[id].length) {
-          this.getProxyUrl(id, link)
+          this.fetchProxyUrl(id, link)
         }
       }
     },
-    getProxyUrl(id, local_proxy_address) {
+    fetchProxyUrl(id, local_proxy_address) {
       const port = local_proxy_address.substr(local_proxy_address.indexOf(":",5)+1)
       api.get(`/dapp/proxyUrl/${id}/${port}`).then((response) => {
-        this.proxyUrl = response?.proxyUrl || ""
+        this.proxyUrl[id] = response?.proxyUrl || ""
       }).catch(() => {
-        this.getProxyUrl(id, local_proxy_address)
+        this.fetchProxyUrl(id, local_proxy_address)
       });
     },
     async startGettingData(id) {
