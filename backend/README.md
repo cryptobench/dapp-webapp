@@ -12,18 +12,22 @@ todo
 
  ### dapp-manager
 
-Install dapp-manager (currently only available as a python source package):
+Install dapp-manager:
+
+#### [Optional] Create a Python virtual environment
 
 ```
 python3 -m venv ~/.envs/dapp-manager
 source ~/.envs/dapp-manager/bin/activate
-git clone --recurse-submodules  https://github.com/golemfactory/dapp-manager.git
-cd dapp-manager
-pip install -U pip poetry
-poetry install
 ```
 
-## Install the dependencies
+#### Install the dapp-manager
+
+```
+pip install --extra-index-url https://test.pypi.org/simple dapp-manager
+```
+
+## Install the JS dependencies
 
 ```bash
 yarn
