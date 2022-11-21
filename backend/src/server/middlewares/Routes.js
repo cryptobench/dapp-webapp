@@ -1,7 +1,7 @@
-module.exports = (server, controllers, logger) => {
+module.exports = (server, config, controllers, logger) => {
   controllers.forEach((controller) =>
     controller.forEach((route) => {
-      server[route.method](route.path, (req, res, next) => {
+      server[route.method](config.prefix + route.path, (req, res, next) => {
         Promise.resolve()
           .then(async () => {
             res.header("Cache-Control", route.cache || "no-store");

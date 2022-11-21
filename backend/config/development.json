@@ -1,6 +1,7 @@
 {
   "http": {
     "port": 8888,
+    "prefix": "/api",
     "origins": ["http://localhost:8080"],
     "throttle": {
       "burst": 20,
