@@ -10,6 +10,6 @@ module.exports = ({ controllers, authentication, config, logger }) => {
   server.use(restify.plugins.bodyParser());
   SecurityMiddleware(server, config);
   AuthenticationMiddleware(server, config, logger, authentication);
-  RoutesMiddleware(server, controllers, logger);
+  RoutesMiddleware(server, config, controllers, logger);
   return server;
 };
