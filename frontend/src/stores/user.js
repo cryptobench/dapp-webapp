@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { LocalStorage } from "quasar";
 import { mande, defaults } from "mande";
-const userApi = mande("http://localhost:8888/user/register/");
+const userApi = mande(process.env.API_BACKEND_URL + "user/register/");
 
 export const useUserStore = defineStore("user", {
   state: () => ({
