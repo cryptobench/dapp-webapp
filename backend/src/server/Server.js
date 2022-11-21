@@ -1,11 +1,12 @@
 const HttpServer = require("./Http");
 
-const Server = ({ Config, Logger, Authentication, CliAdapter, SQLite }, AppConfig) => {
-  let server, dbDriver;
+const Server = ({ Config, Logger, Authentication, CliAdapter, Redis, SQLite }, AppConfig) => {
+  let server, redisClient, dbDriver;
   return {
     async init() {
+      redisClient = await Redis.connect();
       dbDriver = await SQLite.connect();
-      const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver);
+      const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver, redisClient);
       const authentication = Authentication(database);
       await authentication.init();
       server = HttpServer({ controllers, authentication, config: Config.http, logger: Logger });

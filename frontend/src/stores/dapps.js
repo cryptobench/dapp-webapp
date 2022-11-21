@@ -1,8 +1,5 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { useUserStore } from "stores/user";
-
-const userStore = useUserStore();
 
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
@@ -14,6 +11,7 @@ export const useDappsStore = defineStore("dapps", {
     log: {},
     link: {},
     running: {},
+    proxyUrl: {},
   }),
 
   getters: {
@@ -23,6 +21,8 @@ export const useDappsStore = defineStore("dapps", {
     getStdout: (state) => (id) => state.stdout?.[id],
     getStderr: (state) => (id) => state.stderr?.[id],
     getLog: (state) => (id) => state.log?.[id],
+    getLink: (state) => (id) => state.link?.[id],
+    getProxyUrl: (state) => (id) => state.proxyUrl?.[id],
   },
 
   actions: {
@@ -47,25 +47,37 @@ export const useDappsStore = defineStore("dapps", {
       this.stdout[id] = await api.get(`/dapp/stdout/${id}`);
       this.stderr[id] = await api.get(`/dapp/stderr/${id}`);
       this.log[id] = await api.get(`/dapp/log/${id}`);
+      this.setupLink(id);
     },
-    getLink(id) {
+    parseLinkFromRawData(rawData) {
       let link = "";
-      this.rawData[id]?.split("\n")?.every((line) => {
-        let data = {};
+      rawData.split("\n").filter(l => l.trim()).forEach(line => {
         try {
-          data = JSON.parse(line);
+          let data = JSON.parse(line);
+          link = data?.http?.local_proxy_address || ""
         } catch (error) {
-          return true;
+          console.log('ERROR', error)
         }
-        for (const [_, val] of Object.entries(data)) {
-          if (val.local_proxy_address) {
-            link = val.local_proxy_address;
-            return false;
-          }
-        }
-        return true;
       });
       return link;
+    },
+    setupLink(id) {
+      const link = this.parseLinkFromRawData(this.rawData[id]);
+      if(link !== this.link[id]) {
+        this.link[id] = link;
+
+        if(this.link[id].length) {
+          this.fetchProxyUrl(id, link)
+        }
+      }
+    },
+    fetchProxyUrl(id, local_proxy_address) {
+      const port = local_proxy_address.substr(local_proxy_address.indexOf(":",5)+1)
+      api.get(`/dapp/proxyUrl/${id}/${port}`).then((response) => {
+        this.proxyUrl[id] = response?.proxyUrl || ""
+      }).catch(() => {
+        this.fetchProxyUrl(id, local_proxy_address)
+      });
     },
     async startGettingData(id) {
       this.running[id] = true;
