@@ -8,7 +8,7 @@
     "dev": "nodemon src/app.js",
     "lint": "eslint src",
     "format": "prettier --ignore-path .gitignore --write '{src,test}/**/*.js'",
-    "migrate": "db-migrate --config config/database.json"
+    "migrate": "db-migrate up --config config/database.json"
   },
   "keywords": [
     "golem",
