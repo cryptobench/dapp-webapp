@@ -1,24 +1,32 @@
-const { spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 
 module.exports = (config, logger) => {
   if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
-  async function run(...args) {
-    const result = spawnSync(config.command, [...config.args, ...args], {
-      cwd: config.cwd,
-      env: { ...process.env, ...config.env },
-      encoding: "utf8",
+  function run(...args) {
+    return new Promise((resolve) => {
+      let log = '';
+      const result = spawn(config.command, [...config.args, ...args], {
+        cwd: config.cwd,
+        env: { ...process.env, ...config.env },
+        encoding: "utf8",
+      });
+
+      result.stdout.on('data', (data) => {
+        log += data;
+      });
+
+      result.stderr.on('data', (data) => {
+        logger.debug(`[CLI Adapter] STDERR: ${data}`);
+      });
+
+      result.on('close', () => {
+        resolve(resolve({stdout: log}));
+      });
     });
-    logger.debug(`[CLI Adapter] Run command: ${args.join(" ")}`);
-    if (result.error) {
-      throw new Error(`CLI command ${args[0]} error exit code ${result.status}, ${result.error}`);
-    }
-    if (result.stderr) {
-      logger.debug(`[CLI Adapter] STDERR: ${result.stderr}`);
-    }
-    return result;
   }
+
   async function getDetails(command, appId, ensureAlive = true) {
     return run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive").then((res) => res.stdout);
   }
