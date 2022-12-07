@@ -24,7 +24,7 @@ source ~/.envs/dapp-manager/bin/activate
 #### Install the dapp-manager
 
 ```
-pip install --extra-index-url https://test.pypi.org/simple dapp-manager
+pip install dapp-manager
 ```
 
 ## Install the JS dependencies
