@@ -5,6 +5,6 @@ const Server = require("./server/Server")(AdaptersConfig, AppConfig);
 Server.init()
   .then(() => Server.run())
   .catch((error) => {
-    console.error(error);
+    console.error("Server startup failed due to", error);
     process.exit(1);
   });

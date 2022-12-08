@@ -1,18 +1,17 @@
-
 #dapp-store .dapp-card {
-    position: relative;
+  position: relative;
 }
 
 #dapp-store .dapp-card .description {
-    white-space: pre-line;
-    margin-bottom: 4em;
+  white-space: pre-line;
+  margin-bottom: 4em;
 }
 
 #dapp-store .dapp-card .q-card__actions {
-    border-top: 1px solid #eee;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4em;
+  border-top: 1px solid #eee;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4em;
 }

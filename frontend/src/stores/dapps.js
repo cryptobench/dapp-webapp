@@ -51,33 +51,41 @@ export const useDappsStore = defineStore("dapps", {
     },
     parseLinkFromRawData(rawData) {
       let link = "";
-      rawData.split("\n").filter(l => l.trim()).forEach(line => {
-        try {
-          let data = JSON.parse(line);
-          link = data?.http?.local_proxy_address || ""
-        } catch (error) {
-          console.log('ERROR', error)
-        }
-      });
+      rawData
+        .split("\n")
+        .filter((l) => l.trim())
+        .forEach((line) => {
+          try {
+            let data = JSON.parse(line);
+            link = data?.http?.local_proxy_address || "";
+          } catch (error) {
+            console.log("ERROR", error);
+          }
+        });
       return link;
     },
     setupLink(id) {
       const link = this.parseLinkFromRawData(this.rawData[id]);
-      if(link !== this.link[id]) {
+      if (link !== this.link[id]) {
         this.link[id] = link;
 
-        if(this.link[id].length) {
-          this.fetchProxyUrl(id, link)
+        if (this.link[id].length) {
+          this.fetchProxyUrl(id, link);
         }
       }
     },
     fetchProxyUrl(id, local_proxy_address) {
-      const port = local_proxy_address.substr(local_proxy_address.indexOf(":",5)+1)
-      api.get(`/dapp/proxyUrl/${id}/${port}`).then((response) => {
-        this.proxyUrl[id] = response?.proxyUrl || ""
-      }).catch(() => {
-        this.fetchProxyUrl(id, local_proxy_address)
-      });
+      const port = local_proxy_address.substr(
+        local_proxy_address.indexOf(":", 5) + 1
+      );
+      api
+        .get(`/dapp/proxyUrl/${id}/${port}`)
+        .then((response) => {
+          this.proxyUrl[id] = response?.proxyUrl || "";
+        })
+        .catch(() => {
+          this.fetchProxyUrl(id, local_proxy_address);
+        });
     },
     async startGettingData(id) {
       this.running[id] = true;

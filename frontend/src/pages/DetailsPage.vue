@@ -14,10 +14,17 @@
               />
             </h5>
             <p v-if="link" class="service-link">
-              <a title="View the running service" :href="link" target="_blank"><q-icon name="link"/> {{link}}</a>
+              <a title="View the running service" :href="link" target="_blank"
+                ><q-icon name="link" /> {{ link }}</a
+              >
             </p>
             <p v-if="proxyUrl" class="service-link">
-              <a title="View the running service via proxy" :href="proxyUrl" target="_blank"><q-icon name="link"/> {{proxyUrl}}</a>
+              <a
+                title="View the running service via proxy"
+                :href="proxyUrl"
+                target="_blank"
+                ><q-icon name="link" /> {{ proxyUrl }}</a
+              >
             </p>
             <p>
               ID: <b>{{ dapp.id }}</b>
@@ -67,18 +74,17 @@
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel
-            name="state"
-            class="bg-black text-white console q-pa-lg"
-          >
+          <q-tab-panel name="state" class="bg-black text-white console q-pa-lg">
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(stateData) }}</ssh-pre>
-              <pre v-else>{{stateData}}</pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
+                jsonParse(stateData)
+              }}</ssh-pre>
+              <pre v-else>{{ stateData }}</pre>
             </q-scroll-area>
           </q-tab-panel>
 
@@ -89,30 +95,42 @@
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(rawData) }}</ssh-pre>
-              <pre v-else>{{rawData}}</pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
+                jsonParse(rawData)
+              }}</ssh-pre>
+              <pre v-else>{{ rawData }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel name="stdout" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel
+            name="stdout"
+            class="bg-black text-white console q-pa-lg"
+          >
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(stdout) }}</ssh-pre>
-              <pre v-else>{{stdout}}</pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
+                jsonParse(stdout)
+              }}</ssh-pre>
+              <pre v-else>{{ stdout }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel name="stderr" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel
+            name="stderr"
+            class="bg-black text-white console q-pa-lg"
+          >
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(stderr) }}</ssh-pre>
-              <pre v-else>{{stderr}}</pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
+                jsonParse(stderr)
+              }}</ssh-pre>
+              <pre v-else>{{ stderr }}</pre>
             </q-scroll-area>
           </q-tab-panel>
           <q-tab-panel name="log" class="bg-black text-white console q-pa-lg">
@@ -122,8 +140,10 @@
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{ jsonParse(log) }}</ssh-pre>
-              <pre v-else>{{log}}</pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
+                jsonParse(log)
+              }}</ssh-pre>
+              <pre v-else>{{ log }}</pre>
             </q-scroll-area>
           </q-tab-panel>
         </q-tab-panels>
@@ -157,8 +177,8 @@ import { defineComponent, ref, onUnmounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
+import SshPre from "simple-syntax-highlighter";
+import "simple-syntax-highlighter/dist/sshpre.css";
 
 export default defineComponent({
   name: "IndexPage",
@@ -180,7 +200,7 @@ export default defineComponent({
     const jsonFormat = ref(false);
     const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.getProxyUrl(id));
-    if (dapp.value.status === 'active') {
+    if (dapp.value.status === "active") {
       dappStore.startGettingData(id);
     } else {
       dappStore.getData(id);
@@ -193,7 +213,7 @@ export default defineComponent({
       if (scrollToBottom?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
-    onUnmounted(() =>  dappStore.stopGettingData(id));
+    onUnmounted(() => dappStore.stopGettingData(id));
     const $q = useQuasar();
     return {
       dapp,
@@ -276,7 +296,7 @@ export default defineComponent({
         } catch {
           return val;
         }
-      }
+      },
     };
   },
 });
