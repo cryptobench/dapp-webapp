@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar build",
-    "lint": "eslint --ext .js,.vue ./",
-    "format": "prettier --write '**/*.{js,vue,scss,html,md,json}'",
-    "format:check": "prettier --check '**/*.{js,vue,scss,html,md,json}'",
-    "test": "npm run lint"
+    "lint": "eslint ./",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run format:check && npm run lint"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
