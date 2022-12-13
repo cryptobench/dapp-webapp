@@ -8,7 +8,9 @@ module.exports = (config, logger) => {
   }
   function run(...args) {
     return new Promise((resolve) => {
-      let log = "";
+      let stdout = "";
+      let stderr = "";
+
       const result = spawn(config.command, [...config.args, ...args], {
         cwd: config.cwd,
         env: { ...process.env, ...config.env },
@@ -18,15 +20,22 @@ module.exports = (config, logger) => {
       });
 
       result.stdout.on("data", (data) => {
-        log += data;
+        stdout += data;
       });
 
       result.stderr.on("data", (data) => {
-        logger.debug(`[CLI Adapter] STDERR: ${data}`);
+        stderr += data;
+        logger.debug(`[CLI Adapter] STDERR: ${data.toString().trimEnd()}`);
       });
 
-      result.on("close", () => {
-        resolve(resolve({ stdout: log }));
+      result.on("error", (err) => {
+        logger.error(err, `Running '${config.command}' failed due to an error`);
+      });
+
+      result.on("close", (status) => {
+        logger.debug(`Executing ${config.command} finished with exit code ${status}`);
+
+        resolve({ stdout, stderr, status });
       });
     });
   }
@@ -67,6 +76,7 @@ module.exports = (config, logger) => {
     },
     async getStatus(appId) {
       const result = await run("read", "state", appId);
+      // ToDo: What's the possible value set?
       if (result.status === 0) return "active";
       if (result.status === 4) return "unknown_app";
       if (result.status === 5) return "dead";

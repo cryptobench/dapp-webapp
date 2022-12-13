@@ -1,21 +1,32 @@
 <template>
-  <q-card class="dapp-card">
-    <q-card-section class="bg-secondary text-white flex">
+  <q-card class="dapp-card q-ma-lg custom-shadow custom-border">
+    <img :src="image" :alt="name" />
+    <q-card-section class="flex">
       <q-item-section>
-        <div class="text-h6">{{ name }}</div>
-        <div class="text-subtitle2">by {{ author }}</div>
+        <div
+          class="text-subtitle2 dapp-author text-golem-code text-weight-bold q-ma-md"
+        >
+          By: {{ author }}
+        </div>
+        <div class="text-h5 text-weight-bold dapp-name q-ma-md">
+          {{ name }}
+        </div>
       </q-item-section>
-      <q-icon :name="icon" size="lg" />
     </q-card-section>
-    <q-card-section class="description">
-      {{ description }}
+    <q-card-section>
+      <div class="q-px-md text-golem-code">
+        {{ description }}
+      </div>
     </q-card-section>
-    <q-card-actions vertical align="right">
+    <q-card-actions align="right" class="no-border q-mt-auto">
       <q-btn
-        flat
-        label="RUN"
-        icon="play_circle"
-        color="secondary"
+        square
+        unelevated
+        no-caps
+        label="Run"
+        icon-right="play_circle_outline"
+        color="primary"
+        class="q-ma-md text-weight-bold"
         @click="run(id, name)"
       ></q-btn>
     </q-card-actions>
@@ -45,25 +56,30 @@ export default {
       type: String,
       default: "Golem Factory",
     },
-    icon: {
+    image: {
       type: String,
-      default: "verified",
+      default: "https://cdn.quasar.dev/img/mountains.jpg",
     },
   },
   setup() {
     const dappStore = useDappsStore();
     const $q = useQuasar();
+
     function run(id, name) {
       $q.dialog({
         title: name,
-        message: `Would you like to run ${name} on the golem network?`,
+        message: `Would you like to run "${name}" on the Golem Network?`,
         cancel: {
-          color: "secondary",
+          color: "primary",
           outline: true,
+          square: true,
+          unelevated: true,
         },
         ok: {
           label: "Yes",
-          color: "secondary",
+          color: "primary",
+          square: true,
+          unelevated: true,
         },
       })
         .onOk(() => {
@@ -88,6 +104,7 @@ export default {
           // console.log('I am triggered on both OK and Cancel')
         });
     }
+
     return {
       run,
     };
@@ -96,6 +113,18 @@ export default {
 </script>
 <style lang="sass" scoped>
 .dapp-card
-  width: 100%
   max-width: 350px
+
+.dapp-author
+  color: #49536A
+  text-transform: uppercase
+
+.dapp-name
+  color: $primary
+
+.custom-shadow
+  box-shadow: 0px 0px 50px #eeeeee
+
+.custom-border
+  border-radius: 10px
 </style>

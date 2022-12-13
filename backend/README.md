@@ -46,7 +46,7 @@ pip install dapp-manager
 To add support for Proxy you should run the https://github.com/golemfactory/dapp-deployment
 
 
-## Install the projects dependencies
+## Install the project's dependencies
 
 ```bash
 npm install

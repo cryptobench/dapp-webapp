@@ -5,7 +5,7 @@ module.exports = ({ cliAdapter, database, logger }) => {
   return {
     async start(userId, appStoreId) {
       if (!appStoreId) throw new UserError("Dapp Id is required");
-      const dappStore = await database.findDappById(appStoreId);
+      const dappStore = await database.findDAppById(appStoreId);
       if (!dappStore) throw new UserError(`Dapp ${appStoreId} not found`);
       const [appId] = await cliAdapter.start(resolve(dappStore.configPath), resolve(dappStore.descriptorPath));
       await database.insertDapp(userId, appId, appStoreId);

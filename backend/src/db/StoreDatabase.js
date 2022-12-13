@@ -6,31 +6,52 @@ const DEFAULT_META = {
   name: "[Untitled]",
   description: "",
   author: "",
+  image: "",
 };
 
-module.exports = function StoreDatabase() {
+module.exports = function StoreDatabase(_db, logger) {
+  function loadMetaForDApp(dapp) {
+    try {
+      logger.debug({ dapp }, "Loading DApp descriptor from file");
+
+      const descriptor = yaml.load(fs.readFileSync(dapp.descriptorPath));
+
+      const meta = {
+        ...DEFAULT_META,
+        ...(descriptor.meta ? descriptor.meta : {}),
+      };
+
+      return meta;
+    } catch (err) {
+      logger.error(
+        {
+          dapp,
+          err,
+        },
+        "Failed to load meta information for DApp. Will continue with default meta information."
+      );
+
+      return DEFAULT_META;
+    }
+  }
+
   return {
-    async findDappById(appId) {
+    async findDAppById(appId) {
       return dapps.find((dapp) => dapp.id === appId);
     },
-    async findAllStoreDapps() {
-      dapps.forEach(async (dapp) => {
-        let dapp_meta = Object.assign({}, DEFAULT_META);
-        try {
-          let dapp_data = yaml.load(fs.readFileSync(dapp.descriptorPath));
-          if (dapp_data.meta) {
-            Object.assign(dapp_meta, dapp_data.meta);
-          }
-        } catch (e) {
-          console.warn(e);
-        }
-        Object.assign(dapp, {
-          name: dapp_meta.name,
-          author: dapp_meta.author,
-          description: dapp_meta.description,
-        });
+    async findAllStoreDApps() {
+      return dapps.map((dapp) => {
+        const meta = loadMetaForDApp(dapp);
+
+        const { name, author, description } = meta;
+
+        return {
+          ...dapp,
+          name,
+          author,
+          description,
+        };
       });
-      return dapps;
     },
   };
 };

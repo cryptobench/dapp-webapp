@@ -3,7 +3,6 @@
     <div class="row flex justify-between items-baseline">
       <div class="col-auto">
         <div class="row">
-          <q-avatar><q-icon size="md" :name="dapp.icon" /></q-avatar>
           <div>
             <h5 class="q-my-sm">
               {{ dapp.name }}

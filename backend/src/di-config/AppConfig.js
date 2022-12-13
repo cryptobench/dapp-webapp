@@ -10,7 +10,7 @@ const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
 
 module.exports = (logger, cliAdapter, dbDriver, redisClient) => {
-  const database = Database(dbDriver);
+  const database = Database(dbDriver, logger);
 
   const userService = UserService({ database, logger });
   const userController = UserController(userService);

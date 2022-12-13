@@ -1,27 +1,63 @@
 <template>
   <q-page class="q-pa-lg">
-    <h4 class="q-ma-md q-pb-lg">My dapps</h4>
+    <div class="text-primary text-h3 text-weight-bold q-pa-lg">My Dapps</div>
+    <div class="text-body1 text-golem-code q-pa-lg">
+      Your list of current and running applications hosted on the Golem Network
+    </div>
+    <q-separator inset class="q-ma-lg"/>
     <q-table
-      class="q-ma-md"
+      flat
+      id="dapp-instance-list"
+      class="q-ma-md bg-golem"
       :rows="rows"
       :columns="columns"
       :loading="loading"
       row-key="id"
-      table-class="dapps-table"
-      table-header-class="bg-secondary text-white"
       rows-per-page-label="Dapps per page:"
       :rows-per-page-options="[10, 20, 0]"
+      hide-header
+      hide-bottom
     >
-      <template v-slot:body-cell-index="props">
+      <template v-slot:body-cell-icon="props">
         <q-td :props="props">
-          {{ props.rowIndex + 1 }}
+          <div class="image-cropper">
+            <img
+              :src="props.row.image"
+              :alt="props.row.name"
+              class="dapp-thumbnail"
+            />
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-name="props">
+        <q-td :props="props">
+          <div class="dapp-td-title">{{ props.row.name }}</div>
+          <div class="text-golem-gray">
+            {{ new Date(Date.parse(props.row.created_at)).toLocaleString() }}
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-id="props">
+        <q-td :props="props">
+          <div class="dapp-td-title">
+            App ID
+            <q-btn
+              flat
+              unelevated
+              dense
+              size="sm"
+              icon="content_copy"
+              @click="copyToClipboard(props.row.id)"
+            />
+          </div>
+          <div class="text-golem-gray">{{ props.row.id }}</div>
         </q-td>
       </template>
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
           <q-badge
-            :color="statusColor(props.value)"
-            :label="props.value"
+            :color="statusColor(props.row.status)"
+            :label="props.row.status ?? 'Unknown'"
             class="dapp-status"
           />
         </q-td>
@@ -39,16 +75,26 @@
             icon="highlight_off"
             style="min-width: 90px"
             @click="stop(props.row.id)"
-          ></q-btn>
+          />
           <q-btn
-            rounded
-            outline
-            size="sm"
-            color="secondary"
-            label="details"
-            icon="preview"
+            flat
+            square
+            unelevated
+            no-caps
+            color="primary"
+            label="Details"
             :to="/details/ + props.row.id"
-          ></q-btn>
+          />
+          <q-btn
+            v-if="props.row.status === 'dead'"
+            flat
+            square
+            unelevated
+            no-caps
+            color="negative"
+            label="Delete"
+            @click="deleteApp(props.row.id)"
+          />
         </q-td>
       </template>
     </q-table>
@@ -56,50 +102,59 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
+
 const columns = [
-  { name: "index", label: "#", align: "left", field: "index", sortable: false },
+  {
+    name: "icon",
+    label: "Icon",
+    align: "right",
+    sortable: false,
+  },
   {
     name: "name",
     label: "Name",
     align: "left",
     sortable: true,
-    field: "name",
-    style: "font-weight: 500",
   },
-  { name: "id", align: "left", label: "App ID", field: "id", sortable: true },
-  {
-    name: "created_at",
-    label: "Starting Time",
-    field: "created_at",
-    align: "left",
-    sortable: true,
-    format: (val) => new Date(val).toLocaleString(),
-    sort: (a, b) => (new Date(a).valueOf() > new Date(b).valueOf() ? 1 : -1),
-  },
+  {name: "id", align: "left", label: "App ID", field: "id", sortable: true},
   {
     name: "status",
     label: "Status",
-    field: "status",
     align: "left",
     sortable: true,
   },
-  { name: "actions", label: "Actions", field: "actions" },
+  { name: "actions", label: "Actions", field: "actions", sortable: false },
 ];
+
 export default defineComponent({
   name: "DappsPage",
 
   setup() {
     const $q = useQuasar();
     const dappStore = useDappsStore();
+
     const loading = ref(true);
     const stopping = ref(null);
+
     const rows = computed(() => dappStore.dapps);
-    dappStore.getDapps().then(() => {
-      loading.value = false;
-    });
+
+    dappStore
+      .getDapps()
+      .then(() => {
+        loading.value = false;
+      })
+      .catch((err) => {
+        $q.notify({
+          type: "negative",
+          message: `There was an issue while obtaining list of dapps ${err}`,
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
 
     return {
       loading,
@@ -143,18 +198,46 @@ export default defineComponent({
         if (status === "dead") return "negative";
         return "primary";
       },
+      copyToClipboard: (id) => {
+        navigator.clipboard.writeText(id);
+        $q.notify({
+          message: `Copied the dapp ID to clipboard`,
+          timeout: 1000,
+        });
+      },
+      deleteApp: (id) => {
+        confirm(`This will delete the app ${id} - wish to continue?`);
+      },
     };
   },
 });
 </script>
 <style lang="sass">
-.dapps-table .q-table
-  th, tbody td
-    font-size: 1.0em
-    line-height: 3em
 .dapp-status
   font-size: 0.9em
   padding: 4px 8px
   min-width: 60px
   justify-content: center
+
+.dapp-td-title
+  font-weight: bold
+  font-size: 1.2em
+  color: #121212
+
+.dapp-thumbnail
+  display: inline
+  margin: 0 auto
+  margin-left: -25% //centers the image
+  height: 100%
+  width: auto
+
+.image-cropper
+  width: 40px
+  height: 40px
+  position: relative
+  overflow: hidden
+  border-radius: 50%
+
+#dapp-instance-list td
+  padding: 20px
 </style>
