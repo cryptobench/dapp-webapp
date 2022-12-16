@@ -8,7 +8,7 @@
       myriad of use-cases to be born, allowing software developers to leverage
       their creativity more than ever before.
     </div>
-    <q-separator inset class="q-ma-lg"/>
+    <q-separator inset class="q-ma-lg" />
     <div
       class="q-pa-md row justify-start items-start q-gutter-lg"
       id="dapp-store"
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import {computed, defineComponent, ref} from "vue";
-import {useDappstoreStore} from "stores/store";
+import { computed, defineComponent, ref } from "vue";
+import { useDappstoreStore } from "stores/store";
 import DappStoreCard from "components/DappStoreCard";
 
 export default defineComponent({
   name: "StorePage",
-  components: {DappStoreCard},
+  components: { DappStoreCard },
   setup() {
     const dappStore = useDappstoreStore();
     const loading = ref(true);

@@ -4,7 +4,7 @@
     <div class="text-body1 text-golem-code q-pa-lg">
       Your list of current and running applications hosted on the Golem Network
     </div>
-    <q-separator inset class="q-ma-lg"/>
+    <q-separator inset class="q-ma-lg" />
     <q-table
       flat
       id="dapp-instance-list"
@@ -119,7 +119,7 @@ const columns = [
     align: "left",
     sortable: true,
   },
-  {name: "id", align: "left", label: "App ID", field: "id", sortable: true},
+  { name: "id", align: "left", label: "App ID", field: "id", sortable: true },
   {
     name: "status",
     label: "Status",
