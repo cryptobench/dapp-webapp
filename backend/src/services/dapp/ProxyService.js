@@ -1,13 +1,14 @@
 const { Ok, UserError } = require("../../utils/Result");
 
+const OPEN_PORT_TIMEOUT = 3600;
 const CHECK_PORT_INTERVAL = 1000;
 const CHECK_PORT_ATTEMPTS = 30;
 const PROXY_PREFIX = 'https://someUrl/';
 
 module.exports = ({ redisClient, logger }) => {
-    async function requestOpenPortForAppId(appId) {
-        logger.debug(`[ProxyService] requestOpenPortForAppId: ${appId}`);
-        return redisClient.rPush('gpm', `open ${appId} portnum timeout`);
+    async function requestOpenPortForAppId(appId, port) {
+        logger.debug(`[ProxyService] requestOpenPortForAppId: ${appId} ${port}`);
+        return redisClient.rPush('gpm', `open ${appId} ${port} ${OPEN_PORT_TIMEOUT}`);
     }
 
     async function checkIfPortIsAlreadyOpen(appId, port) {
@@ -51,7 +52,7 @@ module.exports = ({ redisClient, logger }) => {
         async getProxyUrl(appId, port) {
             let isPortOpen = await checkIfPortIsAlreadyOpen(appId, port);
             if(!isPortOpen) {
-                await requestOpenPortForAppId(appId)
+                await requestOpenPortForAppId(appId, port)
                 isPortOpen = await waitTillPortWillBeReady(appId, port)
             }
 
