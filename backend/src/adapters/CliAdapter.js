@@ -11,6 +11,8 @@ module.exports = (config, logger) => {
         cwd: config.cwd,
         env: { ...process.env, ...config.env },
         encoding: "utf8",
+      }).on('error', function( err ){
+        logger.error(`[CLI Adapter] STDERR: ${err}`);
       });
 
       result.stdout.on('data', (data) => {
