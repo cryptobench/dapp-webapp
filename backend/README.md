@@ -27,6 +27,11 @@ source ~/.envs/dapp-manager/bin/activate
 pip install dapp-manager
 ```
 
+### dapp-deployment
+
+To add support for Proxy you should run the https://github.com/golemfactory/dapp-deployment
+
+
 ## Install the JS dependencies
 
 ```bash
