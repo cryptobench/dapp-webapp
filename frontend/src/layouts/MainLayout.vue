@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="lHr lpR lFr" class="bg-golem">
-    <q-header class="bg-primary text-white">
+  <q-layout view="hhh LpR fFf">
+    <q-header class="bg-golem text-black">
       <q-toolbar>
         <q-btn
           dense
@@ -15,7 +15,7 @@
         <q-toolbar-title>
           <q-avatar class="q-mx-md">
             <img
-              src="~assets/Golem.GLM_token_mark_RGB_Negative_RGB.svg"
+              src="~assets/golem-network-tokens-glm-logo.svg"
               alt="Golem Logo"
             />
           </q-avatar>
@@ -59,7 +59,7 @@
       </q-scroll-area>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="bg-golem">
       <router-view />
     </q-page-container>
   </q-layout>

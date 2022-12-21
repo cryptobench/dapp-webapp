@@ -8,6 +8,7 @@
               {{ dapp.name }}
               <q-badge
                 :color="statusColor(dapp.status)"
+                :text-color="statusTextColor(dapp.status)"
                 :label="dapp.status"
                 align="middle"
               />
@@ -33,23 +34,23 @@
       </div>
       <div class="col flex justify-end q-gutter-md">
         <q-btn
+          unelevated
+          square
           v-if="dapp.status === 'active'"
-          size="md"
           :loading="stopping"
           color="warning"
           label="stop"
-          icon="cancel"
-          style="min-width: 90px"
+          icon="stop_circle"
           @click="stop(dapp.id)"
         ></q-btn>
         <q-btn
+          unelevated
+          square
           v-if="dapp.status === 'active'"
-          size="md"
           color="negative"
           :loading="killing"
           label="kill"
-          icon="stop_circle"
-          style="min-width: 90px"
+          icon="cancel"
           @click="kill(dapp.id)"
         ></q-btn>
       </div>
@@ -247,13 +248,22 @@ export default defineComponent({
         if (status === "dead") return "negative";
         return "primary";
       },
+      statusTextColor: (status) => {
+        switch (status) {
+          case "active":
+            return "black";
+          default:
+            return "white";
+        }
+      },
       stop: (id) => {
         stopping.value = true;
         dappStore.stopDapp(id).then((result) => {
           if (result) {
             $q.notify({
               type: "positive",
-              message: `Dapp ${name} has been successfully stopped`,
+              textColor: "black",
+              message: `dApp ${name} has been successfully stopped`,
             });
           } else {
             $q.notify({
@@ -273,7 +283,8 @@ export default defineComponent({
           if (result) {
             $q.notify({
               type: "positive",
-              message: `Dapp ${name} has been successfully killed`,
+              textColor: "black",
+              message: `dApp ${name} has been successfully killed`,
             });
           } else {
             $q.notify({

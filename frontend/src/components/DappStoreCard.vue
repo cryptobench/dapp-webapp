@@ -70,10 +70,13 @@ export default {
         title: name,
         message: `Would you like to run "${name}" on the Golem Network?`,
         cancel: {
+          flat: true,
           square: true,
           unelevated: true,
+          color: "secondary",
         },
         ok: {
+          flat: true,
           label: "Yes",
           color: "primary",
           square: true,
@@ -85,11 +88,14 @@ export default {
             if (instanceId) {
               $q.notify({
                 type: "positive",
+                textColor: "black",
                 message: `dApp ${name} has been launched successfully`,
                 actions: [
                   {
                     label: "Go to app",
                     color: "primary",
+                    square: true,
+                    unelevated: true,
                     to: `details/${instanceId}`,
                   },
                 ],

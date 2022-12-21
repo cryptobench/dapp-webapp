@@ -57,6 +57,7 @@
         <q-td :props="props">
           <q-badge
             :color="statusColor(props.row.status)"
+            :text-color="statusTextColor(props.row.status)"
             :label="props.row.status ?? 'Unknown'"
             class="dapp-status"
           />
@@ -73,7 +74,7 @@
             color="negative"
             label="Stop"
             :loading="stopping === props.row.id"
-            icon="highlight_off"
+            icon="stop"
             @click="stop(props.row.id)"
           />
           <q-btn
@@ -169,6 +170,7 @@ export default defineComponent({
             if (result) {
               $q.notify({
                 type: "positive",
+                textColor: "black",
                 message: `dApp ${name} has been successfully stopped`,
               });
             } else {
@@ -198,6 +200,14 @@ export default defineComponent({
         if (status === "dead") return "negative";
         return "primary";
       },
+      statusTextColor: (status) => {
+        switch (status) {
+          case "active":
+            return "black";
+          default:
+            return "white";
+        }
+      },
       copyToClipboard: (id) => {
         navigator.clipboard.writeText(id);
         $q.notify({
@@ -210,12 +220,15 @@ export default defineComponent({
           title: "Delete dApp instance",
           message: `This will delete the app ${id} - wish to continue?`,
           cancel: {
+            flat: true,
             square: true,
             unelevated: true,
+            color: "primary",
           },
           ok: {
             label: "Delete",
             color: "negative",
+            flat: true,
             square: true,
             unelevated: true,
           },
@@ -225,6 +238,7 @@ export default defineComponent({
               await dappStore.deleteDapp(id);
               $q.notify({
                 type: "positive",
+                textColor: "black",
                 message: `dApp instance ${id} has been deleted`,
               });
             } catch (err) {
