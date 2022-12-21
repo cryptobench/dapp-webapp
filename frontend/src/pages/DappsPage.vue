@@ -65,15 +65,15 @@
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-md">
           <q-btn
-            rounded
-            outline
+            flat
+            square
+            unelevated
+            no-caps
             v-if="props.row.status === 'active'"
-            size="sm"
             color="negative"
-            label="stop"
+            label="Stop"
             :loading="stopping === props.row.id"
             icon="highlight_off"
-            style="min-width: 90px"
             @click="stop(props.row.id)"
           />
           <q-btn

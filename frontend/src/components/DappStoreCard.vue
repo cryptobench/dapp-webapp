@@ -1,6 +1,6 @@
 <template>
   <q-card class="dapp-card q-ma-lg custom-shadow custom-border">
-    <q-img :src="image" :fit="cover" style="height: 200px" />
+    <q-img :src="image" fit="cover" style="height: 200px" />
     <q-card-section class="flex">
       <q-item-section>
         <div
@@ -65,7 +65,7 @@ export default {
     const dappStore = useDappsStore();
     const $q = useQuasar();
 
-    function run(id, name) {
+    function run(appId, name) {
       $q.dialog({
         title: name,
         message: `Would you like to run "${name}" on the Golem Network?`,
@@ -83,11 +83,18 @@ export default {
         },
       })
         .onOk(() => {
-          dappStore.startDapp(id).then((result) => {
-            if (result) {
+          dappStore.startDapp(appId).then((instanceId) => {
+            if (instanceId) {
               $q.notify({
                 type: "positive",
-                message: `Dapp ${name} has been launched successfully`,
+                message: `dApp ${name} has been launched successfully`,
+                actions: [
+                  {
+                    label: "Go to app",
+                    color: "primary",
+                    to: `details/${instanceId}`,
+                  },
+                ],
               });
             } else {
               $q.notify({
