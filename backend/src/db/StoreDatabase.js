@@ -12,7 +12,7 @@ const DEFAULT_META = {
 module.exports = function StoreDatabase(_db, logger) {
   function loadMetaForDApp(dapp) {
     try {
-      logger.debug({ dapp }, "Loading DApp descriptor from file");
+      logger.debug({ dapp }, "Loading dApp descriptor from file");
 
       const descriptor = yaml.load(fs.readFileSync(dapp.descriptorPath));
 
@@ -28,7 +28,7 @@ module.exports = function StoreDatabase(_db, logger) {
           dapp,
           err,
         },
-        "Failed to load meta information for DApp. Will continue with default meta information."
+        "Failed to load meta information for dApp. Will continue with default meta information."
       );
 
       return DEFAULT_META;

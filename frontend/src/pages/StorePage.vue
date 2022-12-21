@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="text-primary text-h3 text-weight-bold q-pa-lg">Dapp Store</div>
+    <div class="text-primary text-h3 text-weight-bold q-pa-lg">dApp Store</div>
     <div class="text-body1 text-golem-code q-pa-lg">
       With Golem Network, users can connect with ease and pay each other for
       sharing their unused resources. Golem’s democratized access combined with

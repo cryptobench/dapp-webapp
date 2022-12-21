@@ -1,4 +1,4 @@
-# DApps WebApp (backend)
+# dApps WebApp (backend)
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@
 ## Setup
 
 Making the project run requires a number of applications and services to be installed prior to running
-the `DApps WebApp Backend`.
+the `dApps WebApp Backend`.
 
 ### redis
 
