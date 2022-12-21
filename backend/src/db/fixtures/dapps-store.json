@@ -3,30 +3,30 @@
     "id": "1",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/http-proxy.yaml",
-    "image": "https://placekitten.com/350/250"
+    "image": "/app-covers/todo-app.png"
   },
   {
     "id": "2",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/simple-service.yaml",
-    "image": "https://placekitten.com/350/250"
+    "image": "/app-covers/weather-app.png"
   },
   {
     "id": "3",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/webapp.yaml",
-    "image": "https://placekitten.com/350/250"
+    "image": "/app-covers/tracker-app.png"
   },
   {
     "id": "4",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/external-api-request.yaml",
-    "image": "https://placekitten.com/350/250"
+    "image": "/app-covers/weather-app.png"
   },
   {
     "id": "5",
     "configPath": "src/db/fixtures/config/hybrid-config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/todo-app.yaml",
-    "image": "https://placekitten.com/350/250"
+    "image": "/app-covers/todo-app.png"
   }
 ]
