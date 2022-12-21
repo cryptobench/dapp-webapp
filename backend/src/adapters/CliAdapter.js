@@ -1,30 +1,32 @@
 const { spawn } = require("child_process");
 
+const { EOL } = require("os");
+
 module.exports = (config, logger) => {
   if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
   function run(...args) {
     return new Promise((resolve) => {
-      let log = '';
+      let log = "";
       const result = spawn(config.command, [...config.args, ...args], {
         cwd: config.cwd,
         env: { ...process.env, ...config.env },
         encoding: "utf8",
-      }).on('error', function( err ){
+      }).on("error", function (err) {
         logger.error(`[CLI Adapter] STDERR: ${err}`);
       });
 
-      result.stdout.on('data', (data) => {
+      result.stdout.on("data", (data) => {
         log += data;
       });
 
-      result.stderr.on('data', (data) => {
+      result.stderr.on("data", (data) => {
         logger.debug(`[CLI Adapter] STDERR: ${data}`);
       });
 
-      result.on('close', () => {
-        resolve(resolve({stdout: log}));
+      result.on("close", () => {
+        resolve(resolve({ stdout: log }));
       });
     });
   }
@@ -37,16 +39,16 @@ module.exports = (config, logger) => {
       if (!configPath || !descriptorPath) {
         throw new Error(`Cannot start dapp without config or descriptor file`);
       }
-      return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split("\n"));
+      return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split(EOL));
     },
     async stop(appId) {
-      return run("stop", appId).then((res) => res.stdout?.split("\n"));
+      return run("stop", appId).then((res) => res.stdout?.split(EOL));
     },
     async kill(appId) {
-      return run("kill", appId).then((res) => res.stdout?.split("\n"));
+      return run("kill", appId).then((res) => res.stdout?.split(EOL));
     },
     async list() {
-      return run("list").then((res) => res.stdout?.split("\n"));
+      return run("list").then((res) => res.stdout?.split(EOL));
     },
     async rawData(appId, ensureAlive = true) {
       return getDetails("data", appId, ensureAlive);

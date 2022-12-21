@@ -10,11 +10,18 @@ module.exports = function DappDatabase(db) {
     },
     async insertDapp(userId, appId, appStoreId) {
       return new Promise((res, rej) => {
-        db.run("INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, createdAt) values (?, ?, ?, ?)", userId, appId, appStoreId, (new Date()).toISOString(), (err) => {
-          if (err) rej(err);
-          else res();
-        });
+        db.run(
+          "INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, createdAt) values (?, ?, ?, ?)",
+          userId,
+          appId,
+          appStoreId,
+          new Date().toISOString(),
+          (err) => {
+            if (err) rej(err);
+            else res();
+          }
+        );
       });
-    }
-  }
+    },
+  };
 };

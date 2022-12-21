@@ -12,5 +12,5 @@ module.exports = {
   Logger: logger,
   CliAdapter: CliAdapter(Config.cli, logger),
   SQLite: SQLite(Config.sqlite, logger),
-  Redis: Redis(Config.redis, logger)
+  Redis: Redis(Config.redis, logger),
 };

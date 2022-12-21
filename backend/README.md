@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- node >= v14.17.0
+- node >= v18.12.1
 - npm >= 6.13.4 or yarn >= v1.22.3
 - Redis instance running on localhost (`docker-compose.yaml` available in case you want to run the app locally)
 
@@ -10,6 +10,13 @@
 
 Making the project run requires a number of applications and services to be installed prior to running
 the `DApps WebApp Backend`.
+
+### redis
+
+Have any redis instance available on `localhost:6379`.
+If you have docker installed, run for e.g.: `docker run --rm -p 6379:6379 redis`
+
+There's a `docker-compose` configuration file provided, so you might want to run `docker-compose up -d` instead.
 
 ### Install `yagna` daemon
 
