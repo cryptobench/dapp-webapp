@@ -55,25 +55,25 @@
       </div>
     </div>
     <div class="row flex justify-between items-center q-mt-xs">
-      <q-card class="col">
+      <q-card flat class="col">
         <q-tabs
           v-model="tab"
-          class="bg-secondary text-white"
-          active-color="white"
-          align="justify"
-          dense
+          align="left"
+          indicator-color="primary"
+          active-color="dark-page"
+          class="bg-golem text-golem-gray"
         >
-          <q-tab name="state" label="State" />
-          <q-tab name="data" label="Data" />
-          <q-tab name="stdout" label="Stdout" />
-          <q-tab name="stderr" label="Stderr" />
-          <q-tab name="log" label="Log" />
+          <q-tab name="state" label="State" no-caps />
+          <q-tab name="data" label="Data" no-caps />
+          <q-tab name="stdout" label="Stdout" no-caps />
+          <q-tab name="stderr" label="Stderr" no-caps />
+          <q-tab name="log" label="Log" no-caps />
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="state" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel name="state" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
@@ -87,7 +87,7 @@
             </q-scroll-area>
           </q-tab-panel>
 
-          <q-tab-panel name="data" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
@@ -100,10 +100,7 @@
               <pre v-else>{{ rawData }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel
-            name="stdout"
-            class="bg-black text-white console q-pa-lg"
-          >
+          <q-tab-panel name="stdout" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
@@ -116,10 +113,7 @@
               <pre v-else>{{ stdout }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel
-            name="stderr"
-            class="bg-black text-white console q-pa-lg"
-          >
+          <q-tab-panel name="stderr" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
@@ -132,7 +126,7 @@
               <pre v-else>{{ stderr }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel name="log" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel name="log" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
               style="height: 100%; width: 100%"
               ref="consoleScroll"
@@ -153,20 +147,20 @@
         <q-toggle
           v-model="scrollToBottom"
           label="Scroll to bottom"
-          size="xs"
-          color="secondary"
-          class="text-caption"
+          keep-color
+          color="primary"
+          size="xl"
         />
         <q-toggle
           v-model="jsonFormat"
           label="Highlight syntax"
-          size="xs"
-          color="secondary"
-          class="text-caption"
+          keep-color
+          color="primary"
+          size="xl"
         />
       </div>
 
-      <div class="text-caption content-end">Refresh interval: <b>5s</b></div>
+      <div class="content-end text-golem-gray">Refresh interval: <b>5s</b></div>
     </div>
   </q-page>
 </template>
@@ -196,7 +190,7 @@ export default defineComponent({
     const consoleScroll = ref(null);
     const stopping = ref(false);
     const killing = ref(false);
-    const jsonFormat = ref(false);
+    const jsonFormat = ref(true);
     const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.getProxyUrl(id));
 
@@ -307,7 +301,6 @@ export default defineComponent({
 <style lang="sass">
 .console
   height: 66vh !important
-  background: black
   pre
     margin: 0
   .ssh-pre

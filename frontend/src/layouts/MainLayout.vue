@@ -87,9 +87,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.bg-golem {
-  background-color: #f6f8fc;
-}
-</style>

@@ -1,6 +1,6 @@
 <template>
   <q-card class="dapp-card q-ma-lg custom-shadow custom-border">
-    <q-img :src="image" :fit="cover" style="height: 200px"/>
+    <q-img :src="image" :fit="cover" style="height: 200px" />
     <q-card-section class="flex">
       <q-item-section>
         <div
@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import {useQuasar} from "quasar";
-import {useDappsStore} from "stores/dapps";
+import { useQuasar } from "quasar";
+import { useDappsStore } from "stores/dapps";
 
 export default {
   name: "DappStoreCard",
