@@ -3,12 +3,17 @@
 todo
 
 ### Prerequisites
- - node >= v14.17.0
+ - node >= v18.12.1
  - npm >= 6.13.4 or yarn >= v1.22.3
 
- ### yagna
+### yagna
 
  Follow the requestor's intro tutorial: https://handbook.golem.network/requestor-tutorials/flash-tutorial-of-requestor-development and ensure you can correctly run tasks on yagna.
+
+### redis
+
+Have any redis instance available on `localhost:6379`.
+If you have docker installed, run for e.g.: `docker run --rm -p 6379:6379 redis`
 
  ### dapp-manager
 

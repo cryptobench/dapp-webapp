@@ -1,5 +1,7 @@
 const { spawn } = require("child_process");
 
+const { EOL } = require('os');
+
 module.exports = (config, logger) => {
   if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
@@ -37,16 +39,16 @@ module.exports = (config, logger) => {
       if (!configPath || !descriptorPath) {
         throw new Error(`Cannot start dapp without config or descriptor file`);
       }
-      return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split("\n"));
+      return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split(EOL));
     },
     async stop(appId) {
-      return run("stop", appId).then((res) => res.stdout?.split("\n"));
+      return run("stop", appId).then((res) => res.stdout?.split(EOL));
     },
     async kill(appId) {
-      return run("kill", appId).then((res) => res.stdout?.split("\n"));
+      return run("kill", appId).then((res) => res.stdout?.split(EOL));
     },
     async list() {
-      return run("list").then((res) => res.stdout?.split("\n"));
+      return run("list").then((res) => res.stdout?.split(EOL));
     },
     async rawData(appId, ensureAlive = true) {
       return getDetails("data", appId, ensureAlive);

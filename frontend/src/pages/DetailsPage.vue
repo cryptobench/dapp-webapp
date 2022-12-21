@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-lg">
+  <q-page class="q-pa-lg" v-if="dapp">
     <div class="row flex justify-between items-baseline">
       <div class="col-auto">
         <div class="row">
@@ -180,21 +180,25 @@ export default defineComponent({
     const jsonFormat = ref(false);
     const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.getProxyUrl(id));
-    if (dapp.value.status === 'active') {
+
+    if (dapp.value?.status === 'active') {
       dappStore.startGettingData(id);
     } else {
       dappStore.getData(id);
     }
     watch([stateData, rawData, stdout, stderr, log], () => {
-      if (scrollToBottom?.value)
+      if (scrollToBottom?.value && consoleScroll?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
     watch(scrollToBottom, () => {
-      if (scrollToBottom?.value)
+      if (scrollToBottom?.value && consoleScroll?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
     onUnmounted(() =>  dappStore.stopGettingData(id));
     const $q = useQuasar();
+
+    dappStore.getDapps();
+
     return {
       dapp,
       tab: ref("state"),

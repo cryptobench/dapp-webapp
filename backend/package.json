@@ -25,7 +25,7 @@
     "pino-multi-stream": "^6.0.0",
     "pino-pretty": "^7.6.1",
     "redis": "^4.3.1",
-    "restify": "^8.6.1",
+    "restify": "^10.0.0",
     "rotating-file-stream": "^3.0.3",
     "sqlite3": "^5.1.2",
     "uuid": "^8.3.2"
@@ -38,7 +38,7 @@
     "prettier": "^2.5.1"
   },
   "engines": {
-    "node": ">= 14.17.0",
+    "node": ">= 18.12.1",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   }
