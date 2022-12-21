@@ -24,5 +24,15 @@ module.exports = ({ cliAdapter, database, logger }) => {
       logger.info(`App ${appId} has been killed by user ${userId}`);
       return Ok(killedAppId);
     },
+    async delete(userId, appId) {
+      if (!appId) {
+        throw new UserError("Dapp Id is required");
+      }
+
+      await database.deleteDApp(userId, appId);
+      logger.debug(`App ${appId} was deleted by user ${userId}`);
+
+      return Ok(appId);
+    },
   };
 };

@@ -43,6 +43,13 @@ export const useDappsStore = defineStore("dapps", {
       const id = await api.post(`/dapp/stop/`, { appId });
       return !!id;
     },
+    async deleteDapp(appId) {
+      const deletedId = await api.delete(`/dapps/${appId}`);
+
+      this.dapps = this.dapps.filter((dapp) => dapp.id !== deletedId);
+
+      return deletedId;
+    },
     async killDapp(appId) {
       const id = await api.post(`/dapp/kill/`, { appId });
       return !!id;

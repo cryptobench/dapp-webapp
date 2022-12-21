@@ -70,8 +70,6 @@ export default {
         title: name,
         message: `Would you like to run "${name}" on the Golem Network?`,
         cancel: {
-          color: "primary",
-          outline: true,
           square: true,
           unelevated: true,
         },

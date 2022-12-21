@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="text-primary text-h3 text-weight-bold q-pa-lg">My Dapps</div>
+    <div class="text-primary text-h3 text-weight-bold q-pa-lg">My dApps</div>
     <div class="text-body1 text-golem-code q-pa-lg">
       Your list of current and running applications hosted on the Golem Network
     </div>
@@ -13,7 +13,7 @@
       :columns="columns"
       :loading="loading"
       row-key="id"
-      rows-per-page-label="Dapps per page:"
+      rows-per-page-label="dApps per page:"
       :rows-per-page-options="[10, 20, 0]"
       hide-header
       hide-bottom
@@ -149,7 +149,7 @@ export default defineComponent({
       .catch((err) => {
         $q.notify({
           type: "negative",
-          message: `There was an issue while obtaining list of dapps ${err}`,
+          message: `There was an issue while obtaining list of dApps ${err}`,
         });
       })
       .finally(() => {
@@ -169,7 +169,7 @@ export default defineComponent({
             if (result) {
               $q.notify({
                 type: "positive",
-                message: `Dapp ${name} has been successfully stopped`,
+                message: `dApp ${name} has been successfully stopped`,
               });
             } else {
               $q.notify({
@@ -201,12 +201,41 @@ export default defineComponent({
       copyToClipboard: (id) => {
         navigator.clipboard.writeText(id);
         $q.notify({
-          message: `Copied the dapp ID to clipboard`,
+          message: `Copied the dApp ID to clipboard`,
           timeout: 1000,
         });
       },
-      deleteApp: (id) => {
-        confirm(`This will delete the app ${id} - wish to continue?`);
+      deleteApp: async (id) => {
+        $q.dialog({
+          title: "Delete dApp instance",
+          message: `This will delete the app ${id} - wish to continue?`,
+          cancel: {
+            square: true,
+            unelevated: true,
+          },
+          ok: {
+            label: "Delete",
+            color: "negative",
+            square: true,
+            unelevated: true,
+          },
+        })
+          .onOk(async () => {
+            try {
+              await dappStore.deleteDapp(id);
+              $q.notify({
+                type: "positive",
+                message: `dApp instance ${id} has been deleted`,
+              });
+            } catch (err) {
+              $q.notify({
+                type: "negative",
+                message: `Deleting dApp instance ${id} failed due to ${err}`,
+              });
+            }
+          })
+          .onCancel(() => {})
+          .onDismiss(() => {});
       },
     };
   },
@@ -227,7 +256,8 @@ export default defineComponent({
 .dapp-thumbnail
   display: inline
   margin: 0 auto
-  margin-left: -25% //centers the image
+  margin-left: -25%
+  //centers the image
   height: 100%
   width: auto
 

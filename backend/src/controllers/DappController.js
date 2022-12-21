@@ -9,6 +9,14 @@ module.exports = (dappService) => {
       },
     },
     {
+      method: "del",
+      path: "/dapps/:instanceId",
+      handler: async (req, res) => {
+        const result = await dappService.delete(req.user.id, req.params.instanceId);
+        return res.send(200, result).end();
+      },
+    },
+    {
       method: "post",
       path: "/dapp/start/",
       handler: async (req, res) => {

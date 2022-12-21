@@ -43,6 +43,7 @@ module.exports = (config, logger) => {
   async function getDetails(command, appId, ensureAlive = true) {
     return run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive").then((res) => res.stdout);
   }
+
   return {
     async start(configPath, descriptorPath) {
       if (!configPath || !descriptorPath) {
