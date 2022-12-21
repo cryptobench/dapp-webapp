@@ -1,4 +1,4 @@
-name: Build and test frontend app
+name: Lint & build apps
 
 on: [push]
 
@@ -12,5 +12,6 @@ jobs:
         with:
           node-version: 18.x
       - run: npm ci
-      - run: npm test -ws --if-present
+      - run: npm run format:check -ws --if-present
+      - run: npm run lint -ws --if-present
       - run: npm run build -ws --if-present
