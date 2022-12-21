@@ -134,7 +134,7 @@ export default defineComponent({
       start: (id) => {
         $q.notify({
           type: "warning",
-          message: `TODO ???`,
+          message: `Started app ${id}`,
         });
       },
       statusColor: (status) => {

@@ -42,7 +42,7 @@
             </q-item-section>
             <q-item-section> My Dapps </q-item-section>
           </q-item>
-<!--
+          <!--
           <q-item clickable v-ripple to="/payments">
             <q-item-section avatar>
               <q-icon name="payments" />

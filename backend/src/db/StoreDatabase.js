@@ -1,11 +1,11 @@
-const fs = require('fs');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const yaml = require("js-yaml");
 const dapps = require("./fixtures/dapps-store.json");
 
 const DEFAULT_META = {
-  "name": "[Untitled]",
-  "description": "",
-  "author": "",
+  name: "[Untitled]",
+  description: "",
+  author: "",
 };
 
 module.exports = function StoreDatabase() {
@@ -25,10 +25,10 @@ module.exports = function StoreDatabase() {
           console.warn(e);
         }
         Object.assign(dapp, {
-          "name": dapp_meta.name,
-          "author": dapp_meta.author,
-          "description": dapp_meta.description,
-        })
+          name: dapp_meta.name,
+          author: dapp_meta.author,
+          description: dapp_meta.description,
+        });
       });
       return dapps;
     },

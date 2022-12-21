@@ -6,6 +6,6 @@ module.exports = ({ database, logger, cliAdapter, redisClient }) => {
   return {
     ...GetDappsService({ database, cliAdapter }),
     ...RunService({ database, logger, cliAdapter }),
-    ...ProxyService({ redisClient, logger })
+    ...ProxyService({ redisClient, logger }),
   };
 };

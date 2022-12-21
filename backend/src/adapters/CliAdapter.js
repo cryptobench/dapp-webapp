@@ -1,6 +1,6 @@
 const { spawn } = require("child_process");
 
-const { EOL } = require('os');
+const { EOL } = require("os");
 
 module.exports = (config, logger) => {
   if (!config.command || !config.args) {
@@ -8,25 +8,25 @@ module.exports = (config, logger) => {
   }
   function run(...args) {
     return new Promise((resolve) => {
-      let log = '';
+      let log = "";
       const result = spawn(config.command, [...config.args, ...args], {
         cwd: config.cwd,
         env: { ...process.env, ...config.env },
         encoding: "utf8",
-      }).on('error', function( err ){
+      }).on("error", function (err) {
         logger.error(`[CLI Adapter] STDERR: ${err}`);
       });
 
-      result.stdout.on('data', (data) => {
+      result.stdout.on("data", (data) => {
         log += data;
       });
 
-      result.stderr.on('data', (data) => {
+      result.stderr.on("data", (data) => {
         logger.debug(`[CLI Adapter] STDERR: ${data}`);
       });
 
-      result.on('close', () => {
-        resolve(resolve({stdout: log}));
+      result.on("close", () => {
+        resolve(resolve({ stdout: log }));
       });
     });
   }
