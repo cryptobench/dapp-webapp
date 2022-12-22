@@ -39,6 +39,6 @@
     "openPortTimeout": 3600,
     "checkPortInterval": 1000,
     "checkPortAttempts": 30,
-    "baseUrl": "https://localhost/"
+    "baseUrl": "http://localhost/app/"
   }
 }
