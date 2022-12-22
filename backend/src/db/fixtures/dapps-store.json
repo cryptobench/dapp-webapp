@@ -3,25 +3,25 @@
     "id": "1",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/http-proxy.yaml",
-    "image": "/app-covers/todo-app.png"
+    "image": "/app-covers/default-app.svg"
   },
   {
     "id": "2",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/simple-service.yaml",
-    "image": "/app-covers/weather-app.png"
+    "image": "/app-covers/default-app.svg"
   },
   {
     "id": "3",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/webapp.yaml",
-    "image": "/app-covers/tracker-app.png"
+    "image": "/app-covers/default-app.svg"
   },
   {
     "id": "4",
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/external-api-request.yaml",
-    "image": "/app-covers/weather-app.png"
+    "image": "/app-covers/default-app.svg"
   },
   {
     "id": "5",
@@ -34,5 +34,11 @@
     "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/gas-scanner.yaml",
     "image": "/app-covers/tracker-app.png"
+  },
+  {
+    "id": "7",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/dapp-store/apps/weather.yaml",
+    "image": "/app-covers/weather-app.png"
   }
 ]
