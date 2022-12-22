@@ -1,3 +1,8 @@
+// Taken from brand guide
+$golem-blue: #181ea9;
+$golem-black: #404b63;
+$golem-light: #a2a3b9;
+
 @font-face {
   font-family: "Roboto Mono";
   font-style: normal;
@@ -18,7 +23,8 @@
 
 .text-golem-code {
   font-family: "Roboto Mono", sans-serif;
-  color: #404b63;
+  line-height: 1.4em;
+  color: $golem-black;
 }
 
 .text-golem-gray {
