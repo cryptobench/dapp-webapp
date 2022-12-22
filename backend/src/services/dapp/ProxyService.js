@@ -1,11 +1,11 @@
 const { Ok, UserError } = require("../../utils/Result");
 
-const OPEN_PORT_TIMEOUT = 3600;
-const CHECK_PORT_INTERVAL = 1000;
-const CHECK_PORT_ATTEMPTS = 30;
-const PROXY_PREFIX = "https://someUrl/";
+module.exports = ({ redisClient, logger, config }) => {
+  const OPEN_PORT_TIMEOUT = config.proxy.openPortTimeout;
+  const CHECK_PORT_INTERVAL = config.proxy.checkPortInterval;
+  const CHECK_PORT_ATTEMPTS = config.proxy.checkPortAttemtps;
+  const PROXY_PREFIX = config.proxy.baseUrl;
 
-module.exports = ({ redisClient, logger }) => {
   async function requestOpenPortForAppId(appId, port) {
     logger.debug(`[ProxyService] requestOpenPortForAppId: ${appId} ${port}`);
     return redisClient.rPush("gpm", `open ${appId} ${port} ${OPEN_PORT_TIMEOUT}`);
@@ -28,7 +28,9 @@ module.exports = ({ redisClient, logger }) => {
       await new Promise((r) => setTimeout(r, CHECK_PORT_INTERVAL));
       portReady = appId === appIdOnPort;
     }
+
     await redisClient.del(`port-ready.${port}`);
+
     logger.debug(
       `[ProxyService] waitTillPortWillBeReady ${port} | ${appId} - ${
         portReady ? "Port is ready" : "Failed to open the port"
@@ -37,31 +39,18 @@ module.exports = ({ redisClient, logger }) => {
     return portReady;
   }
 
-  // async function mockResponse(appId, port) {
-  //     const diffs = [1,5,8,10];
-  //
-  //     await Promise.all(diffs.map(async (d) => {
-  //         await redisClient.set(`port-ready.${port-d}`, appId);
-  //         await new Promise(r => setTimeout(r, 2000));
-  //     }))
-  //
-  //     redisClient.set(`port-ready.${port}`, 'some-other-app-id');
-  //
-  //     await new Promise(r => setTimeout(r, 2000));
-  //     redisClient.set(`port-ready.${port}`, appId);
-  //     redisClient.set(`port.${port}`, appId);
-  // }
-
   return {
     async getProxyUrl(appId, port) {
       let isPortOpen = await checkIfPortIsAlreadyOpen(appId, port);
+      logger.debug(`The requested port is already occupied ${appId} ${port}`);
+
       if (!isPortOpen) {
         await requestOpenPortForAppId(appId, port);
         isPortOpen = await waitTillPortWillBeReady(appId, port);
       }
 
       if (!isPortOpen) {
-        throw new UserError("Failed to open the port");
+        throw new UserError("Failed to open the port to proxy the traffic to the app.");
       }
 
       return Ok({
