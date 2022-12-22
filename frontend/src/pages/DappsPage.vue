@@ -1,13 +1,13 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="text-primary text-h3 text-weight-bold q-pa-lg">My dApps</div>
-    <div class="text-body1 text-golem-code q-pa-lg">
+    <PageTitle value="My dApps" />
+    <PageDescription>
       Your list of current and running applications hosted on the Golem Network
-    </div>
+    </PageDescription>
     <q-separator inset class="q-ma-lg" />
     <q-table
-      flat
       id="dapp-instance-list"
+      flat
       class="q-ma-md bg-golem"
       :rows="rows"
       :columns="columns"
@@ -18,7 +18,7 @@
       hide-header
       hide-bottom
     >
-      <template v-slot:body-cell-icon="props">
+      <template #body-cell-icon="props">
         <q-td :props="props">
           <div class="image-cropper">
             <img
@@ -29,7 +29,7 @@
           </div>
         </q-td>
       </template>
-      <template v-slot:body-cell-name="props">
+      <template #body-cell-name="props">
         <q-td :props="props">
           <div class="dapp-td-title">{{ props.row.name }}</div>
           <div class="text-golem-gray">
@@ -37,40 +37,24 @@
           </div>
         </q-td>
       </template>
-      <template v-slot:body-cell-id="props">
+      <template #body-cell-id="props">
         <q-td :props="props">
-          <div class="dapp-td-title">
-            App ID
-            <q-btn
-              flat
-              unelevated
-              dense
-              size="sm"
-              icon="content_copy"
-              @click="copyToClipboard(props.row.id)"
-            />
-          </div>
-          <div class="text-golem-gray">{{ props.row.id }}</div>
+          <AppInstanceId :id="props.row.id" />
         </q-td>
       </template>
-      <template v-slot:body-cell-status="props">
+      <template #body-cell-status="props">
         <q-td :props="props">
-          <q-badge
-            :color="statusColor(props.row.status)"
-            :text-color="statusTextColor(props.row.status)"
-            :label="props.row.status ?? 'Unknown'"
-            class="dapp-status"
-          />
+          <AppStatus :status="props.row.status" />
         </q-td>
       </template>
-      <template v-slot:body-cell-actions="props">
+      <template #body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-md">
           <q-btn
+            v-if="props.row.status === 'active'"
             flat
             square
             unelevated
             no-caps
-            v-if="props.row.status === 'active'"
             color="negative"
             label="Stop"
             :loading="stopping === props.row.id"
@@ -106,6 +90,10 @@
 import { computed, defineComponent, ref } from "vue";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
+import AppStatus from "components/App/AppStatus.vue";
+import AppInstanceId from "components/App/AppInstanceId.vue";
+import PageTitle from "components/Typography/PageTitle.vue";
+import PageDescription from "components/Typography/PageDescription.vue";
 
 const columns = [
   {
@@ -132,6 +120,7 @@ const columns = [
 
 export default defineComponent({
   name: "DappsPage",
+  components: { PageDescription, PageTitle, AppInstanceId, AppStatus },
 
   setup() {
     const $q = useQuasar();
@@ -194,27 +183,6 @@ export default defineComponent({
           message: `Started app ${id}`,
         });
       },
-      statusColor: (status) => {
-        if (status === "active") return "positive";
-        if (status === "unknown_app") return "warning";
-        if (status === "dead") return "negative";
-        return "primary";
-      },
-      statusTextColor: (status) => {
-        switch (status) {
-          case "active":
-            return "black";
-          default:
-            return "white";
-        }
-      },
-      copyToClipboard: (id) => {
-        navigator.clipboard.writeText(id);
-        $q.notify({
-          message: `Copied the dApp ID to clipboard`,
-          timeout: 1000,
-        });
-      },
       deleteApp: async (id) => {
         $q.dialog({
           title: "Delete dApp instance",
@@ -256,12 +224,6 @@ export default defineComponent({
 });
 </script>
 <style lang="sass">
-.dapp-status
-  font-size: 0.9em
-  padding: 4px 8px
-  min-width: 60px
-  justify-content: center
-
 .dapp-td-title
   font-weight: bold
   font-size: 1.2em

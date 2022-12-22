@@ -25,8 +25,8 @@
     </q-header>
 
     <q-drawer
-      show-if-above
       v-model="drawer"
+      show-if-above
       side="left"
       :mini="miniState"
       :width="200"
@@ -34,14 +34,14 @@
     >
       <q-scroll-area class="fit">
         <q-list padding>
-          <q-item clickable v-ripple to="/store">
+          <q-item v-ripple clickable to="/store">
             <q-item-section avatar>
               <q-icon name="store" />
             </q-item-section>
             <q-item-section>dApp Store</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/dapps">
+          <q-item v-ripple clickable to="/dapps">
             <q-item-section avatar>
               <q-icon name="apps" />
             </q-item-section>

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar build",
-    "lint": "eslint ./",
+    "lint": "eslint --ext .js,.vue .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "npm run format:check && npm run lint"

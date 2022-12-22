@@ -108,12 +108,8 @@ export default {
             }
           });
         })
-        .onCancel(() => {
-          // console.log('Cancel')
-        })
-        .onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
-        });
+        .onCancel(() => {})
+        .onDismiss(() => {});
     }
 
     return {
@@ -122,6 +118,7 @@ export default {
   },
 };
 </script>
+
 <style lang="sass" scoped>
 .dapp-card
   max-width: 350px
