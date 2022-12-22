@@ -20,13 +20,7 @@
     >
       <template #body-cell-icon="props">
         <q-td :props="props">
-          <div class="image-cropper">
-            <img
-              :src="props.row.image"
-              :alt="props.row.name"
-              class="dapp-thumbnail"
-            />
-          </div>
+          <AppCoverCircle :src="props.row.image" :alt="props.row.name" />
         </q-td>
       </template>
       <template #body-cell-name="props">
@@ -94,6 +88,7 @@ import AppStatus from "components/App/AppStatus.vue";
 import AppInstanceId from "components/App/AppInstanceId.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
 import PageDescription from "components/Typography/PageDescription.vue";
+import AppCoverCircle from "components/App/AppCoverCircle.vue";
 
 const columns = [
   {
@@ -120,7 +115,13 @@ const columns = [
 
 export default defineComponent({
   name: "DappsPage",
-  components: { PageDescription, PageTitle, AppInstanceId, AppStatus },
+  components: {
+    AppCoverCircle,
+    PageDescription,
+    PageTitle,
+    AppInstanceId,
+    AppStatus,
+  },
 
   setup() {
     const $q = useQuasar();
@@ -228,21 +229,6 @@ export default defineComponent({
   font-weight: bold
   font-size: 1.2em
   color: #121212
-
-.dapp-thumbnail
-  display: inline
-  margin: 0 auto
-  margin-left: -25%
-  //centers the image
-  height: 100%
-  width: auto
-
-.image-cropper
-  width: 40px
-  height: 40px
-  position: relative
-  overflow: hidden
-  border-radius: 50%
 
 #dapp-instance-list td
   padding: 20px

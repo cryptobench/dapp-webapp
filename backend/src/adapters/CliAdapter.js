@@ -6,10 +6,10 @@ module.exports = (config, logger) => {
   if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
+
   function run(...args) {
     return new Promise((resolve) => {
       let stdout = "";
-      let stderr = "";
 
       const result = spawn(config.command, [...config.args, ...args], {
         cwd: config.cwd,
@@ -24,7 +24,6 @@ module.exports = (config, logger) => {
       });
 
       result.stderr.on("data", (data) => {
-        stderr += data;
         logger.debug(`[CLI Adapter] STDERR: ${data.toString().trimEnd()}`);
       });
 
@@ -35,7 +34,7 @@ module.exports = (config, logger) => {
       result.on("close", (status) => {
         logger.debug(`Executing ${config.command} finished with exit code ${status}`);
 
-        resolve({ stdout, stderr, status });
+        resolve({ stdout, status });
       });
     });
   }
@@ -77,7 +76,6 @@ module.exports = (config, logger) => {
     },
     async getStatus(appId) {
       const result = await run("read", "state", appId);
-      // ToDo: What's the possible value set?
       if (result.status === 0) return "active";
       if (result.status === 4) return "unknown_app";
       if (result.status === 5) return "dead";
