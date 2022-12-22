@@ -28,5 +28,11 @@
     "configPath": "src/db/fixtures/config/hybrid-config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/todo-app.yaml",
     "image": "/app-covers/todo-app.png"
+  },
+  {
+    "id": "6",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
+    "descriptorPath": "src/db/fixtures/dapp-store/apps/gas-scanner.yaml",
+    "image": "/app-covers/tracker-app.png"
   }
 ]
