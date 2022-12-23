@@ -9,7 +9,7 @@ const StoreController = require("../controllers/StoreController");
 const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
 
-module.exports = (logger, cliAdapter, dbDriver, redisClient) => {
+module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const database = Database(dbDriver);
 
   const userService = UserService({ database, logger });
@@ -18,7 +18,7 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient) => {
   const storeService = StoreService({ database, logger });
   const storeController = StoreController(storeService);
 
-  const dappService = DappService({ database, logger, cliAdapter, redisClient });
+  const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
   const dappController = DappController(dappService);
 
   return {
