@@ -41,15 +41,17 @@ module.exports = ({ redisClient, logger, config }) => {
 
   return {
     async getProxyUrl(appId, port) {
-      let isPortOpen = await checkIfPortIsAlreadyOpen(appId, port);
-      logger.debug(`The requested port is already occupied ${appId} ${port}`);
+      let isAppOnPort = await checkIfPortIsAlreadyOpen(appId, port);
 
-      if (!isPortOpen) {
+      if (!isAppOnPort) {
+        logger.debug(`The port ${port} seems to be available for app ${appId}`);
         await requestOpenPortForAppId(appId, port);
-        isPortOpen = await waitTillPortWillBeReady(appId, port);
+        isAppOnPort = await waitTillPortWillBeReady(appId, port);
+      } else {
+        logger.debug(`The requested port is already occupied ${appId} ${port}`);
       }
 
-      if (!isPortOpen) {
+      if (!isAppOnPort) {
         throw new UserError("Failed to open the port to proxy the traffic to the app.");
       }
 

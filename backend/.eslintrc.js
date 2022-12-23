@@ -5,8 +5,11 @@ module.exports = {
     commonjs: true,
     mocha: true,
     browser: false,
+    jest: true,
+    "jest/globals": true,
   },
-  extends: ["eslint:recommended"],
+  plugins: ["jest", "prettier"],
+  extends: ["eslint:recommended", "plugin:jest/recommended"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
