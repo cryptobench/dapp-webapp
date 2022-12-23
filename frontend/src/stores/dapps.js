@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import retry from "async-retry";
 
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
@@ -60,7 +61,7 @@ export const useDappsStore = defineStore("dapps", {
       this.stdout[id] = await api.get(`/dapp/stdout/${id}`);
       this.stderr[id] = await api.get(`/dapp/stderr/${id}`);
       this.log[id] = await api.get(`/dapp/log/${id}`);
-      this.setupLink(id);
+      await this.setupLink(id);
     },
     parseLinkFromRawData(rawData) {
       let link = "";
@@ -77,13 +78,13 @@ export const useDappsStore = defineStore("dapps", {
         });
       return link;
     },
-    setupLink(id) {
+    async setupLink(id) {
       const link = this.parseLinkFromRawData(this.rawData[id]);
       if (link !== this.link[id]) {
         this.link[id] = link;
 
         if (this.link[id].length) {
-          this.fetchProxyUrl(id, link);
+          await this.fetchProxyUrl(id, link);
         }
       }
     },
@@ -91,14 +92,14 @@ export const useDappsStore = defineStore("dapps", {
       const port = local_proxy_address.substr(
         local_proxy_address.indexOf(":", 5) + 1
       );
-      api
-        .get(`/dapp/proxyUrl/${id}/${port}`)
-        .then((response) => {
+
+      return retry(
+        async () => {
+          const response = await api.get(`/dapp/proxyUrl/${id}/${port}`);
           this.proxyUrl[id] = response?.proxyUrl || "";
-        })
-        .catch(() => {
-          this.fetchProxyUrl(id, local_proxy_address);
-        });
+        },
+        { retries: 30 }
+      );
     },
     async startGettingData(id) {
       this.running[id] = true;

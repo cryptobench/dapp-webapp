@@ -4,9 +4,10 @@ const Server = ({ Config, Logger, Authentication, CliAdapter, Redis, SQLite }, A
   let server, redisClient, dbDriver;
   return {
     async init() {
+      Logger.info(Config, "Startup configuration");
       redisClient = await Redis.connect();
       dbDriver = await SQLite.connect();
-      const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver, redisClient);
+      const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver, redisClient, Config);
       const authentication = Authentication(database);
       await authentication.init();
       server = HttpServer({ controllers, authentication, config: Config.http, logger: Logger });

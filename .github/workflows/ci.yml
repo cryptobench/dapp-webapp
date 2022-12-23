@@ -1,4 +1,4 @@
-name: Lint & build apps
+name: Lint, test & build apps in workspaces
 
 on: [push]
 
@@ -14,4 +14,5 @@ jobs:
       - run: npm ci
       - run: npm run format:check -ws --if-present
       - run: npm run lint -ws --if-present
+      - run: npm test -ws --if-present
       - run: npm run build -ws --if-present

@@ -8,4 +8,5 @@ module.exports = {
   cli: config.get("cli"),
   redis: config.get("redis"),
   sqlite: config.get("sqlite"),
+  proxy: config.get("proxy"),
 };
