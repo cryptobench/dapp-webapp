@@ -1,6 +1,6 @@
 module.exports = function DappDatabase(db) {
   return {
-    async findDappsByUser(userId) {
+    findDappsByUser(userId) {
       return new Promise((res, rej) => {
         db.all("SELECT * FROM dapp WHERE userId=?", userId, (err, row) => {
           if (err) rej(err);
@@ -8,7 +8,7 @@ module.exports = function DappDatabase(db) {
         });
       });
     },
-    async insertDapp(userId, appId, appStoreId) {
+    insertDapp(userId, appId, appStoreId) {
       return new Promise((res, rej) => {
         db.run(
           "INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, createdAt) values (?, ?, ?, ?)",
@@ -21,6 +21,14 @@ module.exports = function DappDatabase(db) {
             else res();
           }
         );
+      });
+    },
+    deleteDApp(userId, appId) {
+      return new Promise((res, rej) => {
+        db.run("DELETE FROM dapp WHERE userId=? AND appId=?", userId, appId, (err) => {
+          if (err) rej(err);
+          else res();
+        });
       });
     },
   };

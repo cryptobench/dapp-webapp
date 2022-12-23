@@ -9,18 +9,22 @@ module.exports = ({ database, cliAdapter }) => {
   return {
     async getDapps(userId) {
       const userDapps = await database.findDappsByUser(userId);
-      const storeDapps = await database.findAllStoreDapps();
+      const storeDapps = await database.findAllStoreDApps();
       const dapps = [];
+
       for (const { appId, appStoreId, createdAt } of userDapps) {
         const dappStore = storeDapps.find((app) => app.id === appStoreId);
+        const status = await cliAdapter.getStatus(appId);
+
         dapps.push({
           name: dappStore.name,
           id: appId,
-          status: await cliAdapter.getStatus(appId),
-          icon: dappStore.icon,
+          status: status,
+          image: dappStore.image,
           created_at: createdAt,
         });
       }
+
       return Ok(dapps);
     },
     async getRawState(appId) {

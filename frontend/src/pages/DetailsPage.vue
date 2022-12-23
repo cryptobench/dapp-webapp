@@ -1,21 +1,16 @@
 <template>
-  <q-page class="q-pa-lg" v-if="dapp">
+  <q-page v-if="dapp" class="q-pa-lg">
     <div class="row flex justify-between items-baseline">
       <div class="col-auto">
         <div class="row">
-          <q-avatar><q-icon size="md" :name="dapp.icon" /></q-avatar>
           <div>
-            <h5 class="q-my-sm">
-              {{ dapp.name }}
-              <q-badge
-                :color="statusColor(dapp.status)"
-                :label="dapp.status"
-                align="middle"
-              />
-            </h5>
+            <PageTitle :value="dapp.name" />
+            <AppStatus :status="dapp.status" />
+            <AppInstanceId :id="dapp.id" />
             <p v-if="link" class="service-link">
-              <a title="View the running service" :href="link" target="_blank"
-                ><q-icon name="link" /> {{ link }}</a
+              <a title="View the running service" :href="link" target="_blank">
+                <q-icon name="link" />
+                {{ link }}</a
               >
             </p>
             <p v-if="proxyUrl" class="service-link">
@@ -23,11 +18,10 @@
                 title="View the running service via proxy"
                 :href="proxyUrl"
                 target="_blank"
-                ><q-icon name="link" /> {{ proxyUrl }}</a
               >
-            </p>
-            <p>
-              ID: <b>{{ dapp.id }}</b>
+                <q-icon name="link" />
+                {{ proxyUrl }}</a
+              >
             </p>
           </div>
         </div>
@@ -35,114 +29,108 @@
       <div class="col flex justify-end q-gutter-md">
         <q-btn
           v-if="dapp.status === 'active'"
-          size="md"
+          unelevated
+          square
           :loading="stopping"
           color="warning"
           label="stop"
-          icon="cancel"
-          style="min-width: 90px"
+          icon="stop_circle"
           @click="stop(dapp.id)"
         ></q-btn>
         <q-btn
           v-if="dapp.status === 'active'"
-          size="md"
+          unelevated
+          square
           color="negative"
           :loading="killing"
           label="kill"
-          icon="stop_circle"
-          style="min-width: 90px"
+          icon="cancel"
           @click="kill(dapp.id)"
         ></q-btn>
       </div>
     </div>
     <div class="row flex justify-between items-center q-mt-xs">
-      <q-card class="col">
+      <q-card flat class="col">
         <q-tabs
           v-model="tab"
-          class="bg-secondary text-white"
-          active-color="white"
-          align="justify"
-          dense
+          align="left"
+          indicator-color="primary"
+          active-color="dark-page"
+          class="bg-golem text-golem-gray"
         >
-          <q-tab name="state" label="State" />
-          <q-tab name="data" label="Data" />
-          <q-tab name="stdout" label="Stdout" />
-          <q-tab name="stderr" label="Stderr" />
-          <q-tab name="log" label="Log" />
+          <q-tab name="state" label="State" no-caps />
+          <q-tab name="data" label="Data" no-caps />
+          <q-tab name="stdout" label="Stdout" no-caps />
+          <q-tab name="stderr" label="Stderr" no-caps />
+          <q-tab name="log" label="Log" no-caps />
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="state" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel name="state" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
-              style="height: 100%; width: 100%"
               ref="consoleScroll"
+              style="height: 100%; width: 100%"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
-                jsonParse(stateData)
-              }}</ssh-pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                >{{ jsonParse(stateData) }}
+              </ssh-pre>
               <pre v-else>{{ stateData }}</pre>
             </q-scroll-area>
           </q-tab-panel>
 
-          <q-tab-panel name="data" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
-              style="height: 100%; width: 100%"
               ref="consoleScroll"
+              style="height: 100%; width: 100%"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
-                jsonParse(rawData)
-              }}</ssh-pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                >{{ jsonParse(rawData) }}
+              </ssh-pre>
               <pre v-else>{{ rawData }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel
-            name="stdout"
-            class="bg-black text-white console q-pa-lg"
-          >
+          <q-tab-panel name="stdout" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
-              style="height: 100%; width: 100%"
               ref="consoleScroll"
+              style="height: 100%; width: 100%"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
-                jsonParse(stdout)
-              }}</ssh-pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                >{{ jsonParse(stdout) }}
+              </ssh-pre>
               <pre v-else>{{ stdout }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel
-            name="stderr"
-            class="bg-black text-white console q-pa-lg"
-          >
+          <q-tab-panel name="stderr" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
-              style="height: 100%; width: 100%"
               ref="consoleScroll"
+              style="height: 100%; width: 100%"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
-                jsonParse(stderr)
-              }}</ssh-pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                >{{ jsonParse(stderr) }}
+              </ssh-pre>
               <pre v-else>{{ stderr }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-          <q-tab-panel name="log" class="bg-black text-white console q-pa-lg">
+          <q-tab-panel name="log" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
-              style="height: 100%; width: 100%"
               ref="consoleScroll"
+              style="height: 100%; width: 100%"
               :thumb-style="thumbStyle"
               :bar-style="barStyle"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true">{{
-                jsonParse(log)
-              }}</ssh-pre>
+              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                >{{ jsonParse(log) }}
+              </ssh-pre>
               <pre v-else>{{ log }}</pre>
             </q-scroll-area>
           </q-tab-panel>
@@ -154,35 +142,40 @@
         <q-toggle
           v-model="scrollToBottom"
           label="Scroll to bottom"
-          size="xs"
-          color="secondary"
-          class="text-caption"
+          keep-color
+          color="primary"
+          size="xl"
         />
         <q-toggle
           v-model="jsonFormat"
           label="Highlight syntax"
-          size="xs"
-          color="secondary"
-          class="text-caption"
+          keep-color
+          color="primary"
+          size="xl"
         />
       </div>
 
-      <div class="text-caption content-end">Refresh interval: <b>5s</b></div>
+      <div class="content-end text-golem-gray">
+        Refresh interval: <strong>5s</strong>
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import { defineComponent, ref, onUnmounted, computed, watch } from "vue";
+import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
 import SshPre from "simple-syntax-highlighter";
 import "simple-syntax-highlighter/dist/sshpre.css";
+import AppStatus from "components/App/AppStatus.vue";
+import AppInstanceId from "components/App/AppInstanceId.vue";
+import PageTitle from "components/Typography/PageTitle.vue";
 
 export default defineComponent({
   name: "IndexPage",
-  components: { SshPre },
+  components: { PageTitle, AppInstanceId, AppStatus, SshPre },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -197,7 +190,7 @@ export default defineComponent({
     const consoleScroll = ref(null);
     const stopping = ref(false);
     const killing = ref(false);
-    const jsonFormat = ref(false);
+    const jsonFormat = ref(true);
     const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.getProxyUrl(id));
 
@@ -248,19 +241,14 @@ export default defineComponent({
         width: "9px",
         opacity: 0.2,
       },
-      statusColor: (status) => {
-        if (status === "active") return "positive";
-        if (status === "unknown_app") return "warning";
-        if (status === "dead") return "negative";
-        return "primary";
-      },
       stop: (id) => {
         stopping.value = true;
         dappStore.stopDapp(id).then((result) => {
           if (result) {
             $q.notify({
               type: "positive",
-              message: `Dapp ${name} has been successfully stopped`,
+              textColor: "black",
+              message: `dApp ${name} has been successfully stopped`,
             });
           } else {
             $q.notify({
@@ -280,7 +268,8 @@ export default defineComponent({
           if (result) {
             $q.notify({
               type: "positive",
-              message: `Dapp ${name} has been successfully killed`,
+              textColor: "black",
+              message: `dApp ${name} has been successfully killed`,
             });
           } else {
             $q.notify({
@@ -308,12 +297,14 @@ export default defineComponent({
 <style lang="sass">
 .console
   height: 66vh !important
-  background: black
+
   pre
     margin: 0
+
   .ssh-pre
     margin: 0
     padding: 0
+
   .ssh-pre--dark
     background: inherit !important
 </style>

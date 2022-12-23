@@ -1,4 +1,4 @@
-# DApps WebApp (backend)
+# dApps WebApp (backend)
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@
 ## Setup
 
 Making the project run requires a number of applications and services to be installed prior to running
-the `DApps WebApp Backend`.
+the `dApps WebApp Backend`.
 
 ### redis
 
@@ -45,7 +45,7 @@ pip install dapp-manager
 
 To add support for Proxy you should run the https://github.com/golemfactory/dapp-deployment
 
-## Install the projects dependencies
+## Install the project's dependencies
 
 ```bash
 npm install
@@ -55,12 +55,12 @@ npm install
 
 - Copy `.env-template` file to `.env`
 - (If needed) In `.env` file, define vars:
-    - `NODE_CONFIG_DIR` - directory containing configuration files for each environments (default `./config` directory)
-    - `NODE_ENV` - current environment assignee to configuration file (default: `development`)
+  - `NODE_CONFIG_DIR` - directory containing configuration files for each environments (default `./config` directory)
+  - `NODE_ENV` - current environment assignee to configuration file (default: `development`)
 - In `config/{environment}.json` define base configurations for app modules:
-    - http
-    - cli
-    - logger
+  - http
+  - cli
+  - logger
 
 The default config assumes that the yagna app-key is available in your environment as `YAGNA_APPKEY`.
 

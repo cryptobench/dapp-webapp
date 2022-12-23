@@ -1,38 +1,50 @@
 <template>
   <q-page class="q-pa-lg">
-    <h4 class="q-ma-md">Dapp Store</h4>
+    <PageTitle value="dApp Store" />
+    <PageDescription>
+      With Golem Network, users can connect with ease and pay each other for
+      sharing their unused resources. Golem’s democratized access combined with
+      a unique peer-to-peer exchange creates an unstoppable ecosystem for a
+      myriad of use-cases to be born, allowing software developers to leverage
+      their creativity more than ever before.
+    </PageDescription>
+    <q-separator inset class="q-ma-lg" />
     <div
-      class="q-pa-md row items-start items-stretch q-gutter-lg"
       id="dapp-store"
+      class="q-pa-md row justify-start items-start q-gutter-lg"
     >
       <DappStoreCard
         v-for="dapp in dapps"
-        :key="dapp.id"
         :id="dapp.id"
+        :key="dapp.id"
         :name="dapp.name"
         :description="dapp.description"
-        :icon="dapp.icon"
         :author="dapp.author"
+        :image="dapp.image"
       ></DappStoreCard>
     </div>
   </q-page>
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useDappstoreStore } from "stores/store";
-import DappStoreCard from "components/DappStoreCard";
+import DappStoreCard from "components/Catalogue/DappStoreCard.vue";
+import PageTitle from "components/Typography/PageTitle.vue";
+import PageDescription from "components/Typography/PageDescription.vue";
 
 export default defineComponent({
   name: "StorePage",
-  components: { DappStoreCard },
+  components: { PageDescription, PageTitle, DappStoreCard },
   setup() {
     const dappStore = useDappstoreStore();
     const loading = ref(true);
     const dapps = computed(() => dappStore.dapps);
+
     dappStore.getDapps().then(() => {
       loading.value = false;
     });
+
     return {
       dapps,
       loading,

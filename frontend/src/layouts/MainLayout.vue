@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header reveal bordered class="bg-primary text-white">
+  <q-layout view="hhh LpR fFf">
+    <q-header class="bg-golem text-black">
       <q-toolbar>
         <q-btn
           dense
@@ -11,36 +11,41 @@
             $q.screen.lt.sm ? (drawer = !drawer) : (miniState = !miniState)
           "
         />
-        <q-toolbar-title>Golem Dapps</q-toolbar-title>
-        <q-avatar>
-          <img src="~assets/Golem.GLM_token_mark_RGB_Negative_RGB.svg" />
-        </q-avatar>
+
+        <q-toolbar-title>
+          <q-avatar class="q-mx-md">
+            <img
+              src="~assets/golem-network-tokens-glm-logo.svg"
+              alt="Golem Logo"
+            />
+          </q-avatar>
+          Golem Distributed Cloud
+        </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="drawer"
       show-if-above
+      side="left"
       :mini="miniState"
       :width="200"
       :breakpoint="500"
-      bordered
-      class="bg-grey-3"
     >
       <q-scroll-area class="fit">
         <q-list padding>
-          <q-item clickable v-ripple to="/store">
+          <q-item v-ripple clickable to="/store">
             <q-item-section avatar>
               <q-icon name="store" />
             </q-item-section>
-            <q-item-section> Dapp Store </q-item-section>
+            <q-item-section>dApp Store</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/dapps">
+          <q-item v-ripple clickable to="/dapps">
             <q-item-section avatar>
               <q-icon name="apps" />
             </q-item-section>
-            <q-item-section> My Dapps </q-item-section>
+            <q-item-section>My dApps</q-item-section>
           </q-item>
           <!--
           <q-item clickable v-ripple to="/payments">
@@ -54,7 +59,7 @@
       </q-scroll-area>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="bg-golem">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -68,7 +73,9 @@ export default {
   setup() {
     const miniState = ref(false);
     const drawer = ref(false);
+
     const userStore = useUserStore();
+
     if (!userStore.user) {
       userStore.register();
     }

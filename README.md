@@ -27,27 +27,27 @@ as the "App URL" after the front-end starts:
 
 ![Front-end started](readme-assets/frontend_start.png)
 
-### Dapp store
+### dApp store
 
-By clicking the "Dapp store" in the menu, you access the list of apps that you can deploy to Golem.
+By clicking the "dApp store" in the menu, you access the list of apps that you can deploy to Golem.
 
-![Dapp store](readme-assets/dapp_store.png)
+![dApp store](readme-assets/dapp_store.png)
 
 Choose the app that you'd like to run, click its "RUN" button and confirm the operation. You should see a green confirmation after the app has been started:
 
-![Dapp store](readme-assets/dapp_store_launched.png)
+![dApp store](readme-assets/dapp_store_launched.png)
 
-### My Dapps
+### My dApps
 
 After you start your app - or apps - you can visit the list of decentralized apps that you have requested to be deployed to Golem's providers.
 
-![My Dapps list](readme-assets/my_dapps_list.png)
+![My dApps list](readme-assets/my_dapps_list.png)
 
 Each entry consists of the name of the app, its application ID (as assigned by the `dapp-manager`), the time it has been started on, and its current status (either "active" or "dead").
 
 You can stop any of the active apps from here and, more interestingly, you can access the details of any of the listed applications.
 
-#### Dapp details
+#### dApp details
 
 After you click the "Details" button from the list of apps, you should see a screen containing the information about the specific application.
 

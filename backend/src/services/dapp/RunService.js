@@ -5,7 +5,7 @@ module.exports = ({ cliAdapter, database, logger }) => {
   return {
     async start(userId, appStoreId) {
       if (!appStoreId) throw new UserError("Dapp Id is required");
-      const dappStore = await database.findDappById(appStoreId);
+      const dappStore = await database.findDAppById(appStoreId);
       if (!dappStore) throw new UserError(`Dapp ${appStoreId} not found`);
       const [appId] = await cliAdapter.start(resolve(dappStore.configPath), resolve(dappStore.descriptorPath));
       await database.insertDapp(userId, appId, appStoreId);
@@ -23,6 +23,16 @@ module.exports = ({ cliAdapter, database, logger }) => {
       const [killedAppId] = await cliAdapter.kill(appId);
       logger.info(`App ${appId} has been killed by user ${userId}`);
       return Ok(killedAppId);
+    },
+    async delete(userId, appId) {
+      if (!appId) {
+        throw new UserError("Dapp Id is required");
+      }
+
+      await database.deleteDApp(userId, appId);
+      logger.debug(`App ${appId} was deleted by user ${userId}`);
+
+      return Ok(appId);
     },
   };
 };

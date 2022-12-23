@@ -30,13 +30,25 @@ export const useDappsStore = defineStore("dapps", {
     async getDapps() {
       this.dapps = await api.get(`/dapps/`);
     },
+    /**
+     *
+     * @param {String} appStoreId The dApp ID to run
+     *
+     * @returns {Promise<string>} The dApp instance ID
+     */
     async startDapp(appStoreId) {
-      const id = await api.post(`/dapp/start/`, { appStoreId });
-      return !!id;
+      return api.post(`/dapp/start/`, { appStoreId });
     },
     async stopDapp(appId) {
       const id = await api.post(`/dapp/stop/`, { appId });
       return !!id;
+    },
+    async deleteDapp(appId) {
+      const deletedId = await api.delete(`/dapps/${appId}`);
+
+      this.dapps = this.dapps.filter((dapp) => dapp.id !== deletedId);
+
+      return deletedId;
     },
     async killDapp(appId) {
       const id = await api.post(`/dapp/kill/`, { appId });

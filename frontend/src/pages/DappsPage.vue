@@ -1,54 +1,79 @@
 <template>
   <q-page class="q-pa-lg">
-    <h4 class="q-ma-md q-pb-lg">My dapps</h4>
+    <PageTitle value="My dApps" />
+    <PageDescription>
+      Your list of current and running applications hosted on the Golem Network
+    </PageDescription>
+    <q-separator inset class="q-ma-lg" />
     <q-table
-      class="q-ma-md"
+      id="dapp-instance-list"
+      flat
+      class="q-ma-md bg-golem"
       :rows="rows"
       :columns="columns"
       :loading="loading"
       row-key="id"
-      table-class="dapps-table"
-      table-header-class="bg-secondary text-white"
-      rows-per-page-label="Dapps per page:"
+      rows-per-page-label="dApps per page:"
       :rows-per-page-options="[10, 20, 0]"
+      hide-header
+      hide-bottom
     >
-      <template v-slot:body-cell-index="props">
+      <template #body-cell-icon="props">
         <q-td :props="props">
-          {{ props.rowIndex + 1 }}
+          <AppCoverCircle :src="props.row.image" :alt="props.row.name" />
         </q-td>
       </template>
-      <template v-slot:body-cell-status="props">
+      <template #body-cell-name="props">
         <q-td :props="props">
-          <q-badge
-            :color="statusColor(props.value)"
-            :label="props.value"
-            class="dapp-status"
-          />
+          <div class="dapp-td-title">{{ props.row.name }}</div>
+          <div class="text-golem-gray">
+            {{ new Date(Date.parse(props.row.created_at)).toLocaleString() }}
+          </div>
         </q-td>
       </template>
-      <template v-slot:body-cell-actions="props">
+      <template #body-cell-id="props">
+        <q-td :props="props">
+          <AppInstanceId :id="props.row.id" />
+        </q-td>
+      </template>
+      <template #body-cell-status="props">
+        <q-td :props="props">
+          <AppStatus :status="props.row.status" />
+        </q-td>
+      </template>
+      <template #body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-md">
           <q-btn
-            rounded
-            outline
             v-if="props.row.status === 'active'"
-            size="sm"
+            flat
+            square
+            unelevated
+            no-caps
             color="negative"
-            label="stop"
+            label="Stop"
             :loading="stopping === props.row.id"
-            icon="highlight_off"
-            style="min-width: 90px"
+            icon="stop"
             @click="stop(props.row.id)"
-          ></q-btn>
+          />
           <q-btn
-            rounded
-            outline
-            size="sm"
-            color="secondary"
-            label="details"
-            icon="preview"
+            flat
+            square
+            unelevated
+            no-caps
+            color="primary"
+            label="Details"
             :to="/details/ + props.row.id"
-          ></q-btn>
+          />
+          <q-btn
+            v-if="props.row.status === 'dead'"
+            flat
+            square
+            unelevated
+            no-caps
+            color="negative"
+            label="Delete"
+            @click="deleteApp(props.row.id)"
+          />
         </q-td>
       </template>
     </q-table>
@@ -56,50 +81,68 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
+import AppStatus from "components/App/AppStatus.vue";
+import AppInstanceId from "components/App/AppInstanceId.vue";
+import PageTitle from "components/Typography/PageTitle.vue";
+import PageDescription from "components/Typography/PageDescription.vue";
+import AppCoverCircle from "components/App/AppCoverCircle.vue";
+
 const columns = [
-  { name: "index", label: "#", align: "left", field: "index", sortable: false },
+  {
+    name: "icon",
+    label: "Icon",
+    align: "right",
+    sortable: false,
+  },
   {
     name: "name",
     label: "Name",
     align: "left",
     sortable: true,
-    field: "name",
-    style: "font-weight: 500",
   },
   { name: "id", align: "left", label: "App ID", field: "id", sortable: true },
   {
-    name: "created_at",
-    label: "Starting Time",
-    field: "created_at",
-    align: "left",
-    sortable: true,
-    format: (val) => new Date(val).toLocaleString(),
-    sort: (a, b) => (new Date(a).valueOf() > new Date(b).valueOf() ? 1 : -1),
-  },
-  {
     name: "status",
     label: "Status",
-    field: "status",
     align: "left",
     sortable: true,
   },
-  { name: "actions", label: "Actions", field: "actions" },
+  { name: "actions", label: "Actions", field: "actions", sortable: false },
 ];
+
 export default defineComponent({
   name: "DappsPage",
+  components: {
+    AppCoverCircle,
+    PageDescription,
+    PageTitle,
+    AppInstanceId,
+    AppStatus,
+  },
 
   setup() {
     const $q = useQuasar();
     const dappStore = useDappsStore();
+
     const loading = ref(true);
     const stopping = ref(null);
+
     const rows = computed(() => dappStore.dapps);
-    dappStore.getDapps().then(() => {
-      loading.value = false;
-    });
+
+    dappStore
+      .getDapps()
+      .catch((err) => {
+        $q.notify({
+          type: "negative",
+          message: `There was an issue while obtaining list of dApps ${err}`,
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
 
     return {
       loading,
@@ -114,7 +157,8 @@ export default defineComponent({
             if (result) {
               $q.notify({
                 type: "positive",
-                message: `Dapp ${name} has been successfully stopped`,
+                textColor: "black",
+                message: `dApp ${name} has been successfully stopped`,
               });
             } else {
               $q.notify({
@@ -137,24 +181,52 @@ export default defineComponent({
           message: `Started app ${id}`,
         });
       },
-      statusColor: (status) => {
-        if (status === "active") return "positive";
-        if (status === "unknown_app") return "warning";
-        if (status === "dead") return "negative";
-        return "primary";
+      deleteApp: async (id) => {
+        $q.dialog({
+          title: "Delete dApp instance",
+          message: `This will delete the app ${id} - wish to continue?`,
+          cancel: {
+            flat: true,
+            square: true,
+            unelevated: true,
+            color: "primary",
+          },
+          ok: {
+            label: "Delete",
+            color: "negative",
+            flat: true,
+            square: true,
+            unelevated: true,
+          },
+        })
+          .onOk(async () => {
+            try {
+              await dappStore.deleteDapp(id);
+              $q.notify({
+                type: "positive",
+                textColor: "black",
+                message: `dApp instance ${id} has been deleted`,
+              });
+            } catch (err) {
+              $q.notify({
+                type: "negative",
+                message: `Deleting dApp instance ${id} failed due to ${err}`,
+              });
+            }
+          })
+          .onCancel(() => {})
+          .onDismiss(() => {});
       },
     };
   },
 });
 </script>
 <style lang="sass">
-.dapps-table .q-table
-  th, tbody td
-    font-size: 1.0em
-    line-height: 3em
-.dapp-status
-  font-size: 0.9em
-  padding: 4px 8px
-  min-width: 60px
-  justify-content: center
+.dapp-td-title
+  font-weight: bold
+  font-size: 1.2em
+  color: #121212
+
+#dapp-instance-list td
+  padding: 20px
 </style>

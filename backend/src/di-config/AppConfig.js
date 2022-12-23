@@ -10,7 +10,7 @@ const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
 
 module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
-  const database = Database(dbDriver);
+  const database = Database(dbDriver, logger);
 
   const userService = UserService({ database, logger });
   const userController = UserController(userService);
@@ -20,6 +20,12 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
 
   const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
   const dappController = DappController(dappService);
+
+  if (!process.env.YAGNA_APPKEY) {
+    logger.error("Make sure that you set YAGNA_APPKEY environment variable, otherwise the requestor app won't work!");
+  } else {
+    logger.info("Golem Requestor YAGNA_APPKEY is set to '%s'", process.env.YAGNA_APPKEY);
+  }
 
   return {
     controllers: [userController, storeController, dappController],

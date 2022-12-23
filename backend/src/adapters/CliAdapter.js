@@ -6,9 +6,11 @@ module.exports = (config, logger) => {
   if (!config.command || !config.args) {
     throw new Error("Config for CLI Adapter is not defined");
   }
+
   function run(...args) {
     return new Promise((resolve) => {
-      let log = "";
+      let stdout = "";
+
       const result = spawn(config.command, [...config.args, ...args], {
         cwd: config.cwd,
         env: { ...process.env, ...config.env },
@@ -18,15 +20,21 @@ module.exports = (config, logger) => {
       });
 
       result.stdout.on("data", (data) => {
-        log += data;
+        stdout += data;
       });
 
       result.stderr.on("data", (data) => {
-        logger.debug(`[CLI Adapter] STDERR: ${data}`);
+        logger.debug(`[CLI Adapter] STDERR: ${data.toString().trimEnd()}`);
       });
 
-      result.on("close", () => {
-        resolve(resolve({ stdout: log }));
+      result.on("error", (err) => {
+        logger.error(err, `Running '${config.command}' failed due to an error`);
+      });
+
+      result.on("close", (status) => {
+        logger.debug(`Executing ${config.command} finished with exit code ${status}`);
+
+        resolve({ stdout, status });
       });
     });
   }
@@ -34,6 +42,7 @@ module.exports = (config, logger) => {
   async function getDetails(command, appId, ensureAlive = true) {
     return run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive").then((res) => res.stdout);
   }
+
   return {
     async start(configPath, descriptorPath) {
       if (!configPath || !descriptorPath) {
