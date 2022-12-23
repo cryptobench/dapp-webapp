@@ -63,6 +63,7 @@
           <q-tab name="stdout" label="Stdout" no-caps />
           <q-tab name="stderr" label="Stderr" no-caps />
           <q-tab name="log" label="Log" no-caps />
+          <q-tab name="stats" label="Stats" no-caps />
         </q-tabs>
 
         <q-separator />
@@ -81,7 +82,6 @@
               <pre v-else>{{ stateData }}</pre>
             </q-scroll-area>
           </q-tab-panel>
-
           <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
             <q-scroll-area
               ref="consoleScroll"
@@ -134,6 +134,9 @@
               <pre v-else>{{ log }}</pre>
             </q-scroll-area>
           </q-tab-panel>
+          <q-tab-panel class="bg-golem" name="stats">
+            <AppStats :app="dapp" />
+          </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </div>
@@ -172,10 +175,11 @@ import "simple-syntax-highlighter/dist/sshpre.css";
 import AppStatus from "components/App/AppStatus.vue";
 import AppInstanceId from "components/App/AppInstanceId.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
+import AppStats from "components/App/AppStats.vue";
 
 export default defineComponent({
   name: "IndexPage",
-  components: { PageTitle, AppInstanceId, AppStatus, SshPre },
+  components: { AppStats, PageTitle, AppInstanceId, AppStatus, SshPre },
   setup() {
     const route = useRoute();
     const id = route.params.id;
