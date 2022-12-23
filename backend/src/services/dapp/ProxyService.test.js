@@ -5,7 +5,7 @@ const config = {
   proxy: {
     openPortTimeout: 3600,
     checkPortInterval: 1000,
-    checkPortAttemtps: 30,
+    checkPortAttempts: 30,
     baseUrl: "http://test-domain.golem.network/app/",
   },
 };

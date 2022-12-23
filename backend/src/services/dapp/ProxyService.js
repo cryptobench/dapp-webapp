@@ -3,7 +3,7 @@ const { Ok, UserError } = require("../../utils/Result");
 module.exports = ({ redisClient, logger, config }) => {
   const OPEN_PORT_TIMEOUT = config.proxy.openPortTimeout;
   const CHECK_PORT_INTERVAL = config.proxy.checkPortInterval;
-  const CHECK_PORT_ATTEMPTS = config.proxy.checkPortAttemtps;
+  const CHECK_PORT_ATTEMPTS = config.proxy.checkPortAttempts;
   const PROXY_PREFIX = config.proxy.baseUrl;
 
   async function requestOpenPortForAppId(appId, port) {
