@@ -162,7 +162,6 @@
           size="xl"
         />
       </div>
-
       <div class="content-end text-golem-gray">
         Refresh interval: <strong>5s</strong>
       </div>

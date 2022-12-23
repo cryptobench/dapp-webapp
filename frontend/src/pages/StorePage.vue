@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
+    <q-inner-loading label="Plase wait..." :showing="loading" />
     <PageTitle value="dApp Store" />
     <PageDescription>
       With Golem Network, users can connect with ease and pay each other for

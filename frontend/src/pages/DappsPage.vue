@@ -5,7 +5,9 @@
       Your list of current and running applications hosted on the Golem Network
     </PageDescription>
     <q-separator inset class="q-ma-lg" />
+    <q-inner-loading :showing="loading" label="Please wait..." />
     <q-table
+      v-if="rows.length !== 0"
       id="dapp-instance-list"
       flat
       class="q-ma-md bg-golem"
@@ -13,10 +15,9 @@
       :columns="columns"
       :loading="loading"
       row-key="id"
-      rows-per-page-label="dApps per page:"
+      rows-per-page-label="Entries per page:"
       :rows-per-page-options="[10, 20, 0]"
       hide-header
-      hide-bottom
     >
       <template #body-cell-icon="props">
         <q-td :props="props">
@@ -77,6 +78,15 @@
         </q-td>
       </template>
     </q-table>
+    <q-card
+      v-if="!loading && rows.length === 0"
+      class="q-pa-xl"
+      flat
+      unelevated
+    >
+      You didn't run any dApps yet. <a href="#/store">Check the store</a>, to
+      find some dApps to try!
+    </q-card>
   </q-page>
 </template>
 

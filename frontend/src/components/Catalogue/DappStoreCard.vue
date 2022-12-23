@@ -36,6 +36,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { useDappsStore } from "stores/dapps";
+import { useRouter } from "vue-router";
 
 export default {
   name: "DappStoreCard",
@@ -64,6 +65,7 @@ export default {
   setup() {
     const dappStore = useDappsStore();
     const $q = useQuasar();
+    const $router = useRouter();
 
     function run(appId, name) {
       $q.dialog({
@@ -90,15 +92,11 @@ export default {
                 type: "positive",
                 textColor: "black",
                 message: `dApp ${name} has been launched successfully`,
-                actions: [
-                  {
-                    label: "Go to app",
-                    color: "primary",
-                    square: true,
-                    unelevated: true,
-                    to: `details/${instanceId}`,
-                  },
-                ],
+              });
+
+              // Navigate user to the newly started app
+              $router.push({
+                path: `details/${instanceId}`,
               });
             } else {
               $q.notify({
