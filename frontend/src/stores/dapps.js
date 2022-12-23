@@ -37,7 +37,7 @@ export const useDappsStore = defineStore("dapps", {
      * @returns {Promise<string>} The dApp instance ID
      */
     async startDapp(appStoreId) {
-      return api.post(`/dapp/start/`, {appStoreId});
+      return api.post(`/dapp/start/`, { appStoreId });
     },
     async stopDapp(appId) {
       const id = await api.post(`/dapp/stop/`, { appId });

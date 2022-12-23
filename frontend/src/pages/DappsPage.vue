@@ -134,9 +134,6 @@ export default defineComponent({
 
     dappStore
       .getDapps()
-      .then(() => {
-        loading.value = false;
-      })
       .catch((err) => {
         $q.notify({
           type: "negative",
