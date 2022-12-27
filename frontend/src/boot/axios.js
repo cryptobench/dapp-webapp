@@ -7,6 +7,7 @@ const api = axios.create({ baseURL: process.env.API_BACKEND_URL });
 
 export default boot(({ app, store }) => {
   const userStore = useUserStore(store);
+
   api.interceptors.request.use(
     (config) => {
       config.headers["Authorization"] = userStore.user.id;

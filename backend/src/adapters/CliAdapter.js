@@ -24,7 +24,7 @@ module.exports = (config, logger) => {
       });
 
       result.stderr.on("data", (data) => {
-        logger.debug(`[CLI Adapter] STDERR: ${data.toString().trimEnd()}`);
+        logger.warn(`[CLI Adapter] STDERR: ${data.toString().trimEnd()}`);
       });
 
       result.on("error", (err) => {
@@ -79,6 +79,15 @@ module.exports = (config, logger) => {
       if (result.status === 0) return "active";
       if (result.status === 4) return "unknown_app";
       if (result.status === 5) return "dead";
+    },
+    async stats(appId) {
+      const result = await run("dapp-stats", appId);
+
+      if (result.status !== 0) {
+        throw new Error("The stats command failed to execute, stats are not available");
+      }
+
+      return result.stdout;
     },
   };
 };

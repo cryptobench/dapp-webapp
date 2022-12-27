@@ -2,6 +2,8 @@
 import { defineComponent } from "vue";
 import AppStatList from "components/App/AppStatList.vue";
 import AppStatCard from "components/App/AppStatCard.vue";
+import { api } from "boot/axios";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "AppStats",
@@ -12,50 +14,39 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
-    const EXAMPLE = {
-      app: {
-        state_changes: 3,
-        launched_successfully: true,
-        estimated_time_to_launch: "0:02:00",
-        estimated_working_time: "0:02:00",
-      },
-      nodes: {
-        db: {
-          0: {
-            state_changes: 3,
-            launched_successfully: true,
-            estimated_time_to_launch: "0:02:00",
-            estimated_working_time: "0:02:00",
-          },
-        },
-        http: {
-          0: {
-            state_changes: 3,
-            launched_successfully: true,
-            estimated_time_to_launch: "0:02:00",
-            estimated_working_time: "0:02:00",
-          },
-        },
-      },
-    };
+  async setup(props) {
+    const $q = useQuasar();
 
-    return {
-      appStats: EXAMPLE.app,
-      nodeStats: EXAMPLE.nodes,
-    };
+    try {
+      const stats = await api.get(`/dapp/${props.app.id}/stats`);
+
+      return {
+        stats,
+      };
+    } catch (err) {
+      $q.notify({
+        type: "negative",
+        message: `Issue while obtaining stats: ${err}`,
+      });
+
+      throw err;
+    }
   },
 });
 </script>
 
 <template>
   <div class="col">
-    <AppStatCard :stats="appStats">Summarised application stats</AppStatCard>
-    <AppStatList
-      v-for="[nodeType, nodeInstances] in Object.entries(nodeStats)"
-      :key="nodeType"
-      :instances="nodeInstances"
-      :type="nodeType"
-    />
+    <AppStatCard v-if="stats" :stats="stats.app">
+      Summarised application stats
+    </AppStatCard>
+    <div v-if="stats">
+      <AppStatList
+        v-for="[nodeType, nodeInstances] in Object.entries(stats.nodes)"
+        :key="nodeType"
+        :instances="nodeInstances"
+        :type="nodeType"
+      />
+    </div>
   </div>
 </template>

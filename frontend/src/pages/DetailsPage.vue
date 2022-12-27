@@ -135,7 +135,12 @@
             </q-scroll-area>
           </q-tab-panel>
           <q-tab-panel class="bg-golem" name="stats">
-            <AppStats :app="dapp" />
+            <Suspense>
+              <AppStats :app="dapp" />
+              <template #fallback>
+                <p>Please wait...</p>
+              </template>
+            </Suspense>
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
