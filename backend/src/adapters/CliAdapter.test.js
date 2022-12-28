@@ -14,6 +14,21 @@ describe("CLI Adapter", () => {
     jest.resetAllMocks();
   });
 
+  describe("start - Starting new application instances", () => {
+    test("trhows an error when the dapp-manager fails to return 0 for start", async () => {
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd);
+
+      when(dManagerCmd.run).calledWith("start", "--config", "config-path", "descriptor-path").mockResolvedValue({
+        status: 6,
+        stdout: "",
+      });
+
+      await expect(adapter.start("config-path", "descriptor-path")).rejects.toThrow(
+        "Failed to start the application using dapp-manager. Exit status: 6."
+      );
+    });
+  });
+
   describe("stats - Getting stats for a particular app", () => {
     test("returns JSON with agreed stats", async () => {
       const adapter = CliAdapter(dManagerCmd, dStatsCmd);

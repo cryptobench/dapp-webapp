@@ -12,7 +12,13 @@ module.exports = (dManagerCmd, dStatsCmd) => {
         throw new Error(`Cannot start dApp without config or descriptor file`);
       }
 
-      return dManagerCmd.run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split(EOL));
+      const result = await dManagerCmd.run("start", "--config", configPath, descriptorPath);
+
+      if (result.status !== 0) {
+        throw new Error(`Failed to start the application using dapp-manager. Exit status: ${result.status}.`);
+      }
+
+      return result.stdout?.split(EOL);
     },
     async stop(appId) {
       return dManagerCmd.run("stop", appId).then((res) => res.stdout?.split(EOL));
