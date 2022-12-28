@@ -16,12 +16,10 @@ module.exports = function StoreDatabase(_db, logger) {
 
       const descriptor = yaml.load(fs.readFileSync(dapp.descriptorPath));
 
-      const meta = {
+      return {
         ...DEFAULT_META,
         ...(descriptor.meta ? descriptor.meta : {}),
       };
-
-      return meta;
     } catch (err) {
       logger.error(
         {

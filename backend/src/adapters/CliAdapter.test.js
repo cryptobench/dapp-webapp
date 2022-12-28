@@ -1,8 +1,6 @@
 const CliAdapter = require("./CliAdapter");
 const { when } = require("jest-when");
 
-const logger = {};
-
 const dStatsCmd = {
   run: jest.fn(),
 };
@@ -18,7 +16,7 @@ describe("CLI Adapter", () => {
 
   describe("stats - Getting stats for a particular app", () => {
     test("returns JSON with agreed stats", async () => {
-      const adapter = CliAdapter(dManagerCmd, dStatsCmd, logger);
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd);
 
       // Given
       const appId = "some-app-id";
@@ -74,7 +72,7 @@ describe("CLI Adapter", () => {
         stdout: "",
       });
 
-      const adapter = CliAdapter(dManagerCmd, dStatsCmd, logger);
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd);
 
       // Then
       await expect(adapter.stats(appId)).rejects.toThrow(
