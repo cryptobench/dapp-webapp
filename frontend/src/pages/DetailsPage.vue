@@ -180,11 +180,17 @@ import "simple-syntax-highlighter/dist/sshpre.css";
 import AppStatus from "components/App/AppStatus.vue";
 import AppInstanceId from "components/App/AppInstanceId.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
-import AppStats from "components/App/AppStats.vue";
+import AppStats from "components/App/Stats/AppStats.vue";
 
 export default defineComponent({
   name: "IndexPage",
-  components: { AppStats, PageTitle, AppInstanceId, AppStatus, SshPre },
+  components: {
+    AppStats,
+    PageTitle,
+    AppInstanceId,
+    AppStatus,
+    SshPre,
+  },
   setup() {
     const route = useRoute();
     const id = route.params.id;

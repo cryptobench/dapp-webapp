@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from "vue";
-import AppStatCard from "components/App/AppStatCard.vue";
+import AppStatCard from "components/App/Stats/AppStatCard.vue";
 
 export default defineComponent({
   name: "AppStatList",
