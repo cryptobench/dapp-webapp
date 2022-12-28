@@ -14,7 +14,7 @@
       </q-item-section>
     </q-card-section>
     <q-card-section>
-      <div class="q-px-md text-golem-code">
+      <div class="q-px-md text-golem-code q-mb-xl">
         {{ description }}
       </div>
     </q-card-section>
@@ -26,7 +26,7 @@
         label="Run"
         icon-right="play_circle_outline"
         color="primary"
-        class="q-ma-md text-weight-bold"
+        class="q-ma-md text-weight-bold stick-bottom"
         @click="run(id, name)"
       ></q-btn>
     </q-card-actions>
@@ -129,8 +129,13 @@ export default {
   color: $primary
 
 .custom-shadow
-  box-shadow: 0px 0px 50px #eeeeee
+  box-shadow: 0 0 50px #eeeeee
 
 .custom-border
   border-radius: 10px
+
+.stick-bottom
+  position: absolute
+  bottom: 0
+  right: 0
 </style>

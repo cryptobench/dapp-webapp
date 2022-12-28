@@ -12,7 +12,7 @@
     <q-separator inset class="q-ma-lg" />
     <div
       id="dapp-store"
-      class="q-pa-md row justify-start items-start q-gutter-lg"
+      class="q-pa-md row justify-start items-start items-stretch q-gutter-lg"
     >
       <DappStoreCard
         v-for="dapp in dapps"

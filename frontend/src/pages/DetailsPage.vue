@@ -1,169 +1,184 @@
 <template>
   <q-page v-if="dapp" class="q-pa-lg">
-    <div class="row flex justify-between items-baseline">
-      <div class="col-auto">
-        <div class="row">
-          <div>
-            <PageTitle :value="dapp.name" />
-            <AppStatus :status="dapp.status" />
-            <AppInstanceId :id="dapp.id" />
-            <p v-if="link" class="service-link">
-              <a title="View the running service" :href="link" target="_blank">
-                <q-icon name="link" />
-                {{ link }}</a
-              >
-            </p>
-            <p v-if="proxyUrl" class="service-link">
-              <a
-                title="View the running service via proxy"
-                :href="proxyUrl"
-                target="_blank"
-              >
-                <q-icon name="link" />
-                {{ proxyUrl }}</a
-              >
-            </p>
-          </div>
+    <div>
+      <div class="row">
+        <PageTitle :value="dapp.name" />
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <q-card flat class="q-ma-sm">
+            <q-card-section>
+              <AppProperty name="Status">
+                <AppStatusBadge :status="dapp.status" />
+              </AppProperty>
+              <AppProperty :value="dapp.id" name="App ID" copy />
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <q-card flat class="q-ma-sm">
+            <q-card-section>
+              <AppLink v-if="link" :link="link" title="View the app instance" />
+              <AppLink
+                v-if="proxyUrl"
+                :link="proxyUrl"
+                title="View the app instance"
+              />
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <q-card flat class="q-ma-sm">
+            <q-card-section>
+              <q-btn
+                v-if="dapp.status === 'active'"
+                unelevated
+                square
+                :loading="stopping"
+                color="warning"
+                label="stop"
+                icon="stop_circle"
+                @click="stop(dapp.id)"
+              ></q-btn>
+              <q-btn
+                v-if="dapp.status === 'active'"
+                unelevated
+                square
+                color="negative"
+                :loading="killing"
+                label="kill"
+                icon="cancel"
+                @click="kill(dapp.id)"
+              ></q-btn>
+            </q-card-section>
+          </q-card>
         </div>
       </div>
-      <div class="col flex justify-end q-gutter-md">
-        <q-btn
-          v-if="dapp.status === 'active'"
-          unelevated
-          square
-          :loading="stopping"
-          color="warning"
-          label="stop"
-          icon="stop_circle"
-          @click="stop(dapp.id)"
-        ></q-btn>
-        <q-btn
-          v-if="dapp.status === 'active'"
-          unelevated
-          square
-          color="negative"
-          :loading="killing"
-          label="kill"
-          icon="cancel"
-          @click="kill(dapp.id)"
-        ></q-btn>
-      </div>
-    </div>
-    <div class="row flex justify-between items-center q-mt-xs">
-      <q-card flat class="col">
-        <q-tabs
-          v-model="tab"
-          align="left"
-          indicator-color="primary"
-          active-color="dark-page"
-          class="bg-golem text-golem-gray"
-        >
-          <q-tab name="state" label="State" no-caps />
-          <q-tab name="data" label="Data" no-caps />
-          <q-tab name="stdout" label="Stdout" no-caps />
-          <q-tab name="stderr" label="Stderr" no-caps />
-          <q-tab name="log" label="Log" no-caps />
-          <q-tab name="stats" label="Stats" no-caps />
-        </q-tabs>
+      <div class="row">
+        <q-card flat class="col">
+          <q-tabs
+            v-model="tab"
+            align="left"
+            indicator-color="primary"
+            active-color="dark-page"
+            class="bg-golem text-golem-gray"
+          >
+            <q-tab name="state" label="State" no-caps />
+            <q-tab name="data" label="Data" no-caps />
+            <q-tab name="stdout" label="Stdout" no-caps />
+            <q-tab name="stderr" label="Stderr" no-caps />
+            <q-tab name="log" label="Log" no-caps />
+            <q-tab name="stats" label="Stats" no-caps />
+          </q-tabs>
 
-        <q-separator />
+          <q-separator />
 
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="state" class="bg-dark text-white console q-pa-lg">
-            <q-scroll-area
-              ref="consoleScroll"
-              style="height: 100%; width: 100%"
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
+          <q-tab-panels v-model="tab" animated>
+            <q-tab-panel
+              name="state"
+              class="bg-dark text-white console q-pa-lg"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
-                >{{ jsonParse(stateData) }}
-              </ssh-pre>
-              <pre v-else>{{ stateData }}</pre>
-            </q-scroll-area>
-          </q-tab-panel>
-          <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
-            <q-scroll-area
-              ref="consoleScroll"
-              style="height: 100%; width: 100%"
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                  >{{ jsonParse(stateData) }}
+                </ssh-pre>
+                <pre v-else>{{ stateData }}</pre>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                  >{{ jsonParse(rawData) }}
+                </ssh-pre>
+                <pre v-else>{{ rawData }}</pre>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel
+              name="stdout"
+              class="bg-dark text-white console q-pa-lg"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
-                >{{ jsonParse(rawData) }}
-              </ssh-pre>
-              <pre v-else>{{ rawData }}</pre>
-            </q-scroll-area>
-          </q-tab-panel>
-          <q-tab-panel name="stdout" class="bg-dark text-white console q-pa-lg">
-            <q-scroll-area
-              ref="consoleScroll"
-              style="height: 100%; width: 100%"
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                  >{{ jsonParse(stdout) }}
+                </ssh-pre>
+                <pre v-else>{{ stdout }}</pre>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel
+              name="stderr"
+              class="bg-dark text-white console q-pa-lg"
             >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
-                >{{ jsonParse(stdout) }}
-              </ssh-pre>
-              <pre v-else>{{ stdout }}</pre>
-            </q-scroll-area>
-          </q-tab-panel>
-          <q-tab-panel name="stderr" class="bg-dark text-white console q-pa-lg">
-            <q-scroll-area
-              ref="consoleScroll"
-              style="height: 100%; width: 100%"
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-            >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
-                >{{ jsonParse(stderr) }}
-              </ssh-pre>
-              <pre v-else>{{ stderr }}</pre>
-            </q-scroll-area>
-          </q-tab-panel>
-          <q-tab-panel name="log" class="bg-dark text-white console q-pa-lg">
-            <q-scroll-area
-              ref="consoleScroll"
-              style="height: 100%; width: 100%"
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-            >
-              <ssh-pre v-if="jsonFormat" language="json" :dark="true"
-                >{{ jsonParse(log) }}
-              </ssh-pre>
-              <pre v-else>{{ log }}</pre>
-            </q-scroll-area>
-          </q-tab-panel>
-          <q-tab-panel class="bg-golem" name="stats">
-            <Suspense>
-              <AppStats :app="dapp" />
-              <template #fallback>
-                <p>Please wait...</p>
-              </template>
-            </Suspense>
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
-    </div>
-    <div class="row justify-between q-pa-xs q-gutter-md items-center">
-      <div class="row justify-sm-start">
-        <q-toggle
-          v-model="scrollToBottom"
-          label="Scroll to bottom"
-          keep-color
-          color="primary"
-          size="xl"
-        />
-        <q-toggle
-          v-model="jsonFormat"
-          label="Highlight syntax"
-          keep-color
-          color="primary"
-          size="xl"
-        />
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                  >{{ jsonParse(stderr) }}
+                </ssh-pre>
+                <pre v-else>{{ stderr }}</pre>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel name="log" class="bg-dark text-white console q-pa-lg">
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                  >{{ jsonParse(log) }}
+                </ssh-pre>
+                <pre v-else>{{ log }}</pre>
+              </q-scroll-area>
+            </q-tab-panel>
+            <q-tab-panel class="bg-golem" name="stats">
+              <Suspense>
+                <AppStats :app="dapp" />
+                <template #fallback>
+                  <p>Please wait...</p>
+                </template>
+              </Suspense>
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
       </div>
-      <div class="content-end text-golem-gray">
-        Refresh interval: <strong>5s</strong>
+      <div class="row">
+        <div class="row justify-sm-start">
+          <q-toggle
+            v-model="scrollToBottom"
+            label="Scroll to bottom"
+            keep-color
+            color="primary"
+            size="xl"
+          />
+          <q-toggle
+            v-model="jsonFormat"
+            label="Highlight syntax"
+            keep-color
+            color="primary"
+            size="xl"
+          />
+        </div>
+        <div class="content-end text-golem-gray">
+          Refresh interval: <strong>5s</strong>
+        </div>
       </div>
     </div>
   </q-page>
@@ -176,18 +191,20 @@ import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
 import SshPre from "simple-syntax-highlighter";
 import "simple-syntax-highlighter/dist/sshpre.css";
-import AppStatus from "components/App/AppStatus.vue";
-import AppInstanceId from "components/App/AppInstanceId.vue";
+import AppStatusBadge from "components/App/AppStatusBadge.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
 import AppStats from "components/App/Stats/AppStats.vue";
+import AppLink from "components/App/AppLink.vue";
+import AppProperty from "components/App/AppProperty.vue";
 
 export default defineComponent({
   name: "IndexPage",
   components: {
+    AppProperty,
+    AppLink,
     AppStats,
     PageTitle,
-    AppInstanceId,
-    AppStatus,
+    AppStatusBadge,
     SshPre,
   },
   setup() {

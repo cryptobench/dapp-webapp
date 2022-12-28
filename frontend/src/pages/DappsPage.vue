@@ -18,6 +18,7 @@
       rows-per-page-label="Entries per page:"
       :rows-per-page-options="[10, 20, 0]"
       hide-header
+      hide-bottom
     >
       <template #body-cell-icon="props">
         <q-td :props="props">
@@ -26,44 +27,45 @@
       </template>
       <template #body-cell-name="props">
         <q-td :props="props">
-          <div class="dapp-td-title">{{ props.row.name }}</div>
-          <div class="text-golem-gray">
-            {{ new Date(Date.parse(props.row.created_at)).toLocaleString() }}
-          </div>
+          <AppProperty
+            :name="props.row.name"
+            :value="new Date(Date.parse(props.row.created_at)).toLocaleString()"
+          />
         </q-td>
       </template>
       <template #body-cell-id="props">
         <q-td :props="props">
-          <AppInstanceId :id="props.row.id" />
+          <AppProperty name="App ID" :value="props.row.id" copy />
         </q-td>
       </template>
       <template #body-cell-status="props">
         <q-td :props="props">
-          <AppStatus :status="props.row.status" />
+          <AppStatusBadge :status="props.row.status" />
         </q-td>
       </template>
       <template #body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-md">
-          <q-btn
-            v-if="props.row.status === 'active'"
-            flat
-            square
-            unelevated
-            no-caps
-            color="negative"
-            label="Stop"
-            :loading="stopping === props.row.id"
-            icon="stop"
-            @click="stop(props.row.id)"
-          />
           <q-btn
             flat
             square
             unelevated
             no-caps
             color="primary"
-            label="Details"
+            icon="manage_search"
+            title="Details"
             :to="/details/ + props.row.id"
+          />
+          <q-btn
+            v-if="props.row.status === 'active'"
+            flat
+            square
+            unelevated
+            no-caps
+            color="warning"
+            title="Stop"
+            :loading="stopping === props.row.id"
+            icon="stop"
+            @click="stop(props.row.id)"
           />
           <q-btn
             v-if="props.row.status === 'dead'"
@@ -72,7 +74,8 @@
             unelevated
             no-caps
             color="negative"
-            label="Delete"
+            title="Delete"
+            icon="delete_forever"
             @click="deleteApp(props.row.id)"
           />
         </q-td>
@@ -94,11 +97,11 @@
 import { computed, defineComponent, ref } from "vue";
 import { useDappsStore } from "stores/dapps";
 import { useQuasar } from "quasar";
-import AppStatus from "components/App/AppStatus.vue";
-import AppInstanceId from "components/App/AppInstanceId.vue";
+import AppStatusBadge from "components/App/AppStatusBadge.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
 import PageDescription from "components/Typography/PageDescription.vue";
 import AppCoverCircle from "components/App/AppCoverCircle.vue";
+import AppProperty from "components/App/AppProperty.vue";
 
 const columns = [
   {
@@ -126,11 +129,11 @@ const columns = [
 export default defineComponent({
   name: "DappsPage",
   components: {
+    AppProperty,
     AppCoverCircle,
     PageDescription,
     PageTitle,
-    AppInstanceId,
-    AppStatus,
+    AppStatusBadge,
   },
 
   setup() {
