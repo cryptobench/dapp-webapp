@@ -55,7 +55,7 @@ module.exports = ({ cliAdapter, database, logger }) => {
         throw new Error(`No feedback from CliAdapter for app ${appId}`);
       }
 
-      return Ok(JSON.parse(feedback));
+      return Ok(feedback);
     },
   };
 };
