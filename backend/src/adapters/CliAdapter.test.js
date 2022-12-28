@@ -13,8 +13,8 @@ describe("CLI Adapter", () => {
     jest.resetAllMocks();
   });
 
-  describe("Getting stats for a particular app", () => {
-    test("dapp-stats [appId] returns JSON with agreed stats", async () => {
+  describe("stats - Getting stats for a particular app", () => {
+    test("returns JSON with agreed stats", async () => {
       const adapter = CliAdapter(config, logger, runner);
 
       // Given
@@ -61,7 +61,7 @@ describe("CLI Adapter", () => {
       expect(result).toEqual(agreedShape);
     });
 
-    test("dapp-stats throws an error when the result code is non-zero", async () => {
+    test("throws an error when the result code is non-zero", async () => {
       // Given
       const appId = "some-app-id";
 
