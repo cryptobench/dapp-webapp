@@ -10,6 +10,7 @@ module.exports = ({ database, cliAdapter }) => {
     async getDapps(userId) {
       const userDapps = await database.findDappsByUser(userId);
       const storeDapps = await database.findAllStoreDApps();
+
       const dapps = [];
 
       for (const { appId, appStoreId, createdAt } of userDapps) {

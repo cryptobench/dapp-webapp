@@ -7,6 +7,10 @@
       <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-12">
           <q-card flat class="q-ma-sm">
+            <q-inner-loading
+              :showing="loading"
+              label="Loading information..."
+            />
             <q-card-section>
               <AppProperty name="Status">
                 <AppStatusBadge :status="dapp.status" />
@@ -18,6 +22,7 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
           <q-card flat class="q-ma-sm">
             <q-card-section>
+              <q-inner-loading :showing="loading" label="Loading links..." />
               <AppLink v-if="link" :link="link" title="View the app instance" />
               <AppLink
                 v-if="proxyUrl"
@@ -29,6 +34,7 @@
         </div>
         <div class="col-md-4 col-xs-12">
           <q-card flat class="q-ma-sm">
+            <q-inner-loading :showing="loading" label="Loading action..." />
             <q-card-section>
               <q-btn
                 v-if="dapp.status === 'active'"
@@ -222,30 +228,44 @@ export default defineComponent({
     const stopping = ref(false);
     const killing = ref(false);
     const jsonFormat = ref(true);
+    const loading = ref(true);
     const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.getProxyUrl(id));
 
     if (dapp.value?.status === "active") {
-      dappStore.startGettingData(id);
+      dappStore.startGettingData(id).finally(() => {
+        loading.value = false;
+      });
     } else {
-      dappStore.getData(id);
+      dappStore.getData(id).finally(() => {
+        loading.value = false;
+      });
     }
+
     watch([stateData, rawData, stdout, stderr, log], () => {
       if (scrollToBottom?.value && consoleScroll?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
+
     watch(scrollToBottom, () => {
       if (scrollToBottom?.value && consoleScroll?.value)
         consoleScroll.value.setScrollPercentage("vertical", 1.0);
     });
+
     onUnmounted(() => dappStore.stopGettingData(id));
+
     const $q = useQuasar();
 
-    dappStore.getDapps();
+    // ToDo: Don't trigger downloading all apps, target specific app instead
+    //    Right now this is used only to fix a bug when someone is on the details page and hits refresh
+    dappStore.getDapps().finally(() => {
+      loading.value = false;
+    });
 
     return {
       dapp,
       tab: ref("state"),
+      loading,
       stopping,
       killing,
       stateData,
@@ -288,7 +308,7 @@ export default defineComponent({
             });
           }
           stopping.value = false;
-          dappStore.stopGettingData();
+          dappStore.stopGettingData(id);
           dappStore.getDapps();
           dappStore.getData(id);
         });
@@ -309,7 +329,7 @@ export default defineComponent({
             });
           }
           killing.value = false;
-          dappStore.stopGettingData();
+          dappStore.stopGettingData(id);
           dappStore.getDapps();
           dappStore.getData(id);
         });

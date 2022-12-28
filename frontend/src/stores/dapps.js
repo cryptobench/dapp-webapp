@@ -30,12 +30,6 @@ export const useDappsStore = defineStore("dapps", {
     async getDapps() {
       this.dapps = await api.get(`/dapps/`);
     },
-    /**
-     *
-     * @param {String} appStoreId The dApp ID to run
-     *
-     * @returns {Promise<string>} The dApp instance ID
-     */
     async startDapp(appStoreId) {
       return api.post(`/dapp/start/`, { appStoreId });
     },
@@ -66,19 +60,20 @@ export const useDappsStore = defineStore("dapps", {
       let link = "";
       rawData
         .split("\n")
-        .filter((l) => l.trim())
+        .map((l) => l.trim())
         .forEach((line) => {
           try {
-            let data = JSON.parse(line);
+            const data = JSON.parse(line);
             link = data?.http?.local_proxy_address || "";
           } catch (error) {
-            console.log("ERROR", error);
+            console.error("Error during obtaining local_proxy_address", error);
           }
         });
       return link;
     },
     async setupLink(id) {
       const link = this.parseLinkFromRawData(this.rawData[id]);
+
       if (link !== this.link[id]) {
         this.link[id] = link;
 
@@ -106,7 +101,7 @@ export const useDappsStore = defineStore("dapps", {
         await this.getData(id);
         if (this.running?.[id]) setTimeout(async () => await start(), 5000);
       };
-      start();
+      await start();
     },
     stopGettingData(id) {
       this.running[id] = false;
