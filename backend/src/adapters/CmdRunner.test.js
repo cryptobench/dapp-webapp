@@ -12,7 +12,7 @@ describe("CMD Runner", () => {
     });
 
     test("Throws an error when the configuration does not contain required settings", () => {
-      expect(() => CmdRunner({}, {})).toThrow("Config for CLI Adapter is not defined");
+      expect(() => CmdRunner({}, {})).toThrow("Config for CMD Runner is not defined");
     });
   });
 });

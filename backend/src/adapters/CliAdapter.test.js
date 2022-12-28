@@ -1,10 +1,13 @@
 const CliAdapter = require("./CliAdapter");
 const { when } = require("jest-when");
 
-const config = {};
 const logger = {};
 
-const runner = {
+const dStatsCmd = {
+  run: jest.fn(),
+};
+
+const dManagerCmd = {
   run: jest.fn(),
 };
 
@@ -15,7 +18,7 @@ describe("CLI Adapter", () => {
 
   describe("stats - Getting stats for a particular app", () => {
     test("returns JSON with agreed stats", async () => {
-      const adapter = CliAdapter(config, logger, runner);
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd, logger);
 
       // Given
       const appId = "some-app-id";
@@ -48,8 +51,8 @@ describe("CLI Adapter", () => {
       };
 
       // When
-      when(runner.run)
-        .calledWith("dapp-stats", appId)
+      when(dStatsCmd.run)
+        .calledWith("stats", appId)
         .mockResolvedValue({
           status: 0,
           stdout: JSON.stringify(agreedShape),
@@ -66,12 +69,12 @@ describe("CLI Adapter", () => {
       const appId = "some-app-id";
 
       // When
-      when(runner.run).calledWith("dapp-stats", appId).mockResolvedValue({
+      when(dStatsCmd.run).calledWith("stats", appId).mockResolvedValue({
         status: 2,
         stdout: "",
       });
 
-      const adapter = CliAdapter(config, logger, runner);
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd, logger);
 
       // Then
       await expect(adapter.stats(appId)).rejects.toThrow(

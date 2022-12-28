@@ -1,8 +1,8 @@
 const { EOL } = require("os");
 
-module.exports = (config, logger, cmdRunner) => {
+module.exports = (dManagerCmd, dStatsCmd) => {
   async function getDetails(command, appId, ensureAlive = true) {
-    const result = await cmdRunner.run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive");
+    const result = await dManagerCmd.run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive");
     return result.stdout;
   }
 
@@ -12,16 +12,16 @@ module.exports = (config, logger, cmdRunner) => {
         throw new Error(`Cannot start dApp without config or descriptor file`);
       }
 
-      return cmdRunner.run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split(EOL));
     },
     async stop(appId) {
-      return cmdRunner.run("stop", appId).then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("stop", appId).then((res) => res.stdout?.split(EOL));
     },
     async kill(appId) {
-      return cmdRunner.run("kill", appId).then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("kill", appId).then((res) => res.stdout?.split(EOL));
     },
     async list() {
-      return cmdRunner.run("list").then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("list").then((res) => res.stdout?.split(EOL));
     },
     async rawData(appId, ensureAlive = true) {
       return getDetails("data", appId, ensureAlive);
@@ -39,13 +39,13 @@ module.exports = (config, logger, cmdRunner) => {
       return getDetails("log", appId, ensureAlive);
     },
     async getStatus(appId) {
-      const result = await cmdRunner.run("read", "state", appId);
+      const result = await dManagerCmd.run("read", "state", appId);
       if (result.status === 0) return "active";
       if (result.status === 4) return "unknown_app";
       if (result.status === 5) return "dead";
     },
     async stats(appId) {
-      const result = await cmdRunner.run("dapp-stats", appId);
+      const result = await dStatsCmd.run("stats", appId);
 
       if (result.status !== 0) {
         throw new Error("The stats command failed to execute, stats are not available");
