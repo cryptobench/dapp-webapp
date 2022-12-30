@@ -1,11 +1,9 @@
 <template>
-  <q-card class="dapp-card q-ma-lg custom-shadow custom-border">
+  <q-card class="dapp-card q-ma-lg q-pb-xl custom-shadow custom-border">
     <q-img :src="image" fit="cover" style="height: 200px" />
     <q-card-section class="flex">
       <q-item-section>
-        <div
-          class="text-subtitle2 dapp-author text-golem-code text-weight-bold q-ma-md"
-        >
+        <div class="text-golem-code text-weight-bold dapp-author q-ma-md">
           By: {{ author }}
         </div>
         <div class="text-h5 text-weight-bold dapp-name q-ma-md">
@@ -14,11 +12,11 @@
       </q-item-section>
     </q-card-section>
     <q-card-section>
-      <div class="q-px-md text-golem-code q-mb-xl">
+      <div class="q-px-md text-golem-code dapp-description q-mb-xl">
         {{ description }}
       </div>
     </q-card-section>
-    <q-card-actions align="right" class="no-border q-mt-auto">
+    <q-card-actions align="right" class="stick-bottom">
       <q-btn
         square
         unelevated
@@ -26,7 +24,7 @@
         label="Run"
         icon-right="play_circle_outline"
         color="primary"
-        class="q-ma-md text-weight-bold stick-bottom"
+        class="q-ma-md text-weight-bold"
         @click="run(id, name)"
       ></q-btn>
     </q-card-actions>
@@ -124,6 +122,7 @@ export default {
 .dapp-author
   color: #49536A
   text-transform: uppercase
+  font-size: 0.8em
 
 .dapp-name
   color: $primary
@@ -138,4 +137,7 @@ export default {
   position: absolute
   bottom: 0
   right: 0
+
+.dapp-description
+  font-size: 0.8em
 </style>

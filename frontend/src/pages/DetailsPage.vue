@@ -79,7 +79,7 @@
 
           <q-separator />
 
-          <q-tab-panels v-model="tab" animated>
+          <q-tab-panels v-model="tab">
             <q-tab-panel
               name="state"
               class="bg-dark text-white console q-pa-lg"
