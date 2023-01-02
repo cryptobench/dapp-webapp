@@ -1,10 +1,17 @@
 const { Ok, UserError } = require("../../utils/Result");
+const assert = require("assert");
 
 module.exports = ({ redisClient, logger, config }) => {
-  const OPEN_PORT_TIMEOUT = config.proxy.openPortTimeout;
-  const CHECK_PORT_INTERVAL = config.proxy.checkPortInterval;
-  const CHECK_PORT_ATTEMPTS = config.proxy.checkPortAttempts;
-  const PROXY_PREFIX = config.proxy.baseUrl;
+  const {
+    openPortTimeout: OPEN_PORT_TIMEOUT,
+    checkPortInterval: CHECK_PORT_INTERVAL,
+    checkPortAttempts: CHECK_PORT_ATTEMPTS,
+    exposeDomain: PROXY_DOMAIN,
+    exposeProtocol: PROXY_PROTOCOL,
+  } = config.proxy;
+
+  assert(PROXY_PROTOCOL, "The proxy 'exposeProtocol' setting is required");
+  assert(PROXY_DOMAIN, "The proxy 'exposeDomain' setting is required");
 
   async function requestOpenPortForAppId(appId, port) {
     logger.debug(`[ProxyService] requestOpenPortForAppId: ${appId} ${port}`);
@@ -58,7 +65,7 @@ module.exports = ({ redisClient, logger, config }) => {
       return Ok({
         appId,
         port,
-        proxyUrl: PROXY_PREFIX + appId,
+        proxyUrl: `${PROXY_PROTOCOL}://${appId}.${PROXY_DOMAIN}/`,
       });
     },
   };

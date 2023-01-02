@@ -64,6 +64,11 @@ npm install
 
 The default config assumes that the yagna app-key is available in your environment as `YAGNA_APPKEY`.
 
+### `proxy` settings
+
+- `exposeDomain` (**required**, example: _"dapp.golem.network"_) - the domain which will be used to expose HTTP interfaces of the deployed application
+- `exposeProtocol` (**required**, example: _"https"_) - the protocol which will be used to build the links to the exposed HTTP interfaces
+
 ## Start the app
 
 ```bash
