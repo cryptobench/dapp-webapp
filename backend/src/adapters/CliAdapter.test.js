@@ -41,7 +41,6 @@ describe("CLI Adapter", () => {
           state_changes: 3,
           launched_successfully: true,
           estimated_time_to_launch: "0:02:00",
-          estimated_working_time: "0:02:00",
         },
         nodes: {
           db: {
@@ -49,7 +48,6 @@ describe("CLI Adapter", () => {
               state_changes: 3,
               launched_successfully: true,
               estimated_time_to_launch: "0:02:00",
-              estimated_working_time: "0:02:00",
             },
           },
           http: {
@@ -57,7 +55,6 @@ describe("CLI Adapter", () => {
               state_changes: 3,
               launched_successfully: true,
               estimated_time_to_launch: "0:02:00",
-              estimated_working_time: "0:02:00",
             },
           },
         },

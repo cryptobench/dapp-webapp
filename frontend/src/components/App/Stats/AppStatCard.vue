@@ -19,10 +19,6 @@
           <td>Estimated time to launch</td>
           <td>{{ stats.estimated_time_to_launch }}</td>
         </tr>
-        <tr>
-          <td>Estimated working time</td>
-          <td>{{ stats.estimated_working_time }}</td>
-        </tr>
       </tbody>
     </q-markup-table>
   </q-card>
