@@ -9,9 +9,6 @@
       "ip": true
     }
   },
-  "cli": {
-    "mock": "TODO"
-  },
   "logger": {
     "streams": {
       "console": {

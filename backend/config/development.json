@@ -10,14 +10,6 @@
       "xff": true
     }
   },
-  "cli": {
-    "command": "dapp-manager",
-    "args": [],
-    "cwd": null,
-    "env": {
-      "OPTIONAL_SAMPLE_VAR": "var passed to env of spawned process - to define by user if needed"
-    }
-  },
   "authentication": {},
   "logger": {
     "streams": {

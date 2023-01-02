@@ -1,63 +1,33 @@
-const { spawn } = require("child_process");
-
 const { EOL } = require("os");
 
-module.exports = (config, logger) => {
-  if (!config.command || !config.args) {
-    throw new Error("Config for CLI Adapter is not defined");
-  }
-
-  function run(...args) {
-    return new Promise((resolve) => {
-      let stdout = "";
-
-      const result = spawn(config.command, [...config.args, ...args], {
-        cwd: config.cwd,
-        env: { ...process.env, ...config.env },
-        encoding: "utf8",
-      }).on("error", function (err) {
-        logger.error(`[CLI Adapter] STDERR: ${err}`);
-      });
-
-      result.stdout.on("data", (data) => {
-        stdout += data;
-      });
-
-      result.stderr.on("data", (data) => {
-        logger.debug(`[CLI Adapter] STDERR: ${data.toString().trimEnd()}`);
-      });
-
-      result.on("error", (err) => {
-        logger.error(err, `Running '${config.command}' failed due to an error`);
-      });
-
-      result.on("close", (status) => {
-        logger.debug(`Executing ${config.command} finished with exit code ${status}`);
-
-        resolve({ stdout, status });
-      });
-    });
-  }
-
+module.exports = (dManagerCmd, dStatsCmd) => {
   async function getDetails(command, appId, ensureAlive = true) {
-    return run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive").then((res) => res.stdout);
+    const result = await dManagerCmd.run("read", command, appId, ensureAlive ? undefined : "--no-ensure-alive");
+    return result.stdout;
   }
 
   return {
     async start(configPath, descriptorPath) {
       if (!configPath || !descriptorPath) {
-        throw new Error(`Cannot start dapp without config or descriptor file`);
+        throw new Error(`Cannot start dApp without config or descriptor file`);
       }
-      return run("start", "--config", configPath, descriptorPath).then((res) => res.stdout?.split(EOL));
+
+      const result = await dManagerCmd.run("start", "--config", configPath, descriptorPath);
+
+      if (result.status !== 0) {
+        throw new Error(`Failed to start the application using dapp-manager. Exit status: ${result.status}.`);
+      }
+
+      return result.stdout?.split(EOL);
     },
     async stop(appId) {
-      return run("stop", appId).then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("stop", appId).then((res) => res.stdout?.split(EOL));
     },
     async kill(appId) {
-      return run("kill", appId).then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("kill", appId).then((res) => res.stdout?.split(EOL));
     },
     async list() {
-      return run("list").then((res) => res.stdout?.split(EOL));
+      return dManagerCmd.run("list").then((res) => res.stdout?.split(EOL));
     },
     async rawData(appId, ensureAlive = true) {
       return getDetails("data", appId, ensureAlive);
@@ -75,10 +45,19 @@ module.exports = (config, logger) => {
       return getDetails("log", appId, ensureAlive);
     },
     async getStatus(appId) {
-      const result = await run("read", "state", appId);
+      const result = await dManagerCmd.run("read", "state", appId);
       if (result.status === 0) return "active";
       if (result.status === 4) return "unknown_app";
       if (result.status === 5) return "dead";
+    },
+    async stats(appId) {
+      const result = await dStatsCmd.run("stats", appId);
+
+      if (result.status !== 0) {
+        throw new Error("The stats command failed to execute, stats are not available");
+      }
+
+      return JSON.parse(result.stdout);
     },
   };
 };
