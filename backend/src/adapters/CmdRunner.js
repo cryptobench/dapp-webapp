@@ -9,16 +9,24 @@ module.exports = (config, logger) => {
     return new Promise((resolve) => {
       let stdout = "";
 
+      const cmdLine = [config.command, ...config.args, ...args].join(" ");
+      logger.debug(
+        {
+          cmdLine,
+        },
+        "Issuing a shell command"
+      );
+
       const result = spawn(config.command, [...config.args, ...args], {
         cwd: config.cwd,
         env: { ...process.env, ...config.env },
         encoding: "utf8",
       })
         .on("error", function (err) {
-          logger.error(`[CMD Runner] STDERR: ${err}`);
+          logger.error({ cmdLine }, `[CMD Runner] STDERR: ${err}`);
         })
         .on("close", (status) => {
-          logger.debug(`Executing ${config.command} finished with exit code ${status}`);
+          logger.debug({ cmdLine }, `Executing ${config.command} finished with exit code ${status}`);
 
           resolve({ stdout, status });
         });
@@ -28,7 +36,7 @@ module.exports = (config, logger) => {
       });
 
       result.stderr.on("data", (data) => {
-        logger.warn(`[CMD Runner] STDERR: ${data.toString().trimEnd()}`);
+        logger.warn({ cmdLine }, `[CMD Runner] STDERR: ${data.toString().trimEnd()}`);
       });
     });
   }

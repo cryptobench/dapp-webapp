@@ -53,6 +53,7 @@
             color="primary"
             icon="manage_search"
             title="Details"
+            label="Details"
             :to="/details/ + props.row.id"
           />
           <q-btn
@@ -63,18 +64,20 @@
             no-caps
             color="warning"
             title="Stop"
+            label="Stop"
             :loading="stopping === props.row.id"
             icon="stop"
             @click="stop(props.row.id)"
           />
           <q-btn
-            v-if="props.row.status === 'dead'"
+            v-if="props.row.status !== 'active'"
             flat
             square
             unelevated
             no-caps
             color="negative"
             title="Delete"
+            label="Delete"
             icon="delete_forever"
             @click="deleteApp(props.row.id)"
           />

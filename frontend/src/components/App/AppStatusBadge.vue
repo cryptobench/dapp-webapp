@@ -31,6 +31,13 @@ export default defineComponent({
             return "white";
         }
       },
+      statusText: (status) => {
+        const parts = status.split("_");
+        const result = parts.map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+        );
+        return result.join(" ");
+      },
     };
   },
 });
@@ -40,7 +47,7 @@ export default defineComponent({
   <q-badge
     :color="statusColor(status)"
     :text-color="statusTextColor(status)"
-    :label="status ?? 'Unknown'"
+    :label="statusText(status) ?? 'Unknown'"
     class="dapp-status"
   />
 </template>
