@@ -6,7 +6,8 @@ const config = {
     openPortTimeout: 3600,
     checkPortInterval: 1000,
     checkPortAttempts: 30,
-    baseUrl: "http://test-domain.golem.network/app/",
+    exposeDomain: "dapp.golem.network",
+    exposeProtocol: "http",
   },
 };
 
@@ -43,6 +44,6 @@ describe("Proxy Service", () => {
     const result = await service.getProxyUrl(appId, 8080);
 
     // Then
-    expect(result.payload.proxyUrl).toEqual("http://test-domain.golem.network/app/testAppId");
+    expect(result.payload.proxyUrl).toEqual("http://testAppId.dapp.golem.network/");
   });
 });

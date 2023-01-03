@@ -31,6 +31,7 @@
     "openPortTimeout": 3600,
     "checkPortInterval": 1000,
     "checkPortAttempts": 30,
-    "baseUrl": "http://localhost/app/"
+    "exposeDomain": "dapp.golem.network",
+    "exposeProtocol": "http"
   }
 }
