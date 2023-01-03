@@ -15,7 +15,7 @@
           <td>Launched successfully</td>
           <td>{{ stats.launched_successfully ? "Yes" : "No" }}</td>
         </tr>
-        <tr v-if=!!stats.time_to_launch>
+        <tr v-if="!!stats.time_to_launch">
           <td>Time to launch</td>
           <td>{{ stats.time_to_launch }}</td>
         </tr>
