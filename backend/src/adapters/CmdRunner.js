@@ -1,4 +1,5 @@
 const { spawn } = require("child_process");
+const stripColor = require("strip-color");
 
 module.exports = (config, logger) => {
   if (!config.command || !config.args) {
@@ -10,6 +11,7 @@ module.exports = (config, logger) => {
       let stdout = "";
 
       const cmdLine = [config.command, ...config.args, ...args].join(" ");
+
       logger.debug(
         {
           cmdLine,
@@ -28,7 +30,7 @@ module.exports = (config, logger) => {
         .on("close", (status) => {
           logger.debug({ cmdLine }, `Executing ${config.command} finished with exit code ${status}`);
 
-          resolve({ stdout, status });
+          resolve({ stdout: stripColor(stdout), status });
         });
 
       result.stdout.on("data", (data) => {
@@ -36,7 +38,7 @@ module.exports = (config, logger) => {
       });
 
       result.stderr.on("data", (data) => {
-        logger.warn({ cmdLine }, `[CMD Runner] STDERR: ${data.toString().trimEnd()}`);
+        logger.warn({ cmdLine }, `[CMD Runner] STDERR: ${stripColor(data.toString().trimEnd())}`);
       });
     });
   }
