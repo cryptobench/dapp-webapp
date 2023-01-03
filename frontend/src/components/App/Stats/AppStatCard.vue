@@ -17,7 +17,7 @@
         </tr>
         <tr>
           <td>Estimated time to launch</td>
-          <td>{{ stats.estimated_time_to_launch }}</td>
+          <td>{{ stats.time_to_launch }}</td>
         </tr>
       </tbody>
     </q-markup-table>
