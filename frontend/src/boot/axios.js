@@ -10,7 +10,9 @@ export default boot(({ app, store }) => {
 
   api.interceptors.request.use(
     (config) => {
-      config.headers["Authorization"] = userStore.user.id;
+      if (userStore.user) {
+        config.headers["Authorization"] = userStore.user.id;
+      }
       return config;
     },
     (error) => {
@@ -22,21 +24,25 @@ export default boot(({ app, store }) => {
     async (response) => {
       if (response.data.success) {
         return response.data.payload;
-      } else {
+      } else if (response.data.error) {
+        const { error } = response.data;
+        console.error({ error }, "Backend request failed due to this error");
         Notify.create({
           type: "negative",
-          message: response.data.error,
+          message: error,
         });
+      } else {
+        console.error({ response }, "Unknown issue with the response");
       }
     },
     async (error) => {
-      console.log({ error });
+      console.error({ error }, "Backend request failed due to this error");
       Notify.create({
         type: "negative",
         message:
           error.response?.data.error ||
           error?.toString() ||
-          "Some errors has occurred",
+          "Some error has occurred",
       });
       throw error.response;
     }

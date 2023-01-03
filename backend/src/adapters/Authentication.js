@@ -7,8 +7,8 @@ module.exports = (database) => {
       // TODO: really decode in future
       const id = token;
       const user = await database.findUser(id);
+
       if (!user) {
-        // throw new AuthenticationError(`User ${id} not found`);
         // TODO: TMP crate new user if not exists
         const user = {
           id,
@@ -17,6 +17,7 @@ module.exports = (database) => {
         };
         await database.insertUser(user);
       }
+
       return user;
     },
   };
