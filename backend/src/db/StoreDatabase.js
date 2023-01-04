@@ -10,11 +10,15 @@ const DEFAULT_META = {
 };
 
 module.exports = function StoreDatabase(_db, logger) {
+  function loadDescriptorFromFile(file) {
+    return yaml.load(fs.readFileSync(fs.realpathSync(__dirname + "/../../" + file)));
+  }
+
   function loadMetaForDApp(dapp) {
     try {
       logger.debug({ dapp }, "Loading dApp descriptor from file");
 
-      const descriptor = yaml.load(fs.readFileSync(dapp.descriptorPath));
+      const descriptor = loadDescriptorFromFile(dapp.descriptorPath);
 
       return {
         ...DEFAULT_META,
@@ -34,7 +38,7 @@ module.exports = function StoreDatabase(_db, logger) {
   }
 
   return {
-    async findDAppById(appId) {
+    findDAppById(appId) {
       return dapps.find((dapp) => dapp.id === appId);
     },
     async findAllStoreDApps() {
@@ -50,6 +54,15 @@ module.exports = function StoreDatabase(_db, logger) {
           description,
         };
       });
+    },
+    loadDescriptorForApp(appId) {
+      const app = this.findDAppById(appId);
+
+      if (!app) {
+        throw new Error(`App with ID ${appId} does not exist!`);
+      }
+
+      return loadDescriptorFromFile(app.descriptorPath);
     },
   };
 };

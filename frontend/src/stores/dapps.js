@@ -13,6 +13,8 @@ export const useDappsStore = defineStore("dapps", {
     link: {},
     running: {},
     proxyUrl: {},
+    descriptor: {},
+    timers: {},
   }),
 
   getters: {
@@ -24,18 +26,13 @@ export const useDappsStore = defineStore("dapps", {
     getLog: (state) => (id) => state.log?.[id],
     getLink: (state) => (id) => state.link?.[id],
     getProxyUrl: (state) => (id) => state.proxyUrl?.[id],
+    getDescriptor: (state) => (id) => state.descriptor?.[id],
   },
 
   actions: {
     async getDapps() {
       this.dapps = await api.get(`/dapps/`);
     },
-    /**
-     *
-     * @param {String} appStoreId The dApp ID to run
-     *
-     * @returns {Promise<string>} The dApp instance ID
-     */
     async startDapp(appStoreId) {
       return api.post(`/dapp/start/`, { appStoreId });
     },
@@ -60,25 +57,27 @@ export const useDappsStore = defineStore("dapps", {
       this.stdout[id] = await api.get(`/dapp/stdout/${id}`);
       this.stderr[id] = await api.get(`/dapp/stderr/${id}`);
       this.log[id] = await api.get(`/dapp/log/${id}`);
-      await this.setupLink(id);
+      this.descriptor[id] = await api.get(`/dapp/${id}/descriptor`);
     },
     parseLinkFromRawData(rawData) {
       let link = "";
       rawData
         .split("\n")
-        .filter((l) => l.trim())
+        .map((l) => l.trim())
+        .filter((l) => !!l)
         .forEach((line) => {
           try {
-            let data = JSON.parse(line);
+            const data = JSON.parse(line);
             link = data?.http?.local_proxy_address || "";
           } catch (error) {
-            console.log("ERROR", error);
+            console.error("Error during obtaining local_proxy_address", error);
           }
         });
       return link;
     },
     async setupLink(id) {
       const link = this.parseLinkFromRawData(this.rawData[id]);
+
       if (link !== this.link[id]) {
         this.link[id] = link;
 
@@ -102,13 +101,16 @@ export const useDappsStore = defineStore("dapps", {
     },
     async startGettingData(id) {
       this.running[id] = true;
-      const start = async () => {
+      this.timers[id] = setInterval(async () => {
         await this.getData(id);
-        if (this.running?.[id]) setTimeout(async () => await start(), 5000);
-      };
-      start();
+        const info = this.getDapp(id);
+        if (info?.status === "active") {
+          await this.setupLink(id);
+        }
+      }, 5000);
     },
     stopGettingData(id) {
+      clearInterval(this.timers[id]);
       this.running[id] = false;
     },
   },

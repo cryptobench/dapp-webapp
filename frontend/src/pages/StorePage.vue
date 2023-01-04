@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
+    <q-inner-loading label="Plase wait..." :showing="loading" />
     <PageTitle value="dApp Store" />
     <PageDescription>
       With Golem Network, users can connect with ease and pay each other for
@@ -11,7 +12,7 @@
     <q-separator inset class="q-ma-lg" />
     <div
       id="dapp-store"
-      class="q-pa-md row justify-start items-start q-gutter-lg"
+      class="q-pa-md row justify-start items-start items-stretch q-gutter-lg"
     >
       <DappStoreCard
         v-for="dapp in dapps"

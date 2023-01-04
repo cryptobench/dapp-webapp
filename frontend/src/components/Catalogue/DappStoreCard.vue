@@ -1,11 +1,9 @@
 <template>
-  <q-card class="dapp-card q-ma-lg custom-shadow custom-border">
+  <q-card class="dapp-card q-ma-lg q-pb-xl custom-shadow custom-border">
     <q-img :src="image" fit="cover" style="height: 200px" />
     <q-card-section class="flex">
       <q-item-section>
-        <div
-          class="text-subtitle2 dapp-author text-golem-code text-weight-bold q-ma-md"
-        >
+        <div class="text-golem-code text-weight-bold dapp-author q-ma-md">
           By: {{ author }}
         </div>
         <div class="text-h5 text-weight-bold dapp-name q-ma-md">
@@ -14,11 +12,11 @@
       </q-item-section>
     </q-card-section>
     <q-card-section>
-      <div class="q-px-md text-golem-code">
+      <div class="q-px-md text-golem-code dapp-description q-mb-xl">
         {{ description }}
       </div>
     </q-card-section>
-    <q-card-actions align="right" class="no-border q-mt-auto">
+    <q-card-actions align="right" class="stick-bottom">
       <q-btn
         square
         unelevated
@@ -36,6 +34,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { useDappsStore } from "stores/dapps";
+import { useRouter } from "vue-router";
 
 export default {
   name: "DappStoreCard",
@@ -64,6 +63,7 @@ export default {
   setup() {
     const dappStore = useDappsStore();
     const $q = useQuasar();
+    const $router = useRouter();
 
     function run(appId, name) {
       $q.dialog({
@@ -90,15 +90,11 @@ export default {
                 type: "positive",
                 textColor: "black",
                 message: `dApp ${name} has been launched successfully`,
-                actions: [
-                  {
-                    label: "Go to app",
-                    color: "primary",
-                    square: true,
-                    unelevated: true,
-                    to: `details/${instanceId}`,
-                  },
-                ],
+              });
+
+              // Navigate user to the newly started app
+              $router.push({
+                path: `details/${instanceId}`,
               });
             } else {
               $q.notify({
@@ -126,13 +122,22 @@ export default {
 .dapp-author
   color: #49536A
   text-transform: uppercase
+  font-size: 0.8em
 
 .dapp-name
   color: $primary
 
 .custom-shadow
-  box-shadow: 0px 0px 50px #eeeeee
+  box-shadow: 0 0 50px #eeeeee
 
 .custom-border
   border-radius: 10px
+
+.stick-bottom
+  position: absolute
+  bottom: 0
+  right: 0
+
+.dapp-description
+  font-size: 0.8em
 </style>
