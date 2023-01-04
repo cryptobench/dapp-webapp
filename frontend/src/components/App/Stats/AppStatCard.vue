@@ -19,6 +19,14 @@
           <td>Time to launch</td>
           <td>{{ stats.time_to_launch }}</td>
         </tr>
+        <tr>
+          <td>Terminated</td>
+          <td>{{ stats.terminated ? "Yes" : "No" }}</td>
+        </tr>
+        <tr v-if="!!stats.working_time">
+          <td>Working Time</td>
+          <td>{{ stats.working_time }}</td>
+        </tr>
       </tbody>
     </q-markup-table>
   </q-card>

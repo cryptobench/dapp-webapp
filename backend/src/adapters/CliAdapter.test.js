@@ -40,7 +40,9 @@ describe("CLI Adapter", () => {
         app: {
           state_changes: 3,
           launched_successfully: true,
-          time_to_launch: "0:02:00",
+          time_to_launch: "0:04:00",
+          terminated: true,
+          working_time: "0:08:00",
         },
         nodes: {
           db: {
@@ -48,13 +50,17 @@ describe("CLI Adapter", () => {
               state_changes: 3,
               launched_successfully: true,
               time_to_launch: "0:02:00",
+              terminated: true,
+              working_time: "0:08:00",
             },
           },
           http: {
             0: {
               state_changes: 3,
               launched_successfully: true,
-              time_to_launch: "0:02:00",
+              time_to_launch: "0:04:00",
+              terminated: true,
+              working_time: "0:06:00",
             },
           },
         },
