@@ -13,6 +13,8 @@ export const useDappsStore = defineStore("dapps", {
     link: {},
     running: {},
     proxyUrl: {},
+    descriptor: {},
+    timers: {},
   }),
 
   getters: {
@@ -24,6 +26,7 @@ export const useDappsStore = defineStore("dapps", {
     getLog: (state) => (id) => state.log?.[id],
     getLink: (state) => (id) => state.link?.[id],
     getProxyUrl: (state) => (id) => state.proxyUrl?.[id],
+    getDescriptor: (state) => (id) => state.descriptor?.[id],
   },
 
   actions: {
@@ -54,13 +57,14 @@ export const useDappsStore = defineStore("dapps", {
       this.stdout[id] = await api.get(`/dapp/stdout/${id}`);
       this.stderr[id] = await api.get(`/dapp/stderr/${id}`);
       this.log[id] = await api.get(`/dapp/log/${id}`);
-      await this.setupLink(id);
+      this.descriptor[id] = await api.get(`/dapp/${id}/descriptor`);
     },
     parseLinkFromRawData(rawData) {
       let link = "";
       rawData
         .split("\n")
         .map((l) => l.trim())
+        .filter((l) => !!l)
         .forEach((line) => {
           try {
             const data = JSON.parse(line);
@@ -97,13 +101,16 @@ export const useDappsStore = defineStore("dapps", {
     },
     async startGettingData(id) {
       this.running[id] = true;
-      const start = async () => {
+      this.timers[id] = setInterval(async () => {
         await this.getData(id);
-        if (this.running?.[id]) setTimeout(async () => await start(), 5000);
-      };
-      await start();
+        const info = this.getDapp(id);
+        if (info?.status === "active") {
+          await this.setupLink(id);
+        }
+      }, 5000);
     },
     stopGettingData(id) {
+      clearInterval(this.timers[id]);
       this.running[id] = false;
     },
   },

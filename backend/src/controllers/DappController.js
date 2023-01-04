@@ -1,4 +1,4 @@
-module.exports = (dappService) => {
+module.exports = (dappService, storeService) => {
   return [
     {
       method: "get",
@@ -94,6 +94,16 @@ module.exports = (dappService) => {
       handler: async (req, res) => {
         const data = await dappService.getStats(req.user.id, req.params.appId);
         return res.send(200, data).end();
+      },
+    },
+    {
+      method: "get",
+      path: "/dapp/:appId/descriptor",
+      handler: async (req, res) => {
+        const appInstance = await dappService.getInstanceInfo(req.user.id, req.params.appId);
+        const descriptor = storeService.getDescriptorForApp(appInstance.payload.appStoreId);
+
+        return res.send(200, descriptor).end();
       },
     },
   ];

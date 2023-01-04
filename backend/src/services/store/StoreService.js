@@ -5,5 +5,8 @@ module.exports = ({ database }) => {
     async getDapps() {
       return Ok(await database.findAllStoreDApps());
     },
+    getDescriptorForApp(storeAppId) {
+      return Ok(database.loadDescriptorForApp(storeAppId));
+    },
   };
 };

@@ -57,5 +57,15 @@ module.exports = ({ cliAdapter, database, logger }) => {
 
       return Ok(feedback);
     },
+    async getInstanceInfo(userId, appId) {
+      assertAppId(appId);
+
+      const app = await database.findByUserAndAppId(userId, appId);
+      if (!app) {
+        throw new UserError(`You don't have an app instance with ID ${appId}`);
+      }
+
+      return Ok(app);
+    },
   };
 };

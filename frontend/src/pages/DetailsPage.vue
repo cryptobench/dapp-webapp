@@ -7,10 +7,6 @@
       <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-12">
           <q-card flat class="q-ma-sm">
-            <q-inner-loading
-              :showing="loading"
-              label="Loading information..."
-            />
             <q-card-section>
               <AppProperty name="Status">
                 <AppStatusBadge :status="dapp.status" />
@@ -19,22 +15,32 @@
             </q-card-section>
           </q-card>
         </div>
-        <div class="col-md-4 col-sm-6 col-xs-12">
+        <div
+          v-if="isOperational() && descriptor && usesHttpProxy()"
+          class="col-md-4 col-sm-6 col-xs-12"
+        >
           <q-card flat class="q-ma-sm">
             <q-card-section>
-              <q-inner-loading :showing="loading" label="Loading links..." />
-              <AppLink v-if="link" :link="link" title="View the app instance" />
-              <AppLink
-                v-if="proxyUrl"
-                :link="proxyUrl"
-                title="View the app instance"
-              />
+              <AppProperty name="Local access link">
+                <AppLink
+                  :link="link"
+                  title="View the app instance"
+                  :loading="!link"
+                />
+              </AppProperty>
+
+              <AppProperty name="Proxy access link">
+                <AppLink
+                  :link="proxyUrl"
+                  title="View the app instance"
+                  :loading="!proxyUrl"
+                />
+              </AppProperty>
             </q-card-section>
           </q-card>
         </div>
-        <div class="col-md-4 col-xs-12">
+        <div v-if="dapp.status === 'active'" class="col-md-4 col-xs-12">
           <q-card flat class="q-ma-sm">
-            <q-inner-loading :showing="loading" label="Loading action..." />
             <q-card-section>
               <q-btn
                 v-if="dapp.status === 'active'"
@@ -47,7 +53,7 @@
                 @click="stop(dapp.id)"
               ></q-btn>
               <q-btn
-                v-if="dapp.status === 'active'"
+                v-if="isOperational()"
                 unelevated
                 square
                 color="negative"
@@ -166,7 +172,7 @@
         </q-card>
       </div>
       <div class="row">
-        <div class="row justify-sm-start">
+        <div class="col-11">
           <q-toggle
             v-model="scrollToBottom"
             label="Scroll to bottom"
@@ -182,7 +188,7 @@
             size="xl"
           />
         </div>
-        <div class="content-end text-golem-gray">
+        <div class="col-1 text-golem-gray">
           Refresh interval: <strong>5s</strong>
         </div>
       </div>
@@ -214,15 +220,20 @@ export default defineComponent({
     SshPre,
   },
   setup() {
-    const route = useRoute();
-    const id = route.params.id;
+    const $q = useQuasar();
+    const $route = useRoute();
+
+    const { id } = $route.params;
     const dappStore = useDappsStore();
+
     const dapp = computed(() => dappStore.getDapp(id));
     const stateData = computed(() => dappStore.getStateData(id));
     const rawData = computed(() => dappStore.getRawData(id));
     const stdout = computed(() => dappStore.getStdout(id));
     const stderr = computed(() => dappStore.getStderr(id));
     const log = computed(() => dappStore.getLog(id));
+    const descriptor = computed(() => dappStore.getDescriptor(id));
+
     const scrollToBottom = ref(true);
     const consoleScroll = ref(null);
     const stopping = ref(false);
@@ -231,16 +242,6 @@ export default defineComponent({
     const loading = ref(true);
     const link = computed(() => dappStore.getLink(id));
     const proxyUrl = computed(() => dappStore.getProxyUrl(id));
-
-    if (dapp.value?.status === "active") {
-      dappStore.startGettingData(id).finally(() => {
-        loading.value = false;
-      });
-    } else {
-      dappStore.getData(id).finally(() => {
-        loading.value = false;
-      });
-    }
 
     watch([stateData, rawData, stdout, stderr, log], () => {
       if (scrollToBottom?.value && consoleScroll?.value)
@@ -254,13 +255,23 @@ export default defineComponent({
 
     onUnmounted(() => dappStore.stopGettingData(id));
 
-    const $q = useQuasar();
+    const fetchDataFromBackend = async () => {
+      await dappStore.getData(id);
+
+      if (dapp.value?.status === "active") {
+        await dappStore.startGettingData(id);
+        await dappStore.setupLink(id);
+      }
+    };
 
     // ToDo: Don't trigger downloading all apps, target specific app instead
     //    Right now this is used only to fix a bug when someone is on the details page and hits refresh
-    dappStore.getDapps().finally(() => {
-      loading.value = false;
-    });
+    dappStore
+      .getDapps()
+      .then(fetchDataFromBackend)
+      .finally(() => {
+        loading.value = false;
+      });
 
     return {
       dapp,
@@ -273,6 +284,7 @@ export default defineComponent({
       stdout,
       stderr,
       log,
+      descriptor,
       link,
       proxyUrl,
       consoleScroll,
@@ -334,6 +346,12 @@ export default defineComponent({
           dappStore.getData(id);
         });
       },
+      isOperational: () => dapp.value.status === "active",
+      usesHttpProxy: () => {
+        return Object.entries(descriptor.value.nodes).some(
+          ([, nodeSpec]) => !!nodeSpec.http_proxy
+        );
+      },
       jsonParse: (val) => {
         try {
           return JSON.stringify(JSON.parse(val || {}), null, 2);
@@ -342,6 +360,14 @@ export default defineComponent({
         }
       },
     };
+  },
+
+  beforeUnmount() {
+    const $route = useRoute();
+    const { id } = $route.params;
+    const dappStore = useDappsStore();
+
+    dappStore.stopGettingData(id);
   },
 });
 </script>

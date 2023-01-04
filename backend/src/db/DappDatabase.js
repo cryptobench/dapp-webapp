@@ -8,6 +8,17 @@ module.exports = function DappDatabase(db) {
         });
       });
     },
+    findByUserAndAppId(userId, appId) {
+      return new Promise((resolve, reject) => {
+        return db.get("SELECT * FROM dapp WHERE userId=? AND appId=?", userId, appId, (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    },
     insertDapp(userId, appId, appStoreId) {
       return new Promise((res, rej) => {
         db.run(

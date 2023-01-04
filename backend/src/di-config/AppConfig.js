@@ -19,7 +19,7 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const storeController = StoreController(storeService);
 
   const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
-  const dappController = DappController(dappService);
+  const dappController = DappController(dappService, storeService);
 
   if (!process.env.YAGNA_APPKEY) {
     logger.error("Make sure that you set YAGNA_APPKEY environment variable, otherwise the requestor app won't work!");

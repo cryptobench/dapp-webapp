@@ -10,6 +10,10 @@ export default {
       type: String,
       required: true,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -22,6 +26,7 @@ export default {
     icon="link"
     color="primary"
     :title="title"
+    :loading="loading"
     square
     flat
     unelevated
