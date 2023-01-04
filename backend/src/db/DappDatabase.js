@@ -10,11 +10,11 @@ module.exports = function DappDatabase(db) {
     },
     findByUserAndAppId(userId, appId) {
       return new Promise((resolve, reject) => {
-        return db.get("SELECT * FROM dapp WHERE userId=? AND appId=?", userId, appId, (err, rows) => {
+        return db.get("SELECT * FROM dapp WHERE userId=? AND appId=?", userId, appId, (err, row) => {
           if (err) {
             reject(err);
           } else {
-            resolve(rows);
+            resolve(row);
           }
         });
       });

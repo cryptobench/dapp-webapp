@@ -2,10 +2,11 @@ const StoreDatabase = require("./StoreDatabase");
 
 const driver = {};
 const logger = {};
+
 describe("Store Database", () => {
   const db = StoreDatabase(driver, logger);
 
-  describe("Loading descriptor for particular app", () => {
+  describe("loadDescriptorForApp - loading descriptor for particular app", () => {
     test("Positive case where the descriptor is loaded correctly", () => {
       const result = db.loadDescriptorForApp("3");
       expect(result.meta.author).toEqual("Golem Factory");
