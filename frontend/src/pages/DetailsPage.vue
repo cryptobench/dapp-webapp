@@ -81,10 +81,14 @@
             <q-tab name="stderr" label="Stderr" no-caps />
             <q-tab name="log" label="Log" no-caps />
             <q-tab name="stats" label="Stats" no-caps />
+            <q-tab name="descriptor" label="Descriptor" no-caps />
+
           </q-tabs>
 
           <q-separator />
-
+          
+          // TODO sing with me boys: "resuablity". There is lot of redundancy below that should be avoided 
+          // TODO move tabs to separated files, this is far too big  
           <q-tab-panels v-model="tab">
             <q-tab-panel
               name="state"
@@ -167,6 +171,22 @@
                   <p>Please wait...</p>
                 </template>
               </Suspense>
+            </q-tab-panel>
+            <q-tab-panel
+              name="descriptor"
+              class="bg-dark text-white console q-pa-lg"
+            >
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                  >{{ jsonParse(descriptor) }}
+                </ssh-pre>
+                <pre v-else>{{ 'ddd' }}</pre>
+              </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
         </q-card>
@@ -272,7 +292,6 @@ export default defineComponent({
       .finally(() => {
         loading.value = false;
       });
-
     return {
       dapp,
       tab: ref("state"),
