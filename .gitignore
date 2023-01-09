@@ -109,3 +109,6 @@ dist
 #IDE
 .idea
 *.DS_Store
+
+#yagna instance
+yagna

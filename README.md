@@ -5,16 +5,28 @@
 It consists of two components: the front-end and the back-end, and quite obviously, both are required in
 order for the web interface to function. For instructions on how to run them, please refer to their respective manuals:
 
-* [Front-end README](frontend/README.md)
-* [Back-end README](backend/README.md)
+- [Front-end README](frontend/README.md)
+- [Back-end README](backend/README.md)
 
+It contains startup script that runs all the pieces together. In order to run it
+
+- make sure you installed all the requirements mentioned in steps above
+- install tmux [https://github.com/tmux/tmux/wiki/Installing]
+- install zx [https://www.npmjs.com/package/zx]
+- run `zx startup.mjs`
+
+Mainly on macOS but this can happen also on linux you can observe
+
+`Error accepting connection: Too many open files (os error 24)`
+
+This is related to system settings. To fix run starup script by `zc startup.mjs --oflimit your_limit` . This will increase soft limit
+for yagna process to the specified value. If no value provided `zx script.mjs --oflimit` default 1024 will be used.
 
 ### Disclaimer
 
 Please remember that this simple web application is just a proof-of-concept. It shows how Golem can be
 used to enable trivial deployment of whole decentralized applications, possibly consisting of multiple
 nodes and services but this app itself is by no means complete.
-
 
 ## Usage
 
@@ -56,8 +68,9 @@ After you click the "Details" button from the list of apps, you should see a scr
 First, you have the status marker next to the name of the dapp, showing whether the given app is still active or whether it has already been terminated. In case of the active ones, you'll also see two buttons in the upper-right corner - "Stop" and "Kill". Those translate directly to `stop` and `kill` commands of the `dapp-manager` - `stop` performs a regular, graceful shutdown of the dapp and `kill` terminates it immediately. Obviously, you should normally only use `stop` and only resort to `kill` if the app does not respond to a regular shutdown.
 
 Below, you have five tabs that correspond to the five output streams as managed by the `dapp-manager`:
-* `STATE` - shows the stream of the state changes of all the services that constitue your decentralized app,
-* `DATA` - shows the `dapp-runner`'s data stream - that is the output of the scripts ran on each of the apps service instances and all the other components of your decentralized app (e.g. the HTTP proxy),
-* `STDOUT`- shows the `dapp-runner`'s regular standard output as seen in the console,
-* `STDERR` - shows the `dapp-runner`'s standard error stream - if your app has not started correctly, it is here that you'll most likely to see why,
-* and finally, `LOG` shows the full debug log stream from the `dapp-runner` which may help you debug any issues that pop up while running your apps.
+
+- `STATE` - shows the stream of the state changes of all the services that constitue your decentralized app,
+- `DATA` - shows the `dapp-runner`'s data stream - that is the output of the scripts ran on each of the apps service instances and all the other components of your decentralized app (e.g. the HTTP proxy),
+- `STDOUT`- shows the `dapp-runner`'s regular standard output as seen in the console,
+- `STDERR` - shows the `dapp-runner`'s standard error stream - if your app has not started correctly, it is here that you'll most likely to see why,
+- and finally, `LOG` shows the full debug log stream from the `dapp-runner` which may help you debug any issues that pop up while running your apps.
