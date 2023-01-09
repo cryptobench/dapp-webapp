@@ -87,8 +87,7 @@
 
           <q-separator />
           
-          // TODO sing with me boys: "resuablity". There is lot of redundancy below that should be avoided 
-          // TODO move tabs to separated files, this is far too big  
+
           <q-tab-panels v-model="tab">
             <q-tab-panel
               name="state"
@@ -182,8 +181,9 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
-                  >{{ jsonParse(descriptor) }}
+              <!--YAML is not supported by simple syntax highlter -->
+                <ssh-pre v-if="jsonFormat" language="YAML" :dark="true"
+                  >{{ yamlStringify(descriptor) }}
                 </ssh-pre>
                 <pre v-else>{{ 'ddd' }}</pre>
               </q-scroll-area>
@@ -217,6 +217,7 @@
 </template>
 
 <script>
+import YAML from "YAML";
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useDappsStore } from "stores/dapps";
@@ -378,6 +379,9 @@ export default defineComponent({
           return val;
         }
       },
+      yamlStringify: (val) => {
+        return YAML.stringify(val); 
+      }
     };
   },
 
