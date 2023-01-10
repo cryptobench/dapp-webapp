@@ -212,7 +212,7 @@
 </template>
 
 <script>
-import YAML from "YAML";
+import YAML from "yaml";
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useDappsStore } from "stores/dapps";
