@@ -82,11 +82,9 @@
             <q-tab name="log" label="Log" no-caps />
             <q-tab name="stats" label="Stats" no-caps />
             <q-tab name="descriptor" label="Descriptor" no-caps />
-
           </q-tabs>
 
           <q-separator />
-          
 
           <q-tab-panels v-model="tab">
             <q-tab-panel
@@ -181,11 +179,8 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-              <!--YAML is not supported by simple syntax highlter -->
-                <ssh-pre v-if="jsonFormat" language="YAML" :dark="true"
-                  >{{ yamlStringify(descriptor) }}
-                </ssh-pre>
-                <pre v-else>{{ 'ddd' }}</pre>
+                <!--YAML is not supported by simple syntax highlter -->
+                <ssh-pre :dark="true">{{ yamlStringify(descriptor) }} </ssh-pre>
               </q-scroll-area>
             </q-tab-panel>
           </q-tab-panels>
@@ -380,8 +375,8 @@ export default defineComponent({
         }
       },
       yamlStringify: (val) => {
-        return YAML.stringify(val); 
-      }
+        return YAML.stringify(val);
+      },
     };
   },
 
