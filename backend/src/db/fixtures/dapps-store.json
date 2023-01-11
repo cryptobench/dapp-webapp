@@ -25,7 +25,7 @@
   },
   {
     "id": "5",
-    "configPath": "src/db/fixtures/config/hybrid-config.yaml",
+    "configPath": "src/db/fixtures/config/sample_config.yaml",
     "descriptorPath": "src/db/fixtures/dapp-store/apps/todo-app.yaml",
     "image": "/app-covers/todo-app.png"
   },
