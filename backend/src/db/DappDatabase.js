@@ -19,13 +19,14 @@ module.exports = function DappDatabase(db) {
         });
       });
     },
-    insertDapp(userId, appId, appStoreId) {
+    insertDapp(userId, appId, appStoreId, dappStatus) {
       return new Promise((res, rej) => {
         db.run(
-          "INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, createdAt) values (?, ?, ?, ?)",
+          "INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, status, createdAt) values (?, ?, ?, ?, ?)",
           userId,
           appId,
           appStoreId,
+          dappStatus,
           new Date().toISOString(),
           (err) => {
             if (err) rej(err);

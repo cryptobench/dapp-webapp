@@ -18,7 +18,8 @@ module.exports = ({ cliAdapter, database, logger }) => {
       }
 
       const [appId] = await cliAdapter.start(resolve(dappStore.configPath), resolve(dappStore.descriptorPath));
-      await database.insertDapp(userId, appId, appStoreId);
+      const status = "running"
+      await database.insertDapp(userId, appId, appStoreId, status);
       logger.info(`App ${appId} has been launched by user ${userId}`);
 
       return Ok(appId);

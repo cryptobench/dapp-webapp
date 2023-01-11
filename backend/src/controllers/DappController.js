@@ -1,4 +1,4 @@
-module.exports = (dappService, storeService) => {
+module.exports = (dappService, storeService, quoteService) => {
   return [
     {
       method: "get",
@@ -20,6 +20,11 @@ module.exports = (dappService, storeService) => {
       method: "post",
       path: "/dapp/start/",
       handler: async (req, res) => {
+        const userAndGlobalCount = await quoteService.userAndGlobalCount(req.user.id);
+        if (!userAndGlobalCount) {
+          return res.send(429, userAndGlobalCount).end();
+        }
+        
         const dapps = await dappService.start(req.user.id, req.body.appStoreId);
         return res.send(201, dapps).end();
       },
