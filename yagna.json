@@ -1,6 +1,6 @@
 {
   "node_name" : "dapp_webapp", 
-  "api_url" :  "http://0.0.0.0:17900", 
+  "yagna_api_url" :  "http://0.0.0.0:17900", 
   "gsb_url" : "tcp://127.0.0.1:17901", 
   "ya_net_bind_url" : "udp://0.0.0.0:23600",
   "yagna_datadir" : "./yagna"
