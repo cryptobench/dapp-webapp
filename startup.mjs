@@ -1,11 +1,16 @@
 #!/usr/bin/env zx
 
 let increaseOpenFileLimit = "";
-
 const openFileLimit = argv.oflimit;
-const defaultOpenFileLimitOverwrite = 1024;
 
-//TODO add check for yagna installation
+// read yagna settings and set based on them proper env variables
+const yagna_settings_path = argv.yagna_settings || "./yagna.json";
+const yagnaSettings = JSON.parse(await $`cat ${yagna_settings_path}`);
+const yagnaEnv = Object.keys(yagnaSettings).forEach((yagnaEnvKey) => {
+  process.env[yagnaEnvKey.toUpperCase()] = yagnaSettings[yagnaEnvKey];
+});
+
+const defaultOpenFileLimitOverwrite = 1024;
 
 if (openFileLimit === true) {
   increaseOpenFileLimit = `ulimit -n ${defaultOpenFileLimitOverwrite} &&`;
@@ -15,7 +20,7 @@ if (openFileLimit === "number") {
   increaseOpenFileLimit = `ulimit -n ${argv.oflimit} &&`;
 }
 
-//kill previous and recreate session
+// //kill previous and recreate session
 try {
   await $`tmux kill-session -t "dapp-webapp"`;
 } catch (err) {
@@ -36,7 +41,8 @@ await $`tmux send-keys -t frontend "cd frontend && npm run dev" C-m`;
 
 //separated instance of yagna if ine is running it is always better to run
 //separated instance just for the dapp purpose
-await $`tmux new-window -n "yagna"`;
-await $`tmux send-keys -t yagna "${increaseOpenFileLimit} YAGNA_DATADIR=./yagna yagna service run" C-m`;
+
+await $`tmux new-window -n yagna`;
+await $`tmux send-keys -t yagna "yagna service run" C-m`;
 
 await $`tmux attach-session -d`;
