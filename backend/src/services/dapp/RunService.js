@@ -28,6 +28,8 @@ module.exports = ({ cliAdapter, database, logger }) => {
       assertAppId(appId);
 
       const [stoppedAppId] = await cliAdapter.stop(appId);
+      const status = "stopped"
+      await database.updateDappStatus(userId, appId, status);
       logger.info(`App ${appId} has been stopped by user ${userId}`);
 
       return Ok(stoppedAppId);
@@ -36,6 +38,8 @@ module.exports = ({ cliAdapter, database, logger }) => {
       assertAppId(appId);
 
       const [killedAppId] = await cliAdapter.kill(appId);
+      const status = "killed"
+      await database.updateDappStatus(userId, appId, status);
       logger.info(`App ${appId} has been killed by user ${userId}`);
 
       return Ok(killedAppId);

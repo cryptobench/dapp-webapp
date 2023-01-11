@@ -35,6 +35,14 @@ module.exports = function DappDatabase(db) {
         );
       });
     },
+    updateDappStatus(userId, appId, dappStatus) {
+      return new Promise((res, rej) => {
+        db.run("UPDATE dapp SET status=? WHERE userId=? AND appId=?", dappStatus, userId, appId, (err) => {
+          if (err) rej(err);
+          else res();
+        });
+      });
+    },
     deleteDApp(userId, appId) {
       return new Promise((res, rej) => {
         db.run("DELETE FROM dapp WHERE userId=? AND appId=?", userId, appId, (err) => {

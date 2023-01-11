@@ -33,5 +33,9 @@
     "checkPortAttempts": 30,
     "exposeDomain": "dapp.golem.network",
     "exposeProtocol": "http"
+  },
+  "limits": {
+    "maxCountUserDapps": 3,
+    "maxCountGlobalDapps": 200
   }
 }

@@ -8,6 +8,6 @@ module.exports = ({ database, logger, cliAdapter, redisClient, config }) => {
     ...GetDappsService({ database, cliAdapter }),
     ...RunService({ database, logger, cliAdapter }),
     ...ProxyService({ redisClient, logger, config }),
-    ...ServiceQuotes({ database, logger }),
+    ...ServiceQuotes({ database, logger, config }),
   };
 };

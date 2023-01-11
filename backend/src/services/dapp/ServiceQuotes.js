@@ -1,7 +1,18 @@
 const { UserError, Ok } = require("../../utils/Result");
 const { resolve } = require("path");
+const assert = require("assert");
 
-module.exports = ({ database, logger }) => {
+
+module.exports = ({ database, logger, config }) => {
+
+  const {
+    maxCountUserDapps: USER_DAPP_LIMIT,
+    maxCountGlobalDapps: GLOBAL_DAPP_LIMIT,
+  } = config.limits;
+
+  assert(USER_DAPP_LIMIT, "The limit 'maxCountUserDapps' setting is required");
+  assert(GLOBAL_DAPP_LIMIT, "The limit 'maxCountGlobalDapps' setting is required");
+
   function assertUserId(userId) {
     if (!userId) {
       throw new UserError("The id of a user is required");
@@ -18,7 +29,7 @@ module.exports = ({ database, logger }) => {
         throw new UserError(`User with id ${userId} could not be found`);
       }
 
-      if (dappCount < 3) {
+      if (dappCount < USER_DAPP_LIMIT) {
         logger.info(`Quote checker found ${dappCount} running services for user with id ${userId}`);
         return Ok(queryCount);
       } else {
@@ -40,11 +51,11 @@ module.exports = ({ database, logger }) => {
         throw new UserError(`An error occured during counting the global amount of running dapps`);
       }
 
-      if (globalDappCount >= 200) {
+      if (globalDappCount >= GLOBAL_DAPP_LIMIT) {
         throw new UserError(`The global limit of running dapps has been reached. Please try again later.`);
       }
 
-      if (userDappCount >= 3) {
+      if (userDappCount >= USER_DAPP_LIMIT) {
         throw new UserError(`You have reached the maximum amount of running services`);
       }
     
