@@ -2,13 +2,8 @@ const { UserError, Ok } = require("../../utils/Result");
 const { resolve } = require("path");
 const assert = require("assert");
 
-
 module.exports = ({ database, logger, config }) => {
-
-  const {
-    maxCountUserDapps: USER_DAPP_LIMIT,
-    maxCountGlobalDapps: GLOBAL_DAPP_LIMIT,
-  } = config.limits;
+  const { maxCountUserDapps: USER_DAPP_LIMIT, maxCountGlobalDapps: GLOBAL_DAPP_LIMIT } = config.limits;
 
   assert(USER_DAPP_LIMIT, "The limit 'maxCountUserDapps' setting is required");
   assert(GLOBAL_DAPP_LIMIT, "The limit 'maxCountGlobalDapps' setting is required");
@@ -24,7 +19,7 @@ module.exports = ({ database, logger, config }) => {
       assertUserId(userId);
 
       const queryCount = await database.countUsersRunningDapps(userId);
-      const dappCount = queryCount['count']
+      const dappCount = queryCount["count"];
       if (!queryCount) {
         throw new UserError(`User with id ${userId} could not be found`);
       }
@@ -40,13 +35,13 @@ module.exports = ({ database, logger, config }) => {
       assertUserId(userId);
 
       const queryUserCount = await database.countUsersRunningDapps(userId);
-      const userDappCount = queryUserCount['count']
+      const userDappCount = queryUserCount["count"];
       if (!queryUserCount) {
         throw new UserError(`We could not find a user with id ${userId} in our database`);
       }
 
       const queryGlobalCount = await database.countGlobalRunningDapps();
-      const globalDappCount = queryGlobalCount['count']
+      const globalDappCount = queryGlobalCount["count"];
       if (!queryGlobalCount) {
         throw new UserError(`An error occured during counting the global amount of running dapps`);
       }
@@ -58,13 +53,15 @@ module.exports = ({ database, logger, config }) => {
       if (userDappCount >= USER_DAPP_LIMIT) {
         throw new UserError(`You have reached the maximum amount of running services`);
       }
-    
-      logger.info(`Quote checker found ${userDappCount} running services for user with id ${userId} and a global count of ${globalDappCount} running dapps}`);
-      return Ok({'global': globalDappCount, 'user': userDappCount});
+
+      logger.info(
+        `Quote checker found ${userDappCount} running services for user with id ${userId} and a global count of ${globalDappCount} running dapps}`
+      );
+      return Ok({ global: globalDappCount, user: userDappCount });
     },
     async globalRunningDappCount() {
       const queryGlobalCount = await database.countGlobalRunningDapps();
-      const dappCount = queryGlobalCount['count']
+      const dappCount = queryGlobalCount["count"];
 
       if (!queryGlobalCount) {
         throw new UserError(`Error counting global amount of running dapps`);

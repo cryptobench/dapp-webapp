@@ -18,7 +18,7 @@ module.exports = ({ cliAdapter, database, logger }) => {
       }
 
       const [appId] = await cliAdapter.start(resolve(dappStore.configPath), resolve(dappStore.descriptorPath));
-      const status = "running"
+      const status = "running";
       await database.insertDapp(userId, appId, appStoreId, status);
       logger.info(`App ${appId} has been launched by user ${userId}`);
 
@@ -28,7 +28,7 @@ module.exports = ({ cliAdapter, database, logger }) => {
       assertAppId(appId);
 
       const [stoppedAppId] = await cliAdapter.stop(appId);
-      const status = "stopped"
+      const status = "stopped";
       await database.updateDappStatus(userId, appId, status);
       logger.info(`App ${appId} has been stopped by user ${userId}`);
 
@@ -38,7 +38,7 @@ module.exports = ({ cliAdapter, database, logger }) => {
       assertAppId(appId);
 
       const [killedAppId] = await cliAdapter.kill(appId);
-      const status = "killed"
+      const status = "killed";
       await database.updateDappStatus(userId, appId, status);
       logger.info(`App ${appId} has been killed by user ${userId}`);
 

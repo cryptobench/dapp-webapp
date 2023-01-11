@@ -13,7 +13,7 @@ const ServiceQuotes = require("../services/dapp/ServiceQuotes");
 module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const database = Database(dbDriver, logger);
 
-  const quoteService = ServiceQuotes({ database, logger, config })
+  const quoteService = ServiceQuotes({ database, logger, config });
 
   const userService = UserService({ database, logger });
   const userController = UserController(userService);

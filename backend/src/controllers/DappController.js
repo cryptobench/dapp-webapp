@@ -24,7 +24,7 @@ module.exports = (dappService, storeService, quoteService) => {
         if (!userAndGlobalCount) {
           return res.send(429, userAndGlobalCount).end();
         }
-        
+
         const dapps = await dappService.start(req.user.id, req.body.appStoreId);
         return res.send(201, dapps).end();
       },
