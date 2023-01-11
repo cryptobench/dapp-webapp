@@ -1,14 +1,9 @@
 #!/usr/bin/env zx
 
+require("dotenv").config({ path: __dirname + "/backend/.env" });
+
 let increaseOpenFileLimit = "";
 const openFileLimit = argv.oflimit;
-
-// read yagna settings and set based on them proper env variables
-const yagna_settings_path = argv.yagna_settings || "./yagna.json";
-const yagnaSettings = JSON.parse(await $`cat ${yagna_settings_path}`);
-const yagnaEnv = Object.keys(yagnaSettings).forEach((yagnaEnvKey) => {
-  process.env[yagnaEnvKey.toUpperCase()] = yagnaSettings[yagnaEnvKey];
-});
 
 const defaultOpenFileLimitOverwrite = 1024;
 
