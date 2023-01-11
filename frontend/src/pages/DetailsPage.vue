@@ -96,7 +96,10 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && stateData"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(stateData) }}
                 </ssh-pre>
                 <pre v-else>{{ stateData }}</pre>
@@ -109,7 +112,10 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && rawData"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(rawData) }}
                 </ssh-pre>
                 <pre v-else>{{ rawData }}</pre>
@@ -125,7 +131,10 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && stdout"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(stdout) }}
                 </ssh-pre>
                 <pre v-else>{{ stdout }}</pre>
@@ -141,7 +150,10 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && stderr"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(stderr) }}
                 </ssh-pre>
                 <pre v-else>{{ stderr }}</pre>
@@ -154,7 +166,7 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre v-if="jsonFormat && log" language="json" :dark="true"
                   >{{ jsonParse(log) }}
                 </ssh-pre>
                 <pre v-else>{{ log }}</pre>
@@ -255,7 +267,7 @@ export default defineComponent({
 
     onUnmounted(() => dappStore.stopGettingData(id));
 
-    const fetchDataFromBackend = async () => {
+    const fetchInstanceDataFromBackend = async () => {
       await dappStore.getData(id);
 
       if (dapp.value?.status === "active") {
@@ -268,7 +280,7 @@ export default defineComponent({
     //    Right now this is used only to fix a bug when someone is on the details page and hits refresh
     dappStore
       .getDapps()
-      .then(fetchDataFromBackend)
+      .then(fetchInstanceDataFromBackend)
       .finally(() => {
         loading.value = false;
       });
