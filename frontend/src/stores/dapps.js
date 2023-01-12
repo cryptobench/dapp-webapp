@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import retry from "async-retry";
+import { extractLinkFromAppData } from "src/lib/extractLinkFromAppData";
 
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
@@ -59,24 +60,8 @@ export const useDappsStore = defineStore("dapps", {
       this.log[id] = await api.get(`/dapp/log/${id}`);
       this.descriptor[id] = await api.get(`/dapp/${id}/descriptor`);
     },
-    parseLinkFromRawData(rawData) {
-      let link = "";
-      rawData
-        .split("\n")
-        .map((l) => l.trim())
-        .filter((l) => !!l)
-        .forEach((line) => {
-          try {
-            const data = JSON.parse(line);
-            link = data?.http?.local_proxy_address || "";
-          } catch (error) {
-            console.error("Error during obtaining local_proxy_address", error);
-          }
-        });
-      return link;
-    },
     async setupLink(id) {
-      const link = this.parseLinkFromRawData(this.rawData[id]);
+      const link = extractLinkFromAppData(this.rawData[id]);
 
       if (link !== this.link[id]) {
         this.link[id] = link;

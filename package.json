@@ -4,7 +4,7 @@
   "private": true,
   "description": "`dapp-webapp` in its current form is a proof-of-concept web interface for the [dapp-manager](https://github.com/golemfactory/dapp-manager/), making the deployment of decentralized applications on Golem extremely trivial, using just a few clicks.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "husky install"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,11 @@
   ],
   "devDependencies": {
     "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-jest": "^27.2.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.2",
+    "jest": "^29.3.1",
     "prettier": "^2.8.1"
   }
 }
