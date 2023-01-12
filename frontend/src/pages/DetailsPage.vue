@@ -81,6 +81,7 @@
             <q-tab name="stderr" label="Stderr" no-caps />
             <q-tab name="log" label="Log" no-caps />
             <q-tab name="stats" label="Stats" no-caps />
+            <q-tab name="descriptor" label="Descriptor" no-caps />
           </q-tabs>
 
           <q-separator />
@@ -168,6 +169,20 @@
                 </template>
               </Suspense>
             </q-tab-panel>
+            <q-tab-panel
+              name="descriptor"
+              class="bg-dark text-white console q-pa-lg"
+            >
+              <q-scroll-area
+                ref="consoleScroll"
+                style="height: 100%; width: 100%"
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+              >
+                <!--YAML is not supported by simple syntax highlter -->
+                <ssh-pre :dark="true">{{ yamlStringify(descriptor) }} </ssh-pre>
+              </q-scroll-area>
+            </q-tab-panel>
           </q-tab-panels>
         </q-card>
       </div>
@@ -197,6 +212,7 @@
 </template>
 
 <script>
+import YAML from "yaml";
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useDappsStore } from "stores/dapps";
@@ -272,7 +288,6 @@ export default defineComponent({
       .finally(() => {
         loading.value = false;
       });
-
     return {
       dapp,
       tab: ref("state"),
@@ -358,6 +373,9 @@ export default defineComponent({
         } catch {
           return val;
         }
+      },
+      yamlStringify: (val) => {
+        return YAML.stringify(val);
       },
     };
   },
