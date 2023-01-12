@@ -59,5 +59,14 @@ module.exports = (dManagerCmd, dStatsCmd) => {
 
       return JSON.parse(result.stdout);
     },
+    async getSize(descriptorPath) {
+      const result = await dStatsCmd.run("size", descriptorPath);
+
+      if (result.status !== 0) {
+        throw new Error("The stats command failed to execute, no size information available");
+      }
+
+      return JSON.parse(result.stdout);
+    },
   };
 };

@@ -5,8 +5,8 @@
         <PageTitle :value="dapp.name" />
       </div>
       <div class="row">
-        <div class="col-md-4 col-sm-6 col-xs-12">
-          <q-card flat class="q-ma-sm">
+        <div class="col-md-4 col-sm-6 col-xs-12 q-pa-sm">
+          <q-card flat>
             <q-card-section>
               <AppProperty name="Status">
                 <AppStatusBadge :status="dapp.status" />
@@ -17,9 +17,9 @@
         </div>
         <div
           v-if="isOperational() && descriptor && usesHttpProxy()"
-          class="col-md-4 col-sm-6 col-xs-12"
+          class="col-md-4 col-sm-6 col-xs-12 q-pa-sm"
         >
-          <q-card flat class="q-ma-sm">
+          <q-card flat>
             <q-card-section>
               <AppProperty name="Local access link">
                 <AppLink
@@ -39,8 +39,8 @@
             </q-card-section>
           </q-card>
         </div>
-        <div v-if="dapp.status === 'active'" class="col-md-4 col-xs-12">
-          <q-card flat class="q-ma-sm">
+        <div v-if="dapp.status === 'active'" class="col-md-4 col-xs-12 q-pa-sm">
+          <q-card flat>
             <q-card-section>
               <q-btn
                 v-if="dapp.status === 'active'"

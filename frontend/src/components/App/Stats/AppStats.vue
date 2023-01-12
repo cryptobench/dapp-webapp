@@ -5,10 +5,11 @@ import AppStatCard from "components/App/Stats/AppStatCard.vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
 import AlertNegative from "components/Alert/AlertNegative.vue";
+import AppImageSizeCard from "components/App/Stats/AppImageSizeCard.vue";
 
 export default defineComponent({
   name: "AppStats",
-  components: { AlertNegative, AppStatCard, AppStatList },
+  components: { AlertNegative, AppStatCard, AppStatList, AppImageSizeCard },
   props: {
     app: {
       type: Object,
@@ -43,17 +44,22 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="col">
-    <AppStatCard v-if="stats" :stats="stats.app">
-      Summarised application stats
-    </AppStatCard>
-    <div v-if="stats">
-      <AppStatList
-        v-for="[nodeType, nodeInstances] in Object.entries(stats.nodes)"
-        :key="nodeType"
-        :instances="nodeInstances"
-        :type="nodeType"
-      />
+  <div class="row justify-between">
+    <div class="col-xs-12 col-lg-6 q-pa-sm">
+      <AppStatCard v-if="stats.general" :stats="stats.general.app">
+        <q-icon name="summarize" color="primary" />
+        Summarised application stats
+      </AppStatCard>
+    </div>
+    <div class="col-xs-12 col-lg-6 q-pa-sm">
+      <AppImageSizeCard v-if="stats.size" class="col-6" :stats="stats.size" />
+    </div>
+    <div
+      v-for="[nodeType, nodeInstances] in Object.entries(stats.general.nodes)"
+      :key="nodeType"
+      class="col-xs-12 col-lg-6 q-pa-sm"
+    >
+      <AppStatList :instances="nodeInstances" :type="nodeType" />
     </div>
     <AlertNegative v-if="error">Failed to load the app stats :(</AlertNegative>
   </div>

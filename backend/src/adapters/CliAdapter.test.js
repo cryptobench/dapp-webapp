@@ -98,4 +98,44 @@ describe("CLI Adapter", () => {
       );
     });
   });
+
+  describe("getSize - getting gvmi size information for particular app", () => {
+    test("returns JSON with the stats obtained by dapp-stats size based on the descriptor file", async () => {
+      const expectedResult = {
+        total_size: 82396693,
+        payloads: {
+          db: 24281724,
+          http: 58114969,
+        },
+      };
+
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd);
+
+      when(dStatsCmd.run)
+        .calledWith("size", "some-descriptor.yaml")
+        .mockResolvedValue({
+          status: 0,
+          stdout: JSON.stringify(expectedResult),
+        });
+
+      const result = await adapter.getSize("some-descriptor.yaml");
+
+      // Then
+      expect(result).toEqual(expectedResult);
+    });
+
+    test("throws an error when the result code is non-zero", async () => {
+      const adapter = CliAdapter(dManagerCmd, dStatsCmd);
+      // When
+      when(dStatsCmd.run).calledWith("size", "some-descriptor.yaml").mockResolvedValue({
+        status: 2,
+        stdout: "",
+      });
+
+      // Then
+      await expect(adapter.getSize("some-descriptor.yaml")).rejects.toThrow(
+        "The stats command failed to execute, no size information available"
+      );
+    });
+  });
 });

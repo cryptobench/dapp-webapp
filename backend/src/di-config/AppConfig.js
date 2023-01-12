@@ -8,18 +8,22 @@ const StoreService = require("../services/store/StoreService");
 const StoreController = require("../controllers/StoreController");
 const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
+const StatsService = require("../services/dapp/StatsService");
 
 module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
+  // Database Layer
   const database = Database(dbDriver, logger);
 
+  // Domain Service Layer
   const userService = UserService({ database, logger });
-  const userController = UserController(userService);
-
   const storeService = StoreService({ database, logger });
-  const storeController = StoreController(storeService);
-
   const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
-  const dappController = DappController(dappService, storeService);
+  const statsService = StatsService({ dappService, storeService });
+
+  // Controller layer
+  const storeController = StoreController(storeService);
+  const dappController = DappController(dappService, storeService, statsService);
+  const userController = UserController(userService);
 
   if (!process.env.YAGNA_APPKEY) {
     logger.error("Make sure that you set YAGNA_APPKEY environment variable, otherwise the requestor app won't work!");
