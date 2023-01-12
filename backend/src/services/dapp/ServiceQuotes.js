@@ -1,6 +1,8 @@
 const { UserError, Ok } = require("../../utils/Result");
-const { resolve } = require("path");
 const assert = require("assert");
+var cron = require('node-cron');
+const { spawn } = require("child_process");
+
 
 module.exports = ({ database, logger, config }) => {
   const { maxCountUserDapps: USER_DAPP_LIMIT, maxCountGlobalDapps: GLOBAL_DAPP_LIMIT } = config.limits;
@@ -13,11 +15,53 @@ module.exports = ({ database, logger, config }) => {
       throw new UserError("The id of a user is required");
     }
   }
+  
+// https://nodejs.org/api/child_process.html#optionsdetached When using the detached option to start a long-running process,
+// the process will not stay running in the background after the parent exits unless it is provided
+// with a stdio configuration that is not connected to the parent. 
+// If the parent's stdio is inherited, the child will remain attached to the controlling terminal.
+
+  cron.schedule('* * * * *', () => {
+    const dappManager = spawn('dapp-manager', ['list'], {
+      detached: true,
+    });
+    dappManager.stdout.on('data', (data) => {
+        const lines = data.toString().split("\n");
+      for (const line of lines) {
+
+        // Skip empty lines
+        if (!line) continue;
+
+        const getDappState = spawn('dapp-manager', ['read', 'state', line], {
+          detached: true,
+        });
+        getDappState.on('close', (code) => {
+          let status = ""
+          if (code === 0) status = "active";
+          if (code === 4) status = "unknown_app";
+          if (code === 5) status = "dead";
+          
+          database.updateDappStatus(false, line, status).then((result) => {
+            logger.debug(`[Cron worker] Updated status of dapp ${line} to ${status}`);
+          }
+          );
+
+        });
+      }
+    });
+    dappManager.stderr.on('data', (data) => {
+        logger.error(`Cron worker failed to list dapp-manager applications. ${data}`);
+    });
+   
+});
+
 
   return {
     async userRunningDappCount(userId) {
       assertUserId(userId);
 
+
+      
       const queryCount = await database.countUsersRunningDapps(userId);
       const dappCount = queryCount["count"];
       if (!queryCount) {
