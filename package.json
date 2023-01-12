@@ -1,6 +1,6 @@
 {
   "name": "dapp-webapp",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "`dapp-webapp` in its current form is a proof-of-concept web interface for the [dapp-manager](https://github.com/golemfactory/dapp-manager/), making the deployment of decentralized applications on Golem extremely trivial, using just a few clicks.",
   "scripts": {
