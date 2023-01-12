@@ -6,9 +6,11 @@ const { spawn } = require("child_process");
 
 module.exports = ({ database, logger, config }) => {
   const { maxCountUserDapps: USER_DAPP_LIMIT, maxCountGlobalDapps: GLOBAL_DAPP_LIMIT } = config.limits;
+  const { cronSchedule: CRON_SCHEDULE } = config.worker;
 
   assert(USER_DAPP_LIMIT, "The limit 'maxCountUserDapps' setting is required");
   assert(GLOBAL_DAPP_LIMIT, "The limit 'maxCountGlobalDapps' setting is required");
+  assert(CRON_SCHEDULE, "The cron schedule for the 'cronSchedule' setting is required");
 
   function assertUserId(userId) {
     if (!userId) {
@@ -21,7 +23,7 @@ module.exports = ({ database, logger, config }) => {
 // with a stdio configuration that is not connected to the parent. 
 // If the parent's stdio is inherited, the child will remain attached to the controlling terminal.
 
-  cron.schedule('* * * * *', () => {
+  cron.schedule(CRON_SCHEDULE, () => {
     const dappManager = spawn('dapp-manager', ['list'], {
       detached: true,
     });

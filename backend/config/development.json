@@ -37,5 +37,9 @@
   "limits": {
     "maxCountUserDapps": 3,
     "maxCountGlobalDapps": 200
+  },
+  "worker": {
+    "cronSchedule": "*/10 * * * * *"
   }
 }
+
