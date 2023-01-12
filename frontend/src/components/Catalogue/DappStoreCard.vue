@@ -18,6 +18,22 @@
     </q-card-section>
     <q-card-actions align="right" class="stick-bottom">
       <q-btn
+        v-if="globalLimitReached"
+        square
+        unelevated
+        no-caps
+        label="Run"
+        icon-right="play_circle_outline"
+        color="primary"
+        class="q-ma-md text-weight-bold disabled"
+      >
+        <q-tooltip>
+          The global limit of running dApps has been reached. Please try again
+          later.
+        </q-tooltip>
+      </q-btn>
+      <q-btn
+        v-else
         square
         unelevated
         no-caps
@@ -58,6 +74,10 @@ export default {
     image: {
       type: String,
       default: "https://cdn.quasar.dev/img/mountains.jpg",
+    },
+    globalLimitReached: {
+      type: Boolean,
+      default: false,
     },
   },
   setup() {

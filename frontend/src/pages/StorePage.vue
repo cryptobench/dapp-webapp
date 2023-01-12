@@ -22,6 +22,7 @@
         :description="dapp.description"
         :author="dapp.author"
         :image="dapp.image"
+        :global-limit-reached="globalLimitReached"
       ></DappStoreCard>
     </div>
   </q-page>
@@ -41,14 +42,26 @@ export default defineComponent({
     const dappStore = useDappstoreStore();
     const loading = ref(true);
     const dapps = computed(() => dappStore.dapps);
+    const globalLimitReached = ref(false);
+
+    dappStore
+      .globalLimitCheck()
+      .then(function () {
+        globalLimitReached.value = false;
+      })
+      .catch(function () {
+        globalLimitReached.value = true;
+      });
 
     dappStore.getDapps().then(() => {
       loading.value = false;
     });
 
+    console.log(globalLimitReached);
     return {
       dapps,
       loading,
+      globalLimitReached,
     };
   },
 });

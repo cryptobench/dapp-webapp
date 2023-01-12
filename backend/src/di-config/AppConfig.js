@@ -9,17 +9,19 @@ const StoreController = require("../controllers/StoreController");
 const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
 const ServiceQuotes = require("../services/dapp/ServiceQuotes");
+const ServiceQuotesController = require("../controllers/ServiceQuoteController");
 
 module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const database = Database(dbDriver, logger);
 
   const quoteService = ServiceQuotes({ database, logger, config });
+  const serviceQuotesController = ServiceQuotesController(quoteService);
 
   const userService = UserService({ database, logger });
   const userController = UserController(userService);
 
   const storeService = StoreService({ database, logger });
-  const storeController = StoreController(storeService, quoteService);
+  const storeController = StoreController(storeService);
 
   const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
   const dappController = DappController(dappService, storeService, quoteService);
@@ -31,7 +33,7 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   }
 
   return {
-    controllers: [userController, storeController, dappController],
+    controllers: [userController, storeController, dappController, serviceQuotesController],
     database,
   };
 };
