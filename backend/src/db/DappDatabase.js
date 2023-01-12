@@ -35,21 +35,21 @@ module.exports = function DappDatabase(db) {
         );
       });
     },
-    updateDappStatus(userId=false, appId, dappStatus) {
+    updateDappStatus(userId = false, appId, dappStatus) {
       return new Promise((res, rej) => {
         if (userId) {
           // Used for the dapp start method, where the userId is known.
-        db.run("UPDATE dapp SET status=? WHERE userId=? AND appId=?", dappStatus, userId, appId, (err) => {
-          if (err) rej(err);
-          else res();
-        });
+          db.run("UPDATE dapp SET status=? WHERE userId=? AND appId=?", dappStatus, userId, appId, (err) => {
+            if (err) rej(err);
+            else res();
+          });
         } else {
           // Cron worker is not aware of userId's , so it simply just updates the status of a specific appId.
           db.run("UPDATE dapp SET status=? WHERE appId=?", dappStatus, appId, (err) => {
             if (err) rej(err);
             else res();
           });
-        } 
+        }
       });
     },
     deleteDApp(userId, appId) {

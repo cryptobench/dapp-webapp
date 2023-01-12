@@ -1,69 +1,22 @@
 const { UserError, Ok } = require("../../utils/Result");
 const assert = require("assert");
-var cron = require('node-cron');
-const { spawn } = require("child_process");
-
 
 module.exports = ({ database, logger, config }) => {
   const { maxCountUserDapps: USER_DAPP_LIMIT, maxCountGlobalDapps: GLOBAL_DAPP_LIMIT } = config.limits;
-  const { cronSchedule: CRON_SCHEDULE } = config.worker;
 
   assert(USER_DAPP_LIMIT, "The limit 'maxCountUserDapps' setting is required");
   assert(GLOBAL_DAPP_LIMIT, "The limit 'maxCountGlobalDapps' setting is required");
-  assert(CRON_SCHEDULE, "The cron schedule for the 'cronSchedule' setting is required");
 
   function assertUserId(userId) {
     if (!userId) {
       throw new UserError("The id of a user is required");
     }
   }
-  
-// https://nodejs.org/api/child_process.html#optionsdetached When using the detached option to start a long-running process,
-// the process will not stay running in the background after the parent exits unless it is provided
-// with a stdio configuration that is not connected to the parent. 
-// If the parent's stdio is inherited, the child will remain attached to the controlling terminal.
-
-  cron.schedule(CRON_SCHEDULE, () => {
-    const dappManager = spawn('dapp-manager', ['list'], {
-      detached: true,
-    });
-    dappManager.stdout.on('data', (data) => {
-        const lines = data.toString().split("\n");
-      for (const line of lines) {
-
-        // Skip empty lines
-        if (!line) continue;
-
-        const getDappState = spawn('dapp-manager', ['read', 'state', line], {
-          detached: true,
-        });
-        getDappState.on('close', (code) => {
-          let status = ""
-          if (code === 0) status = "active";
-          if (code === 4) status = "unknown_app";
-          if (code === 5) status = "dead";
-          
-          database.updateDappStatus(false, line, status).then((result) => {
-            logger.debug(`[Cron worker] Updated status of dapp ${line} to ${status}`);
-          }
-          );
-
-        });
-      }
-    });
-    dappManager.stderr.on('data', (data) => {
-        logger.error(`Cron worker failed to list dapp-manager applications. ${data}`);
-    });
-   
-});
-
 
   return {
     async userRunningDappCount(userId) {
       assertUserId(userId);
 
-
-      
       const queryCount = await database.countUsersRunningDapps(userId);
       const dappCount = queryCount["count"];
       if (!queryCount) {
@@ -112,6 +65,10 @@ module.exports = ({ database, logger, config }) => {
       if (!queryGlobalCount) {
         throw new UserError(`Error counting global amount of running dapps`);
       }
+      if (dappCount >= GLOBAL_DAPP_LIMIT) {
+        throw new UserError(`The maximum amount of running dapps has been reached. Please try again later.`, 429);
+      }
+
       logger.info(`Quote checker found ${dappCount} running services globally`);
 
       return Ok(queryGlobalCount);
