@@ -102,7 +102,7 @@
                   :dark="true"
                   >{{ jsonParse(stateData) }}
                 </ssh-pre>
-                <pre v-else>{{ stateData }}</pre>
+                <pre v-else>{{ stateData ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
@@ -118,7 +118,7 @@
                   :dark="true"
                   >{{ jsonParse(rawData) }}
                 </ssh-pre>
-                <pre v-else>{{ rawData }}</pre>
+                <pre v-else>{{ rawData ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel
@@ -137,7 +137,7 @@
                   :dark="true"
                   >{{ jsonParse(stdout) }}
                 </ssh-pre>
-                <pre v-else>{{ stdout }}</pre>
+                <pre v-else>{{ stdout ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel
@@ -156,7 +156,7 @@
                   :dark="true"
                   >{{ jsonParse(stderr) }}
                 </ssh-pre>
-                <pre v-else>{{ stderr }}</pre>
+                <pre v-else>{{ stderr ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="log" class="bg-dark text-white console q-pa-lg">
@@ -169,7 +169,7 @@
                 <ssh-pre v-if="jsonFormat && log" language="json" :dark="true"
                   >{{ jsonParse(log) }}
                 </ssh-pre>
-                <pre v-else>{{ log }}</pre>
+                <pre v-else>{{ log ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel class="bg-golem" name="stats">
