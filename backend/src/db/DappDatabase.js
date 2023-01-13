@@ -35,21 +35,20 @@ module.exports = function DappDatabase(db) {
         );
       });
     },
-    updateDappStatus(userId = false, appId, dappStatus) {
+    updateDappStatus(userId, appId, dappStatus) {
       return new Promise((res, rej) => {
-        if (userId) {
-          // Used for the dapp start method, where the userId is known.
-          db.run("UPDATE dapp SET status=? WHERE userId=? AND appId=?", dappStatus, userId, appId, (err) => {
-            if (err) rej(err);
-            else res();
-          });
-        } else {
-          // Cron worker is not aware of userId's , so it simply just updates the status of a specific appId.
-          db.run("UPDATE dapp SET status=? WHERE appId=?", dappStatus, appId, (err) => {
-            if (err) rej(err);
-            else res();
-          });
-        }
+        db.run("UPDATE dapp SET status=? WHERE userId=? AND appId=?", dappStatus, userId, appId, (err) => {
+          if (err) rej(err);
+          else res();
+        });
+      });
+    },
+    getDappsByStatus(dappStatus) {
+      return new Promise((res, rej) => {
+        db.all("SELECT * FROM dapp WHERE status=?", dappStatus, (err, row) => {
+          if (err) rej(err);
+          else res(row);
+        });
       });
     },
     deleteDApp(userId, appId) {
@@ -57,6 +56,22 @@ module.exports = function DappDatabase(db) {
         db.run("DELETE FROM dapp WHERE userId=? AND appId=?", userId, appId, (err) => {
           if (err) rej(err);
           else res();
+        });
+      });
+    },
+    countUsersActiveDapps(userId) {
+      return new Promise((res, rej) => {
+        db.get("SELECT COUNT(*) AS count FROM dapp WHERE userId=? AND status='active'", userId, (err, row) => {
+          if (err) rej(err);
+          else res(row.count);
+        });
+      });
+    },
+    countGlobalActiveDapps() {
+      return new Promise((res, rej) => {
+        db.get("SELECT COUNT(*) AS count FROM dapp WHERE status='active'", (err, row) => {
+          if (err) rej(err);
+          else res(row.count);
         });
       });
     },

@@ -14,18 +14,17 @@ module.exports = ({ database, logger, config }) => {
   }
 
   return {
-    async userRunningDappCount(userId) {
+    async userActiveDappCount(userId) {
       assertUserId(userId);
 
-      const queryCount = await database.countUsersRunningDapps(userId);
-      const dappCount = queryCount["count"];
-      if (!queryCount) {
+      const dappCount = await database.countUsersActiveDapps(userId);
+      if (dappCount === false) {
         throw new UserError(`User with id ${userId} could not be found`);
       }
 
       if (dappCount < USER_DAPP_LIMIT) {
-        logger.info(`Quote checker found ${dappCount} running services for user with id ${userId}`);
-        return Ok(queryCount);
+        logger.debug(`Quote checker found ${dappCount} running services for user with id ${userId}`);
+        return Ok(dappCount);
       } else {
         throw new UserError(`User with id ${userId} has reached the maximum amount of running services`);
       }
@@ -33,45 +32,45 @@ module.exports = ({ database, logger, config }) => {
     async userAndGlobalCount(userId) {
       assertUserId(userId);
 
-      const queryUserCount = await database.countUsersRunningDapps(userId);
-      const userDappCount = queryUserCount["count"];
-      if (!queryUserCount) {
+      const status = { userActiveAppsLimitReached: false, globalActiveAppsLimitReached: false };
+
+      const userDappCount = await database.countUsersActiveDapps(userId);
+      if (userDappCount === false) {
         throw new UserError(`We could not find a user with id ${userId} in our database`);
       }
 
-      const queryGlobalCount = await database.countGlobalRunningDapps();
-      const globalDappCount = queryGlobalCount["count"];
-      if (!queryGlobalCount) {
+      const globalDappCount = await database.countGlobalActiveDapps();
+      if (globalDappCount === false) {
         throw new UserError(`An error occured during counting the global amount of running dapps`);
       }
 
       if (globalDappCount >= GLOBAL_DAPP_LIMIT) {
-        throw new UserError(`The global limit of running dapps has been reached. Please try again later.`);
+        status.globalActiveAppsLimitReached = true;
       }
 
       if (userDappCount >= USER_DAPP_LIMIT) {
-        throw new UserError(`You have reached the maximum amount of running services`);
+        status.userActiveAppsLimitReached = true;
       }
 
-      logger.info(
+      status.userActiveAppsCount = userDappCount;
+      status.globalActiveAppsCount = globalDappCount;
+
+      console.log("status", status);
+
+      logger.debug(
         `Quote checker found ${userDappCount} running services for user with id ${userId} and a global count of ${globalDappCount} running dapps}`
       );
-      return Ok({ global: globalDappCount, user: userDappCount });
+      return Ok(status);
     },
-    async globalRunningDappCount() {
-      const queryGlobalCount = await database.countGlobalRunningDapps();
-      const dappCount = queryGlobalCount["count"];
-
-      if (!queryGlobalCount) {
+    async globalActiveDappCount() {
+      const dappCount = await database.countGlobalActiveDapps();
+      if (dappCount === false) {
         throw new UserError(`Error counting global amount of running dapps`);
       }
-      if (dappCount >= GLOBAL_DAPP_LIMIT) {
-        throw new UserError(`The maximum amount of running dapps has been reached. Please try again later.`, 429);
-      }
 
-      logger.info(`Quote checker found ${dappCount} running services globally`);
+      logger.debug(`Quote checker found ${dappCount} running services globally`);
 
-      return Ok(queryGlobalCount);
+      return Ok(dappCount);
     },
   };
 };

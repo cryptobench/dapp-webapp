@@ -11,7 +11,7 @@ export const useDappstoreStore = defineStore("store", {
       this.dapps = await api.get("/store/dapps/");
     },
     async globalLimitCheck() {
-      return await api.get("/quote/status/global");
+      return await api.get("/usage/limits");
     },
   },
 });

@@ -1,26 +1,21 @@
-var cron = require("node-cron");
-const { spawn } = require("child_process");
 const assert = require("assert");
+const schedule = require("node-schedule");
 
 module.exports = (config, dappDatabase, logger, cliAdapter) => {
   const { cronSchedule: CRON_SCHEDULE } = config.worker;
   assert(CRON_SCHEDULE, "The cron schedule for the 'cronSchedule' setting is required");
 
-  cron.schedule(CRON_SCHEDULE, () => {
-    const dappManager = spawn("dapp-manager", ["list"], {
-      detached: true,
-    });
-    dappManager.stdout.on("data", async (data) => {
-      const lines = data.toString().split("\n");
-      for (const appId of lines) {
-        // Skip empty lines
-        if (!appId) continue;
+  schedule.scheduleJob(CRON_SCHEDULE, async () => {
+    const dapps = await dappDatabase.getDappsByStatus("active");
 
-        const status = await cliAdapter.getStatus(appId);
+    for (const obj of dapps) {
+      // Skip empty lines
+      if (!obj) continue;
 
-        await dappDatabase.updateDappStatus(false, appId, status);
-        logger.debug(`[Cron worker] Updated status of dapp ${appId} to ${status}`);
-      }
-    });
+      const status = await cliAdapter.getStatus(obj.appId);
+
+      await dappDatabase.updateDappStatus(obj.userId, obj.appId, status);
+      logger.debug(`[Cron worker] Updated status of dapp ${obj.appId} to ${status}`);
+    }
   });
 };

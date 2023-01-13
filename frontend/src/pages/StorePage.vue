@@ -57,7 +57,6 @@ export default defineComponent({
       loading.value = false;
     });
 
-    console.log(globalLimitReached);
     return {
       dapps,
       loading,

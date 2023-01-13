@@ -8,14 +8,14 @@ const StoreService = require("../services/store/StoreService");
 const StoreController = require("../controllers/StoreController");
 const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
-const ServiceQuotes = require("../services/dapp/ServiceQuotes");
+const ServiceQuotes = require("../services/dapp/UsageQuotaService");
 const ServiceQuotesController = require("../controllers/ServiceQuoteController");
 
 module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const database = Database(dbDriver, logger);
 
-  const quoteService = ServiceQuotes({ database, logger, config });
-  const serviceQuotesController = ServiceQuotesController(quoteService);
+  const usageQuotesService = ServiceQuotes({ database, logger, config });
+  const serviceQuotesController = ServiceQuotesController(usageQuotesService);
 
   const userService = UserService({ database, logger });
   const userController = UserController(userService);
@@ -24,7 +24,7 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const storeController = StoreController(storeService);
 
   const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
-  const dappController = DappController(dappService, storeService, quoteService);
+  const dappController = DappController(dappService, storeService, usageQuotesService);
 
   if (!process.env.YAGNA_APPKEY) {
     logger.error("Make sure that you set YAGNA_APPKEY environment variable, otherwise the requestor app won't work!");

@@ -4,10 +4,10 @@ const Ok = (payload) => ({
 });
 
 class UserError extends Error {
-  constructor(message, code) {
+  constructor(message, code = 400) {
     super(message);
     this.name = "UserError";
-    this.code = code ? code : 400;
+    this.code = code;
   }
   toJson() {
     return {

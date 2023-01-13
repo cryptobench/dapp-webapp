@@ -1,7 +1,7 @@
 const GetDappsService = require("./GetDappsService");
 const ProxyService = require("./ProxyService");
 const RunService = require("./RunService");
-const ServiceQuotes = require("./ServiceQuotes");
+const ServiceQuotes = require("./UsageQuotaService");
 
 module.exports = ({ database, logger, cliAdapter, redisClient, config }) => {
   return {

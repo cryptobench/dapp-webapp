@@ -1,11 +1,11 @@
-module.exports = (quoteService) => {
+module.exports = (UsageQuotaService) => {
   return [
     {
       method: "get",
-      path: "/quote/status/global",
+      path: "/usage/limits",
       handler: async (req, res) => {
-        await quoteService.globalRunningDappCount();
-        return res.send(200).end();
+        const status = await UsageQuotaService.userAndGlobalCount(req.user.id);
+        return res.send(200, status).end();
       },
     },
   ];
