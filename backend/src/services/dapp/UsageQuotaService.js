@@ -55,8 +55,6 @@ module.exports = ({ database, logger, config }) => {
       status.userActiveAppsCount = userDappCount;
       status.globalActiveAppsCount = globalDappCount;
 
-      console.log("status", status);
-
       logger.debug(
         `Quote checker found ${userDappCount} running services for user with id ${userId} and a global count of ${globalDappCount} running dapps}`
       );
@@ -65,7 +63,7 @@ module.exports = ({ database, logger, config }) => {
     async globalActiveDappCount() {
       const dappCount = await database.countGlobalActiveDapps();
       if (dappCount === false) {
-        throw new UserError(`Error counting global amount of running dapps`);
+        throw new Error(`Error counting global amount of running dapps`);
       }
 
       logger.debug(`Quote checker found ${dappCount} running services globally`);

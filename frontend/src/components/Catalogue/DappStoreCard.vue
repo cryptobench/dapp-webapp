@@ -18,7 +18,7 @@
     </q-card-section>
     <q-card-actions align="right" class="stick-bottom">
       <q-btn
-        v-if="globalLimitReached"
+        v-if="quote.limited"
         square
         unelevated
         no-caps
@@ -27,10 +27,7 @@
         color="primary"
         class="q-ma-md text-weight-bold disabled"
       >
-        <q-tooltip>
-          The global limit of running dApps has been reached. Please try again
-          later.
-        </q-tooltip>
+        <q-tooltip> {{ quote.message }} </q-tooltip>
       </q-btn>
       <q-btn
         v-else
@@ -75,9 +72,9 @@ export default {
       type: String,
       default: "https://cdn.quasar.dev/img/mountains.jpg",
     },
-    globalLimitReached: {
-      type: Boolean,
-      default: false,
+    quote: {
+      type: Object,
+      required: true,
     },
   },
   setup() {

@@ -22,7 +22,7 @@
         :description="dapp.description"
         :author="dapp.author"
         :image="dapp.image"
-        :global-limit-reached="globalLimitReached"
+        :quote="quote"
       ></DappStoreCard>
     </div>
   </q-page>
@@ -34,33 +34,41 @@ import { useDappstoreStore } from "stores/store";
 import DappStoreCard from "components/Catalogue/DappStoreCard.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
 import PageDescription from "components/Typography/PageDescription.vue";
+import { useUsageQuotesStore } from "stores/quotes";
 
 export default defineComponent({
   name: "StorePage",
   components: { PageDescription, PageTitle, DappStoreCard },
   setup() {
     const dappStore = useDappstoreStore();
+    const usageQuotes = useUsageQuotesStore();
     const loading = ref(true);
+    const quote = ref({ limited: false, message: "" });
     const dapps = computed(() => dappStore.dapps);
-    const globalLimitReached = ref(false);
-
-    dappStore
-      .globalLimitCheck()
-      .then(function () {
-        globalLimitReached.value = false;
-      })
-      .catch(function () {
-        globalLimitReached.value = true;
-      });
 
     dappStore.getDapps().then(() => {
-      loading.value = false;
+      null; // Not sure what to do here
     });
+    usageQuotes.getQuoteLimits().then((response) => {
+      if (response.globalActiveAppsLimitReached) {
+        quote.value.message =
+          "The global limit of active dapps has been reached. Try again later";
+        quote.value.limited = true;
+      }
+
+      if (response.userActiveAppsLimitReached) {
+        quote.value.message =
+          "You have reached the limit of active dapps. Stop one to start another";
+        quote.value.limited = true;
+      }
+    });
+
+    loading.value = false;
 
     return {
       dapps,
       loading,
-      globalLimitReached,
+      quote,
     };
   },
 });
