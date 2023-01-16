@@ -1,4 +1,4 @@
-module.exports = (dappService, storeService, quoteService) => {
+module.exports = (dappService, storeService, usageQuotaService) => {
   return [
     {
       method: "get",
@@ -20,9 +20,16 @@ module.exports = (dappService, storeService, quoteService) => {
       method: "post",
       path: "/dapp/start/",
       handler: async (req, res) => {
-        const userAndGlobalCount = await quoteService.userAndGlobalCount(req.user.id);
-        if (!userAndGlobalCount) {
-          return res.send(429, userAndGlobalCount).end();
+        const usageQuotaStatuses = await usageQuotaService.getQuotaStats(req.user.id);
+
+        if (
+          usageQuotaStatuses.payload.userActiveAppsLimitReached ||
+          usageQuotaStatuses.payload.globalActiveAppsLimitReached
+        ) {
+          const message = usageQuotaStatuses.payload.userActiveAppsLimitReached
+            ? "You have reached your active apps limit. "
+            : "The global limit of active apps has been reached.";
+          return res.send(429, message).end();
         }
 
         const dapps = await dappService.start(req.user.id, req.body.appStoreId);

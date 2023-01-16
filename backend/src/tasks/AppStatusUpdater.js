@@ -9,13 +9,12 @@ module.exports = (config, dappDatabase, logger, cliAdapter) => {
     const dapps = await dappDatabase.getDappsByStatus("active");
 
     for (const obj of dapps) {
-      // Skip empty lines
-      if (!obj) continue;
-
       const status = await cliAdapter.getStatus(obj.appId);
 
-      await dappDatabase.updateDappStatus(obj.userId, obj.appId, status);
-      logger.debug(`[Cron worker] Updated status of dapp ${obj.appId} to ${status}`);
+      if (status !== "active") {
+        await dappDatabase.updateDappStatus(obj.userId, obj.appId, status);
+        logger.debug(`[Cron worker] Updated status of dapp ${obj.appId} to ${status}`);
+      }
     }
   });
 };

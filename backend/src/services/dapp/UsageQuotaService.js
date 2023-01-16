@@ -23,25 +23,25 @@ module.exports = ({ database, logger, config }) => {
       }
 
       if (dappCount < USER_DAPP_LIMIT) {
-        logger.debug(`Quote checker found ${dappCount} running services for user with id ${userId}`);
+        logger.debug(`Quota checker found ${dappCount} running services for user with id ${userId}`);
         return Ok(dappCount);
       } else {
         throw new UserError(`User with id ${userId} has reached the maximum amount of running services`);
       }
     },
-    async userAndGlobalCount(userId) {
+    async getQuotaStats(userId) {
       assertUserId(userId);
 
       const status = { userActiveAppsLimitReached: false, globalActiveAppsLimitReached: false };
 
       const userDappCount = await database.countUsersActiveDapps(userId);
       if (userDappCount === false) {
-        throw new UserError(`We could not find a user with id ${userId} in our database`);
+        throw new Error(`We could not find a user with id ${userId} in our database`);
       }
 
       const globalDappCount = await database.countGlobalActiveDapps();
       if (globalDappCount === false) {
-        throw new UserError(`An error occured during counting the global amount of running dapps`);
+        throw new Error(`An error occured during counting the global amount of running dapps`);
       }
 
       if (globalDappCount >= GLOBAL_DAPP_LIMIT) {
@@ -56,7 +56,7 @@ module.exports = ({ database, logger, config }) => {
       status.globalActiveAppsCount = globalDappCount;
 
       logger.debug(
-        `Quote checker found ${userDappCount} running services for user with id ${userId} and a global count of ${globalDappCount} running dapps}`
+        `Quota checker found ${userDappCount} running services for user with id ${userId} and a global count of ${globalDappCount} running dapps}`
       );
       return Ok(status);
     },
@@ -66,7 +66,7 @@ module.exports = ({ database, logger, config }) => {
         throw new Error(`Error counting global amount of running dapps`);
       }
 
-      logger.debug(`Quote checker found ${dappCount} running services globally`);
+      logger.debug(`Quota checker found ${dappCount} running services globally`);
 
       return Ok(dappCount);
     },
