@@ -47,6 +47,7 @@ module.exports = configure(function (ctx) {
       env: {
         API_BACKEND_URL:
           process.env?.API_BACKEND_URL || "http://localhost:8888/api/",
+        DISCORD_URL: process.env?.DISCORD_URL || "https://discord.gg/golem",
       },
       vueRouterMode: "hash", // available values: 'hash', 'history'
 
