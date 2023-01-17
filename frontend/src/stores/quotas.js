@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 
-export const useUsageQuotaStore = defineStore("usagequotas", {
+export const useUsageQuotaStore = defineStore("usageQuotas", {
   state: () => {
     return {
       userActiveAppsLimitReached: false,

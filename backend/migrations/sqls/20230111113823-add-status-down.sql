@@ -1,2 +1,1 @@
-DROP TABLE users;
-DROP TABLE dapp;
+DROP column "status" from table "dapp";

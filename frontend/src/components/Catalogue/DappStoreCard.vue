@@ -18,7 +18,7 @@
     </q-card-section>
     <q-card-actions align="right" class="stick-bottom">
       <div class="q-ma-md">
-        <q-tooltip v-if="quota.limited"> {{ quota.message }} </q-tooltip>
+        <q-tooltip v-if="quota.limitReached"> {{ quota.message }} </q-tooltip>
         <q-btn
           square
           unelevated
@@ -28,7 +28,7 @@
           color="primary"
           class="text-weight-bold"
           @click="run(id, name)"
-          :disable="quota.limited"
+          :disable="quota.limitReached"
         >
         </q-btn>
       </div>
