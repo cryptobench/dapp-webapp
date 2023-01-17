@@ -47,6 +47,7 @@
             </q-item-section>
             <q-item-section>My dApps</q-item-section>
           </q-item>
+          <DiscordInvite />
           <!--
           <q-item clickable v-ripple to="/payments">
             <q-item-section avatar>
@@ -68,8 +69,9 @@
 <script>
 import { ref } from "vue";
 import { useUserStore } from "stores/user";
-
+import DiscordInvite from "components/Navigation/DiscordInvite.vue";
 export default {
+  components: { DiscordInvite },
   setup() {
     const miniState = ref(false);
     const drawer = ref(false);
