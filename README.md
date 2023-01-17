@@ -13,7 +13,8 @@ It contains startup script that runs all the pieces together. In order to run it
 - make sure you installed all the requirements mentioned in steps above
 - install tmux [https://github.com/tmux/tmux/wiki/Installing]
 - install zx [https://www.npmjs.com/package/zx]
-- run `zx startup.mjs`
+- run `npm run prepare:dev`
+- run `npm run start:dev`
 
 Mainly on macOS but this can happen also on linux you can observe
 
