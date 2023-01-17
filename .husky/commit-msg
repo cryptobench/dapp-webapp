@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+BLUE='\033[0;34m' && echo "${BLUE}validating commit message" && npx --no -- commitlint --edit ${1}

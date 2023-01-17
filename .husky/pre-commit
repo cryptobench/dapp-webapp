@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run format:check -ws && npm run lint -ws
+npm run format:check -ws && npm run lint -ws && zx check-branch-name.mjs
