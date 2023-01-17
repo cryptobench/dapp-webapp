@@ -27,8 +27,8 @@
           icon-right="play_circle_outline"
           color="primary"
           class="text-weight-bold"
-          @click="run(id, name)"
           :disable="quota.limitReached"
+          @click="run(id, name)"
         >
         </q-btn>
       </div>
