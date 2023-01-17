@@ -1,13 +1,9 @@
 const HttpServer = require("./Http");
 
-const Server = ({ Config, Logger, Authentication, CliAdapter, Redis, SQLite }, AppConfig) => {
-  let server, redisClient, dbDriver;
+const Server = ({ Config, Logger, Authentication }) => {
+  let server;
   return {
-    async init() {
-      Logger.info(Config, "Startup configuration");
-      redisClient = await Redis.connect();
-      dbDriver = await SQLite.connect();
-      const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver, redisClient, Config);
+    async init(controllers, database) {
       const authentication = Authentication(database);
       await authentication.init();
       server = HttpServer({ controllers, authentication, config: Config.http, logger: Logger });
@@ -18,7 +14,6 @@ const Server = ({ Config, Logger, Authentication, CliAdapter, Redis, SQLite }, A
     },
     async end() {
       await server.close();
-      await dbDriver.close();
       Logger.info(`API Dapps server closed`);
     },
   };

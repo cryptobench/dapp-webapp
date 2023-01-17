@@ -10,7 +10,7 @@ module.exports = (server, config, controllers, logger) => {
           .catch((error) => {
             if (error.name === "UserError") {
               logger.warn(`[${route.method.toUpperCase()} ${req.url}] ` + error.toString());
-              res.send(400, error.toJson() || error.toString());
+              res.send(error.code, error.toJson() || error.toString());
             } else {
               logger.error(error);
               res.send(500, "Internal Server Error");
