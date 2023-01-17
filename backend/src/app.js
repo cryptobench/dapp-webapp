@@ -1,7 +1,8 @@
 const AdaptersConfig = require("./di-config/AdaptersConfig");
 const AppConfig = require("./di-config/AppConfig");
-const Server = require("./server/Server");
-const AppStatusUpdater = require("./tasks/AppStatusUpdater");
+const { bootHttpServer } = require("./server");
+const { bootStatusWorker } = require("./tasks");
+const { connectBackendServices } = require("./adapters");
 
 const main = async () => {
   const { SQLite, Redis, Config, Logger, CliAdapter } = AdaptersConfig;
@@ -10,29 +11,22 @@ const main = async () => {
   Logger.info(Config, "Startup configuration");
 
   // Connect backend services
-  const redisClient = await Redis.connect();
-  const dbDriver = await SQLite.connect();
+  const { services, disconnectBackendServices } = await connectBackendServices(Redis, SQLite);
+  const { dbDriver, redisClient } = services;
 
-  // Create application services
   const { controllers, database } = AppConfig(Logger, CliAdapter, dbDriver, redisClient, Config);
 
-  // Boot the server
-  const srv = Server(AdaptersConfig);
-  await srv.init(controllers, database);
-  await srv.run();
-
-  // Boot workers
-  const schedule = AppStatusUpdater(Config, database, Logger, CliAdapter);
+  const shutdownServer = await bootHttpServer(controllers, database);
+  const shutdownWorker = bootStatusWorker(Config, database, Logger, CliAdapter);
 
   // Register shutdown procedures
   let isShuttingDown = false;
   const shutdown = async (signal) => {
     if (!isShuttingDown) {
       Logger.info({ signal }, "Received shutdown request");
-      await schedule.gracefulShutdown();
-      await srv.end();
-      await dbDriver.close();
-      await redisClient.disconnect();
+      await shutdownWorker();
+      await shutdownServer();
+      await disconnectBackendServices();
       Logger.info("Finished shutdown sequence");
     }
 
