@@ -8,6 +8,8 @@ const StoreService = require("../services/store/StoreService");
 const StoreController = require("../controllers/StoreController");
 const DappService = require("../services/dapp/DappService");
 const DappController = require("../controllers/DappController");
+const UsageQuotaService = require("../services/dapp/UsageQuotaService");
+const UsageQuotaController = require("../controllers/UsageQuotaController");
 const StatsService = require("../services/dapp/StatsService");
 
 module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
@@ -15,14 +17,16 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   const database = Database(dbDriver, logger);
 
   // Domain Service Layer
+  const usageQuotaService = UsageQuotaService({ database, logger, config });
   const userService = UserService({ database, logger });
   const storeService = StoreService({ database, logger });
   const dappService = DappService({ database, logger, cliAdapter, redisClient, config });
   const statsService = StatsService({ dappService, storeService });
 
   // Controller layer
+  const usageQuotaController = UsageQuotaController(usageQuotaService);
   const storeController = StoreController(storeService);
-  const dappController = DappController(dappService, storeService, statsService);
+  const dappController = DappController(dappService, storeService, statsService, usageQuotaService);
   const userController = UserController(userService);
 
   if (!process.env.YAGNA_APPKEY) {
@@ -32,7 +36,7 @@ module.exports = (logger, cliAdapter, dbDriver, redisClient, config) => {
   }
 
   return {
-    controllers: [userController, storeController, dappController],
+    controllers: [userController, storeController, dappController, usageQuotaController],
     database,
   };
 };

@@ -19,13 +19,14 @@ module.exports = function DappDatabase(db) {
         });
       });
     },
-    insertDapp(userId, appId, appStoreId) {
+    insertDapp(userId, appId, appStoreId, dappStatus) {
       return new Promise((res, rej) => {
         db.run(
-          "INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, createdAt) values (?, ?, ?, ?)",
+          "INSERT OR REPLACE INTO dapp (userId, appId, appStoreId, status, createdAt) values (?, ?, ?, ?, ?)",
           userId,
           appId,
           appStoreId,
+          dappStatus,
           new Date().toISOString(),
           (err) => {
             if (err) rej(err);
@@ -34,11 +35,43 @@ module.exports = function DappDatabase(db) {
         );
       });
     },
+    updateDappStatus(userId, appId, dappStatus) {
+      return new Promise((res, rej) => {
+        db.run("UPDATE dapp SET status=? WHERE userId=? AND appId=?", dappStatus, userId, appId, (err) => {
+          if (err) rej(err);
+          else res();
+        });
+      });
+    },
+    getDappsByStatus(dappStatus) {
+      return new Promise((res, rej) => {
+        db.all("SELECT * FROM dapp WHERE status=?", dappStatus, (err, row) => {
+          if (err) rej(err);
+          else res(row);
+        });
+      });
+    },
     deleteDApp(userId, appId) {
       return new Promise((res, rej) => {
         db.run("DELETE FROM dapp WHERE userId=? AND appId=?", userId, appId, (err) => {
           if (err) rej(err);
           else res();
+        });
+      });
+    },
+    countUsersActiveDapps(userId) {
+      return new Promise((res, rej) => {
+        db.get("SELECT COUNT(*) AS count FROM dapp WHERE userId=? AND status='active'", userId, (err, row) => {
+          if (err) rej(err);
+          else res(row.count);
+        });
+      });
+    },
+    countGlobalActiveDapps() {
+      return new Promise((res, rej) => {
+        db.get("SELECT COUNT(*) AS count FROM dapp WHERE status='active'", (err, row) => {
+          if (err) rej(err);
+          else res(row.count);
         });
       });
     },

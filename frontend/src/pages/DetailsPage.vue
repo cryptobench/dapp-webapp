@@ -97,10 +97,13 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && stateData"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(stateData) }}
                 </ssh-pre>
-                <pre v-else>{{ stateData }}</pre>
+                <pre v-else>{{ stateData ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="data" class="bg-dark text-white console q-pa-lg">
@@ -110,10 +113,13 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && rawData"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(rawData) }}
                 </ssh-pre>
-                <pre v-else>{{ rawData }}</pre>
+                <pre v-else>{{ rawData ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel
@@ -126,10 +132,13 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && stdout"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(stdout) }}
                 </ssh-pre>
-                <pre v-else>{{ stdout }}</pre>
+                <pre v-else>{{ stdout ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel
@@ -142,10 +151,13 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre
+                  v-if="jsonFormat && stderr"
+                  language="json"
+                  :dark="true"
                   >{{ jsonParse(stderr) }}
                 </ssh-pre>
-                <pre v-else>{{ stderr }}</pre>
+                <pre v-else>{{ stderr ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel name="log" class="bg-dark text-white console q-pa-lg">
@@ -155,10 +167,10 @@
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
               >
-                <ssh-pre v-if="jsonFormat" language="json" :dark="true"
+                <ssh-pre v-if="jsonFormat && log" language="json" :dark="true"
                   >{{ jsonParse(log) }}
                 </ssh-pre>
-                <pre v-else>{{ log }}</pre>
+                <pre v-else>{{ log ?? "Loading..." }}</pre>
               </q-scroll-area>
             </q-tab-panel>
             <q-tab-panel class="bg-golem" name="stats">
@@ -271,7 +283,7 @@ export default defineComponent({
 
     onUnmounted(() => dappStore.stopGettingData(id));
 
-    const fetchDataFromBackend = async () => {
+    const fetchInstanceDataFromBackend = async () => {
       await dappStore.getData(id);
 
       if (dapp.value?.status === "active") {
@@ -284,7 +296,7 @@ export default defineComponent({
     //    Right now this is used only to fix a bug when someone is on the details page and hits refresh
     dappStore
       .getDapps()
-      .then(fetchDataFromBackend)
+      .then(fetchInstanceDataFromBackend)
       .finally(() => {
         loading.value = false;
       });
