@@ -12,7 +12,10 @@ module.exports = {
 
   env: {
     browser: true,
+    node: true,
     "vue/setup-compiler-macros": true,
+    jest: true,
+    "jest/globals": true,
   },
 
   // Rules order is important, please avoid shuffling them
@@ -30,6 +33,7 @@ module.exports = {
     // https://github.com/prettier/eslint-config-prettier#installation
     // usage with Prettier, provided by 'eslint-config-prettier'.
     "prettier",
+    "plugin:jest/recommended",
   ],
 
   plugins: [
@@ -40,6 +44,8 @@ module.exports = {
     // https://github.com/typescript-eslint/typescript-eslint/issues/389#issuecomment-509292674
     // Prettier has not been included as plugin to avoid performance impact
     // add it as an extension for your IDE
+    "jest",
+    "prettier",
   ],
 
   globals: {
