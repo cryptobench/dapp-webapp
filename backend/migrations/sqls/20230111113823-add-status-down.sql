@@ -1,0 +1,1 @@
+DROP column "status" from table "dapp";

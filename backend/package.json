@@ -24,6 +24,7 @@
     "dotenv": "^16.0.0",
     "helmet": "^5.0.2",
     "js-yaml": "^4.1.0",
+    "node-schedule": "^2.1.1",
     "pino": "^7.10.0",
     "pino-multi-stream": "^6.0.0",
     "pino-pretty": "^9.1.1",

@@ -17,16 +17,21 @@
       </div>
     </q-card-section>
     <q-card-actions align="right" class="stick-bottom">
-      <q-btn
-        square
-        unelevated
-        no-caps
-        label="Run"
-        icon-right="play_circle_outline"
-        color="primary"
-        class="q-ma-md text-weight-bold"
-        @click="run(id, name)"
-      ></q-btn>
+      <div class="q-ma-md">
+        <q-tooltip v-if="quota.limitReached"> {{ quota.message }} </q-tooltip>
+        <q-btn
+          square
+          unelevated
+          no-caps
+          label="Run"
+          icon-right="play_circle_outline"
+          color="primary"
+          class="text-weight-bold"
+          :disable="quota.limitReached"
+          @click="run(id, name)"
+        >
+        </q-btn>
+      </div>
     </q-card-actions>
   </q-card>
 </template>
@@ -58,6 +63,10 @@ export default {
     image: {
       type: String,
       default: "https://cdn.quasar.dev/img/mountains.jpg",
+    },
+    quota: {
+      type: Object,
+      required: true,
     },
   },
   setup() {

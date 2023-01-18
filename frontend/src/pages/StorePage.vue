@@ -22,6 +22,7 @@
         :description="dapp.description"
         :author="dapp.author"
         :image="dapp.image"
+        :quota="quota"
       ></DappStoreCard>
     </div>
   </q-page>
@@ -33,22 +34,54 @@ import { useDappstoreStore } from "stores/store";
 import DappStoreCard from "components/Catalogue/DappStoreCard.vue";
 import PageTitle from "components/Typography/PageTitle.vue";
 import PageDescription from "components/Typography/PageDescription.vue";
+import { useUsageQuotaStore } from "stores/quotas";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "StorePage",
   components: { PageDescription, PageTitle, DappStoreCard },
   setup() {
+    const $q = useQuasar();
     const dappStore = useDappstoreStore();
+    const usageQuotas = useUsageQuotaStore();
     const loading = ref(true);
+    const quota = ref({ limitReached: false, message: "" });
     const dapps = computed(() => dappStore.dapps);
 
-    dappStore.getDapps().then(() => {
+    const getDataFromBackend = async () => {
+      await dappStore.getDapps();
+      const response = await usageQuotas.getQuotaLimits();
+
+      if (response.globalActiveAppsLimitReached) {
+        quota.value = {
+          message:
+            "The global limit of active dapps has been reached. Try again later",
+          limitReached: true,
+        };
+      }
+
+      if (response.userActiveAppsLimitReached) {
+        quota.value = {
+          message:
+            "You have reached the limit of active dapps. Stop one to start another",
+          limitReached: true,
+        };
+      }
+
       loading.value = false;
+    };
+
+    getDataFromBackend().catch((error) => {
+      $q.notify({
+        message: `Error: ${error}`,
+        type: "negative",
+      });
     });
 
     return {
       dapps,
       loading,
+      quota,
     };
   },
 });
