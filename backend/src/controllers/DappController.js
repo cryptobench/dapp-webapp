@@ -1,4 +1,4 @@
-module.exports = (dappService, storeService, usageQuotaService) => {
+module.exports = (dappService, storeService, statsService, usageQuotaService) => {
   return [
     {
       method: "get",
@@ -104,8 +104,8 @@ module.exports = (dappService, storeService, usageQuotaService) => {
       method: "get",
       path: "/dapp/:appId/stats",
       handler: async (req, res) => {
-        const data = await dappService.getStats(req.user.id, req.params.appId);
-        return res.send(200, data).end();
+        const stats = await statsService.getStatsForInstance(req.user.id, req.params.appId);
+        return res.send(200, stats).end();
       },
     },
     {

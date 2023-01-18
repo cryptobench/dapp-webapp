@@ -25,10 +25,10 @@ export default defineComponent({
     v-for="[instanceKey, stats] in Object.entries(instances)"
     :key="instanceKey"
     :stats="stats"
-    class="q-my-lg"
     flat
     unelevated
   >
-    Stats for "{{ type }}-{{ instanceKey }}"
+    <q-icon name="account_tree" color="secondary" />
+    Stats for "{{ type }}"
   </AppStatCard>
 </template>

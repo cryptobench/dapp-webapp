@@ -62,6 +62,14 @@ module.exports = ({ cliAdapter, database, logger }) => {
 
       return Ok(feedback);
     },
+    async getAppImageSizes(descriptorPath) {
+      const feedback = await cliAdapter.getSize(descriptorPath);
+      if (!feedback) {
+        throw new Error("No feedback from CliAdapter for app sizes - path %s", descriptorPath);
+      }
+
+      return Ok(feedback);
+    },
     async getInstanceInfo(userId, appId) {
       assertAppId(appId);
 

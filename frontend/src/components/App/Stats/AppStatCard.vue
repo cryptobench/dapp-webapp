@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my" flat unelevated>
+  <q-card flat unelevated>
     <q-card-section>
       <div class="text-h6">
         <slot />
