@@ -37,7 +37,7 @@ export default defineComponent({
 
 <template>
   <div class="q-mb-md">
-    <div class="app-property-name">
+    <div class="app-property-name text-primary">
       {{ name }}
       <q-btn
         v-if="copy"

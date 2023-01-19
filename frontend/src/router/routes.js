@@ -7,6 +7,10 @@ const routes = [
       { path: "/store", component: () => import("pages/StorePage.vue") },
       { path: "/dapps", component: () => import("pages/DappsPage.vue") },
       {
+        path: "/terms-and-conditions",
+        component: () => import("pages/TermsAndConditions.vue"),
+      },
+      {
         path: "/details/:id",
         component: () => import("pages/DetailsPage.vue"),
       },
