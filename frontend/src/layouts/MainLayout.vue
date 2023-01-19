@@ -70,7 +70,7 @@
           class="col-2"
           style="font-size: 16px; margin-bottom: 10px; margin-top: 40px"
         >
-          <b class="text-primary">LEGAL</b>
+          <b class="text-primary">Legal</b>
         </div>
         <div class="col-9"></div>
         <div class="col-1"></div>
@@ -82,7 +82,7 @@
         </div>
       </div>
     </q-footer>
-    <q-page-container class="bg-golem">
+    <q-page-container class="bg-white">
       <router-view />
     </q-page-container>
   </q-layout>

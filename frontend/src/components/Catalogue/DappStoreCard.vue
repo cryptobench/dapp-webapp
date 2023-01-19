@@ -137,7 +137,7 @@ export default {
   color: $primary
 
 .custom-shadow
-  box-shadow: 0 0 50px #eeeeee
+  box-shadow: 5px 23px 22px 0px rgba(238,238,238,0.81)
 
 .custom-border
   border-radius: 10px

@@ -215,7 +215,7 @@
             size="xl"
           />
         </div>
-        <div class="col-1 text-golem-gray">
+        <div class="col-1 text-golem-gray q-mt-md">
           Refresh interval: <strong>5s</strong>
         </div>
       </div>
