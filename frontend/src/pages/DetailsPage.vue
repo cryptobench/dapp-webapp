@@ -186,7 +186,6 @@
               class="bg-dark text-white console q-pa-lg"
             >
               <q-scroll-area
-                ref="consoleScroll"
                 style="height: 100%; width: 100%"
                 :thumb-style="thumbStyle"
                 :bar-style="barStyle"
