@@ -11,6 +11,8 @@ module.exports = (server, config, logger, authentication) => {
       } else {
         res.send(401, "Missing Authorization header").end();
       }
+    } else {
+      next();
     }
   });
 };
