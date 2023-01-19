@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hhh LpR fff">
-    <q-header class="bg-golem text-black" reveal>
+    <q-header reveal elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-btn
           dense
@@ -8,14 +8,16 @@
           round
           icon="menu"
           @click="
-            $q.screen.lt.sm ? (drawer = !drawer) : (miniState = !miniState)
+            $q.screen.lt.sm
+              ? (leftDrawerOpen = !leftDrawerOpen)
+              : (miniState = !miniState)
           "
         />
 
         <q-toolbar-title>
           <q-avatar class="q-mx-md">
             <img
-              src="~assets/golem-network-tokens-glm-logo.svg"
+              src="~assets/Golem.GLM_token_mark_RGB_Negative_RGB.svg"
               alt="Golem Logo"
             />
           </q-avatar>
@@ -25,9 +27,10 @@
     </q-header>
 
     <q-drawer
-      v-model="drawer"
+      v-model="leftDrawerOpen"
       show-if-above
       side="left"
+      bordered
       :mini="miniState"
       :width="200"
       :breakpoint="500"
@@ -59,6 +62,7 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
+
     <q-footer class="bg-golem text-black">
       <div class="row">
         <div class="col-1"></div>
@@ -92,8 +96,7 @@ export default {
   components: { DiscordInvite },
   setup() {
     const miniState = ref(false);
-    const drawer = ref(false);
-
+    const leftDrawerOpen = ref(false);
     const userStore = useUserStore();
 
     if (!userStore.user) {
@@ -101,8 +104,11 @@ export default {
     }
 
     return {
-      drawer,
       miniState,
+      leftDrawerOpen,
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
     };
   },
 };
