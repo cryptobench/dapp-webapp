@@ -33,3 +33,8 @@ $golem-light: #a2a3b9;
 .bg-golem {
   background-color: #f6f8fc;
 }
+
+.scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

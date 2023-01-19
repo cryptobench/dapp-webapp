@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hhh LpR fFf">
-    <q-header class="bg-golem text-black">
+    <q-header class="bg-golem text-black" reveal>
       <q-toolbar>
         <q-btn
           dense
@@ -59,7 +59,23 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
+    <q-footer class="bg-golem text-black">
+      <div class="row">
+        <div class="col-1"></div>
+        <div
+          class="col-2"
+          style="font-size: 16px; margin-bottom: 10px; margin-top: 40px"
+        >
+          <b>LEGAL</b>
+        </div>
+        <div class="col-9"></div>
+        <div class="col-1"></div>
 
+        <div class="col-2" style="margin-bottom: 20px">
+          <a href="#/terms-and-conditions"> Terms & conditions </a>
+        </div>
+      </div>
+    </q-footer>
     <q-page-container class="bg-golem">
       <router-view />
     </q-page-container>
