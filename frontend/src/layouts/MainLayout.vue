@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hhh LpR fFf">
+  <q-layout view="hhh LpR fff">
     <q-header class="bg-golem text-black" reveal>
       <q-toolbar>
         <q-btn
@@ -66,13 +66,15 @@
           class="col-2"
           style="font-size: 16px; margin-bottom: 10px; margin-top: 40px"
         >
-          <b>LEGAL</b>
+          <b class="text-primary">LEGAL</b>
         </div>
         <div class="col-9"></div>
         <div class="col-1"></div>
 
         <div class="col-2" style="margin-bottom: 20px">
-          <a href="#/terms-and-conditions"> Terms & conditions </a>
+          <a class="footer-link golemgray" href="#/terms-and-conditions">
+            Terms & conditions
+          </a>
         </div>
       </div>
     </q-footer>
@@ -105,3 +107,13 @@ export default {
   },
 };
 </script>
+<style lang="sass" scoped>
+.footer-link
+  text-decoration: none
+
+.footer-link:hover
+  text-decoration: underline
+
+.golemgray
+  color: #28293c
+</style>
