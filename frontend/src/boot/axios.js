@@ -7,7 +7,7 @@ const api = axios.create({ baseURL: process.env.API_BACKEND_URL });
 export default boot(({ app, store }) => {
   const userStore = useUserStore(store);
 
-  const getOrCreateUserId = async () => {
+  const obtainUserId = async () => {
     if (!userStore.user) {
       await userStore.register();
     }
@@ -16,7 +16,7 @@ export default boot(({ app, store }) => {
 
   api.interceptors.request.use(
     async (config) => {
-      const userId = await getOrCreateUserId();
+      const userId = await obtainUserId();
       config.headers["Authorization"] = userId;
       return config;
     },
