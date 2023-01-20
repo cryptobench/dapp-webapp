@@ -32,7 +32,20 @@ export const useDappsStore = defineStore("dapps", {
 
   actions: {
     async getDapps() {
-      this.dapps = await api.get(`/dapps/`);
+      clearInterval(this.timers["monitorDapps"]);
+      const getDappsDelay = 1000;
+      const that = this;
+      this.timers["monitorDapps"] = setInterval(
+        //immediately invoked setInmterval, now and then periodically
+        //probably mroe clear with promise
+        (function getDapps() {
+          api.get(`/dapps/`).then((dapps) => {
+            that.dapps = dapps;
+          });
+          return getDapps;
+        })(),
+        getDappsDelay
+      );
     },
     async startDapp(appStoreId) {
       return api.post(`/dapp/start/`, { appStoreId });
