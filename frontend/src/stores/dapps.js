@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import retry from "async-retry";
-import { extractLinkFromAppData } from "src/lib/extractLinkFromAppData";
 
+import environment from "../utils/environment";
+
+// console.log("prc", process.env);
 export const useDappsStore = defineStore("dapps", {
   state: () => ({
     dapps: [],
@@ -11,11 +13,12 @@ export const useDappsStore = defineStore("dapps", {
     stdout: {},
     stderr: {},
     log: {},
-    link: {},
+    localUrl: {},
     running: {},
     proxyUrl: {},
     descriptor: {},
     timers: {},
+    appUrl: {},
   }),
 
   getters: {
@@ -25,8 +28,15 @@ export const useDappsStore = defineStore("dapps", {
     getStdout: (state) => (id) => state.stdout?.[id],
     getStderr: (state) => (id) => state.stderr?.[id],
     getLog: (state) => (id) => state.log?.[id],
-    getLink: (state) => (id) => state.link?.[id],
-    getProxyUrl: (state) => (id) => state.proxyUrl?.[id],
+    getLocalUrl: (state) => (id) => {
+      return state.localUrl[id];
+    },
+    getProxyUrl: (state) => (id) => {
+      return state.proxyUrl[id];
+    },
+    getAppUrl: (state) => (id) => {
+      return state.appUrl[id];
+    },
     getDescriptor: (state) => (id) => state.descriptor?.[id],
   },
 
@@ -60,22 +70,42 @@ export const useDappsStore = defineStore("dapps", {
       this.log[id] = await api.get(`/dapp/log/${id}`);
       this.descriptor[id] = await api.get(`/dapp/${id}/descriptor`);
     },
+    parseLinkFromRawData(rawData) {
+      let link = "";
+      rawData
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => !!l)
+        .forEach((line) => {
+          try {
+            const data = JSON.parse(line);
+            link = data?.http?.local_proxy_address || "";
+          } catch (error) {
+            console.error("Error during obtaining local_proxy_address", error);
+          }
+        });
+      return link;
+    },
     async setupLink(id) {
-      const link = extractLinkFromAppData(this.rawData[id]);
+      const localUrl = this.parseLinkFromRawData(this.rawData[id]);
+      if (localUrl !== this.localUrl[id]) {
+        this.localUrl[id] = localUrl;
+      }
 
-      if (link !== this.link[id]) {
-        this.link[id] = link;
+      // if proxy is in use then load, its unnecessary ping pong
+      // and url should be obtained on one call to backend
 
-        if (this.link[id].length) {
-          await this.fetchProxyUrl(id, link);
+      if (environment.isProxyInUse()) {
+        const port = new URL(localUrl).port;
+        if (port) {
+          const url = await this.fetchProxyUrl({ id, port });
+          this.appUrl[id] = url;
         }
+      } else {
+        this.appUrl[id] = localUrl;
       }
     },
-    fetchProxyUrl(id, local_proxy_address) {
-      const port = local_proxy_address.substr(
-        local_proxy_address.indexOf(":", 5) + 1
-      );
-
+    fetchProxyUrl({ id, port }) {
       return retry(
         async () => {
           const response = await api.get(`/dapp/proxyUrl/${id}/${port}`);
@@ -88,6 +118,7 @@ export const useDappsStore = defineStore("dapps", {
       this.running[id] = true;
       this.timers[id] = setInterval(async () => {
         await this.getData(id);
+        await this.getDapps();
         const info = this.getDapp(id);
         if (info?.status === "active") {
           await this.setupLink(id);
