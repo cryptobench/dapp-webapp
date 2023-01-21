@@ -34,26 +34,28 @@
         <div v-if="dapp.status === 'active'" class="col-md-4 col-xs-12 q-pa-sm">
           <q-card flat>
             <q-card-section>
-              <q-btn
-                v-if="dapp.status === 'active'"
-                unelevated
-                square
-                :loading="stopping"
-                color="warning"
-                label="stop"
-                icon="stop_circle"
-                @click="stop(dapp.id)"
-              ></q-btn>
-              <q-btn
-                v-if="isOperational()"
-                unelevated
-                square
-                color="negative"
-                :loading="killing"
-                label="kill"
-                icon="cancel"
-                @click="kill(dapp.id)"
-              ></q-btn>
+              <AppProperty name="Actions ">
+                <q-btn
+                  v-if="dapp.status === 'active'"
+                  unelevated
+                  square
+                  :loading="stopping"
+                  color="warning"
+                  label="stop"
+                  icon="stop_circle"
+                  @click="stop(dapp.id)"
+                ></q-btn>
+                <q-btn
+                  v-if="isOperational()"
+                  unelevated
+                  square
+                  color="negative"
+                  :loading="killing"
+                  label="kill"
+                  icon="cancel"
+                  @click="kill(dapp.id)"
+                ></q-btn>
+              </AppProperty>
             </q-card-section>
           </q-card>
         </div>
