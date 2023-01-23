@@ -5,7 +5,7 @@
   "productName": "Golem WebApp",
   "private": true,
   "scripts": {
-    "dev": "quasar dev",
+    "dev": "ENVIRONMENT='development' quasar dev",
     "build": "quasar build",
     "lint": "eslint --ext .js,.vue .",
     "format": "prettier --write .",

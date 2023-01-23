@@ -21,19 +21,11 @@
         >
           <q-card flat>
             <q-card-section>
-              <AppProperty name="Local access link">
+              <AppProperty name="Access link">
                 <AppLink
                   :link="link"
                   title="View the app instance"
                   :loading="!link"
-                />
-              </AppProperty>
-
-              <AppProperty name="Proxy access link">
-                <AppLink
-                  :link="proxyUrl"
-                  title="View the app instance"
-                  :loading="!proxyUrl"
                 />
               </AppProperty>
             </q-card-section>
@@ -42,26 +34,28 @@
         <div v-if="dapp.status === 'active'" class="col-md-4 col-xs-12 q-pa-sm">
           <q-card flat>
             <q-card-section>
-              <q-btn
-                v-if="dapp.status === 'active'"
-                unelevated
-                square
-                :loading="stopping"
-                color="warning"
-                label="stop"
-                icon="stop_circle"
-                @click="stop(dapp.id)"
-              ></q-btn>
-              <q-btn
-                v-if="isOperational()"
-                unelevated
-                square
-                color="negative"
-                :loading="killing"
-                label="kill"
-                icon="cancel"
-                @click="kill(dapp.id)"
-              ></q-btn>
+              <AppProperty name="Actions ">
+                <q-btn
+                  v-if="dapp.status === 'active'"
+                  unelevated
+                  square
+                  :loading="stopping"
+                  color="warning"
+                  label="stop"
+                  icon="stop_circle"
+                  @click="stop(dapp.id)"
+                ></q-btn>
+                <q-btn
+                  v-if="isOperational()"
+                  unelevated
+                  square
+                  color="negative"
+                  :loading="killing"
+                  label="kill"
+                  icon="cancel"
+                  @click="kill(dapp.id)"
+                ></q-btn>
+              </AppProperty>
             </q-card-section>
           </q-card>
         </div>
@@ -267,8 +261,9 @@ export default defineComponent({
     const killing = ref(false);
     const jsonFormat = ref(true);
     const loading = ref(true);
-    const link = computed(() => dappStore.getLink(id));
-    const proxyUrl = computed(() => dappStore.getProxyUrl(id));
+    const link = computed(() => {
+      return dappStore.getAppUrl(id);
+    });
 
     watch([stateData, rawData, stdout, stderr, log], () => {
       if (scrollToBottom?.value && consoleScroll?.value)
@@ -312,7 +307,6 @@ export default defineComponent({
       log,
       descriptor,
       link,
-      proxyUrl,
       consoleScroll,
       scrollToBottom,
       jsonFormat,

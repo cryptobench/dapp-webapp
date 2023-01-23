@@ -45,6 +45,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       env: {
+        ENVIRONMENT: process.env?.ENVIRONMENT,
         API_BACKEND_URL:
           process.env?.API_BACKEND_URL || "http://localhost:8888/api/",
         DISCORD_URL: process.env?.DISCORD_URL || "https://discord.gg/golem",
