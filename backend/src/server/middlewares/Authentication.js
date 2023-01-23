@@ -11,6 +11,9 @@ module.exports = (server, config, logger, authentication) => {
       } else {
         res.send(401, "Missing Authorization header").end();
       }
+      // If the user is registering, we don't need to authenticate them.
+    } else {
+      next();
     }
   });
 };

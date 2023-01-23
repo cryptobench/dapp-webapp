@@ -90,18 +90,12 @@
 
 <script>
 import { ref } from "vue";
-import { useUserStore } from "stores/user";
 import DiscordInvite from "components/Navigation/DiscordInvite.vue";
 export default {
   components: { DiscordInvite },
   setup() {
     const miniState = ref(false);
     const leftDrawerOpen = ref(false);
-    const userStore = useUserStore();
-
-    if (!userStore.user) {
-      userStore.register();
-    }
 
     return {
       miniState,

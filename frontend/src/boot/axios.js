@@ -2,17 +2,22 @@ import { boot } from "quasar/wrappers";
 import axios from "axios";
 import { Notify } from "quasar";
 import { useUserStore } from "stores/user";
-
 const api = axios.create({ baseURL: process.env.API_BACKEND_URL });
 
 export default boot(({ app, store }) => {
   const userStore = useUserStore(store);
 
+  const obtainUserId = async () => {
+    if (!userStore.user) {
+      await userStore.register();
+    }
+    return userStore.user.id;
+  };
+
   api.interceptors.request.use(
-    (config) => {
-      if (userStore.user) {
-        config.headers["Authorization"] = userStore.user.id;
-      }
+    async (config) => {
+      const userId = await obtainUserId();
+      config.headers["Authorization"] = userId;
       return config;
     },
     (error) => {
