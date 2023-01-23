@@ -41,8 +41,23 @@ export const useDappsStore = defineStore("dapps", {
   },
 
   actions: {
+    //TODO : refactor this way of loading data immediatelly when we will get rid of vue
+    // for now thats clearing interval it is safe but has to be refactored
     async getDapps() {
-      this.dapps = await api.get(`/dapps/`);
+      clearInterval(this.timers["monitorDapps"]);
+      const getDappsDelay = 1000;
+      const that = this;
+      this.timers["monitorDapps"] = setInterval(
+        //immediately invoked setInmterval, now and then periodically
+        //probably mroe clear with promise
+        (function getDapps() {
+          api.get(`/dapps/`).then((dapps) => {
+            that.dapps = dapps;
+          });
+          return getDapps;
+        })(),
+        getDappsDelay
+      );
     },
     async startDapp(appStoreId) {
       return api.post(`/dapp/start/`, { appStoreId });
@@ -114,6 +129,7 @@ export const useDappsStore = defineStore("dapps", {
         { retries: 30 }
       );
     },
+
     async startGettingData(id) {
       this.running[id] = true;
       this.timers[id] = setInterval(async () => {
