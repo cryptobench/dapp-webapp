@@ -57,6 +57,13 @@ npm install
 - (If needed) In `.env` file, define vars:
   - `NODE_CONFIG_DIR` - directory containing configuration files for each environments (default `./config` directory)
   - `NODE_ENV` - current environment assignee to configuration file (default: `development`)
+- And yagna specific varibles needed to run separated yagna deamon (look into .env-template for example values ):
+  - `YAGNA_APP_KEY` - Yagna service REST API application key token
+  - `NODE_NAME` - Your human readable identity in the network.
+  - `YAGNA_API_URL` - Host and port for yagna REST API
+  - `GSB_URL` - Host and port where the internal Service Bus (aka GSB) will be bound
+  - `YA_NET_BIND_URL`- ya-net p2p client will listen on this address.
+  - `YAGNA_DATA_DIR` - Yagna working directory path
 - In `config/{environment}.json` define base configurations for app modules:
   - http
   - cli
