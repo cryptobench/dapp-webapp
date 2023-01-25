@@ -7,7 +7,7 @@ let branchCategoriesRegex = `^(${allowedCategories.reduce((prev, current, index)
   return prev + current + suffix;
 }, "")})`;
 
-let referenceRegex = "(#|issue-)[1-9]+";
+let referenceRegex = "(no-ref|((#|issue-)[1-9][0-9]*))";
 let kebabCaseRegex = "([a-z][a-z0-9]*)(-[a-z0-9]+)*";
 
 let validBranchRegex = new RegExp(`^${branchCategoriesRegex}\/${referenceRegex}\/${kebabCaseRegex}$`);
