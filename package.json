@@ -21,6 +21,7 @@
   "homepage": "https://github.com/golemfactory/dapp-webapp#readme",
   "workspaces": [
     "backend",
+    "frontend_legacy", 
     "frontend"
   ],
   "devDependencies": {
