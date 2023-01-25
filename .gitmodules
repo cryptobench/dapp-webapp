@@ -1,3 +1,0 @@
-[submodule "backend/src/db/fixtures/dapp-store"]
-	path = backend/src/db/fixtures/dapp-store
-	url = https://github.com/golemfactory/dapp-store.git
