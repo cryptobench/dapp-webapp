@@ -30,9 +30,14 @@ await $`tmux new-session -d -s "dapp-webapp"`;
 await $`tmux new-window -n "backend"`;
 await $`tmux send-keys -t backend "cd backend && npm run dev" C-m`;
 
-//frontend
+//frontend vue legacy
 await $`tmux new-window -n "frontend_legacy"`;
 await $`tmux send-keys -t frontend_legacy "cd frontend_legacy && npm run dev" C-m`;
+
+//frontend
+
+await $`tmux new-window -n "frontend"`;
+await $`tmux send-keys -t frontend "cd frontend && npm run dev" C-m`;
 
 //separated instance of yagna if ine is running it is always better to run
 //separated instance just for the dapp purpose
