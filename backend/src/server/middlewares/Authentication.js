@@ -1,7 +1,9 @@
 module.exports = (server, config, logger, authentication) => {
   server.pre((req, res, next) => {
     const { url } = req;
-    if (url !== "/api/user/register/") {
+    console.log("ur", url);
+    if (["/api/user/register/", "/api/store/dapps/"].indexOf(url) === -1) {
+      console.log("halloi");
       const token = req.header("Authorization");
       if (token) {
         authentication.authenticate(token).then((user) => {
